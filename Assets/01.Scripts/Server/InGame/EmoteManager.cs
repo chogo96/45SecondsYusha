@@ -18,18 +18,6 @@ public class EmoteManager : MonoBehaviourPun
 
     private void Start()
     {
-        // Ensure photonView is properly assigned
-        if (photonView == null)
-        {
-            Debug.LogError("PhotonView component is missing on EmoteManager object.");
-            return;
-        }
-
-        if (PhotonNetwork.LocalPlayer == null)
-        {
-            Debug.LogError("Local player is not yet connected to Photon Network.");
-            return;
-        }
 
         _emotePanelOnOffButton.onClick.AddListener(OnClickOnOffPanelButton);
 

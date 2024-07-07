@@ -12,12 +12,4 @@ public class PlayerManager : MonoBehaviourPun
             LocalPlayerInstance = this;
         }
     }
-
-    void Start()
-    {
-        if (photonView.IsMine)
-        {
-            LocalPlayerInstance = this;
-        }
-    }
 }

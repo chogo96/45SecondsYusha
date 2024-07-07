@@ -5,15 +5,20 @@ using System.Collections.Generic;
 
 public class RoomListDisplay : MonoBehaviourPunCallbacks
 {
-    public GameObject roomListItemPrefab;
-    private GameObject roomListContent;
-    private Dictionary<string, GameObject> rooms = new Dictionary<string, GameObject>();
+    public GameObject roomListItemPrefab; // 방 목록 아이템 프리팹
+    private GameObject roomListContent; // 방 목록 콘텐츠를 담는 부모 객체
+    private Dictionary<string, GameObject> rooms = new Dictionary<string, GameObject>(); // 방 이름과 방 목록 아이템 매핑
+
+    private const string _matchmakingRoomType = "matchmaking"; // 매치메이킹 방 타입
+    private const string _customRoomType = "Custom"; // 커스텀 방 타입
 
     private void Awake()
     {
+        // 방 목록 콘텐츠를 찾습니다
         roomListContent = transform.Find("RoomList/Scroll View - RoomList/Viewport/Content").gameObject;
     }
-    
+
+    // 방 목록이 업데이트될 때 호출됩니다
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
         Debug.Log("Room list updated");
@@ -23,6 +28,13 @@ public class RoomListDisplay : MonoBehaviourPunCallbacks
 
         foreach (var roomInfo in roomList)
         {
+            // 매치메이킹 방을 필터링하여 제외합니다
+            if (roomInfo.CustomProperties.ContainsKey("roomType") &&
+                (string)roomInfo.CustomProperties["roomType"] == _matchmakingRoomType)
+            {
+                continue; // 매치메이킹 방은 건너뜁니다
+            }
+
             // 룸이 삭제된 경우
             if (roomInfo.RemovedFromList == true)
             {
