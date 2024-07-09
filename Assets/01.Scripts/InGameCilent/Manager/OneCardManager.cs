@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using TMPro;
 
 // holds the refs to all the Text, Images on the card
 public class OneCardManager : MonoBehaviour
@@ -9,9 +10,9 @@ public class OneCardManager : MonoBehaviour
     public CardAsset cardAsset;
     public OneCardManager PreviewManager;
     [Header("Text Component References")]
-    public Text NameText;
-    public Text DescriptionText;
-    public Text AttackText;
+    public TMP_Text NameText;
+    public TMP_Text DescriptionText;
+    public TMP_Text AttackText;
     [Header("Image References")]
     public Image CardTopRibbonImage;
     public Image CardLowRibbonImage;
