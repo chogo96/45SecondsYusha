@@ -9,12 +9,12 @@ public class TurnOverPack : MonoBehaviour
 
     private float _initialScale;
     private float _scaleFactor = 1.1f;
-    private OneCardManager _oneCardManager;
+    public OneCardManager _oneCardManager;
 
     private void Awake()
     {
         _initialScale = transform.localScale.x;
-        _oneCardManager = new OneCardManager();
+        //_oneCardManager = new OneCardManager();
     }
     private void OnMouseDown()
     {

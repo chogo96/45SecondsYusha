@@ -22,7 +22,7 @@ public class DragPackOpening : DraggingActions
     }
     public override void OnDraggingInUpdate()
     {
-        throw new System.NotImplementedException();
+
     }
 
     public override void OnEndDrag()
@@ -39,6 +39,8 @@ public class DragPackOpening : DraggingActions
             OnCancelDrag();
         }
     }
+
+
     public override void OnCancelDrag()
     {
         canceling = true;

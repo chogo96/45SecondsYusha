@@ -5,8 +5,9 @@ using UnityEngine.UI;
 using DG.Tweening;
 using System;
 using Random = UnityEngine.Random;
+using TMPro;
 
-public class ShopManager : SingletonMonoBase<ShopManager>
+public class ShopManager : MonoBehaviour
 {
     //돈과 가루 프로퍼티 화
     private int _gold;
@@ -38,8 +39,8 @@ public class ShopManager : SingletonMonoBase<ShopManager>
     public float PosXRange = 4f;
     public float PosYRange = 8f;
     public float RotationRange = 10f;
-    public Text MoneyText;
-    public Text DustText;
+    public TMP_Text MoneyText;
+    public TMP_Text DustText;
     public GameObject GoldHUD;
     public GameObject DustHUD;
     public PackOpeningArea OpeningArea;
@@ -49,10 +50,13 @@ public class ShopManager : SingletonMonoBase<ShopManager>
 
     public int PacksCreated { get; set; }
     private float _packPlacementOffset = -0.01f;
-
+    public static ShopManager instance;
     private void Awake()
     {
-        HideScreen();
+        //HideScreen();
+        if (instance != this && instance != null)
+            Destroy(instance.gameObject);
+        instance = this;
 
         if (PlayerPrefs.HasKey("UnopenedPacks"))
         {
