@@ -1,60 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class CardManager : SingletonMonoBase<CardManager>
+public class CardManager : MonoBehaviour
 {
-    [SerializeField]ItemSO _item;
+    public GameObject cardPrefab; // 카드의 기본 prefab
+    public Transform handTransform; // 카드를 배치할 위치 (예: 손 패 위치)
 
-    public GameObject _cardPrefab;
+    public void CreateCard(CardAsset cardAsset)
+    {
+        // 카드 prefab 인스턴스화
+        GameObject card = Instantiate(cardPrefab, handTransform);
 
-    List<Item> _itemBuffer;
+        // 카드 이미지 설정
+        Image cardImage = card.transform.Find("CardImage").GetComponent<Image>();
+        cardImage.sprite = cardAsset.CardImage;
 
-    public Item PopItem() 
-    {
-        if (_itemBuffer.Count == 0)
-        {
-            SetupItemBuffer();
-        }
-        Item card = _itemBuffer[0];
-        _itemBuffer.RemoveAt(0);
-        return card;
-    }
-    void SetupItemBuffer()
-    {
-        _itemBuffer = new List<Item>();
-        for (int i = 0; i < _item.cards.Length; i++)
-        {
-            Item card = _item.cards[i];
-            for(int j = 0; j < card.percent; j++)
-            {
-                _itemBuffer.Add(card);
-            }
-        }
-        for (int i = 0; i< _itemBuffer.Count; i++)
-        {
-            int rand = Random.Range(0, _itemBuffer.Count);
-            Item temp = _itemBuffer[i];
-            _itemBuffer[i] = _itemBuffer[rand];
-            _itemBuffer[rand] = temp;
-        }
-    }
+        // 카드 설명 설정
+        Text descriptionText = card.transform.Find("Description").GetComponent<Text>();
+        descriptionText.text = cardAsset.Description;
 
-    private void Start()
-    {
-        SetupItemBuffer();
-    }
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Keypad1))
-        {
-            AddCard(true);
-        }
-    }
-    void AddCard(bool isMine)
-    {
-        var cardObject = Instantiate(_cardPrefab, Vector3.zero, Quaternion.identity);
-        var card = cardObject.GetComponent<Card>();
-        card.Setup(PopItem(), isMine);
+        // 카드 태그 설정
+        Text tagsText = card.transform.Find("Tags").GetComponent<Text>();
+        tagsText.text = cardAsset.Tags;
+
+        // 카드 희귀도 설정 (필요한 경우 색상 변경 등)
+        // RarityOptions rarity = cardAsset.Rarity;
+
+        // 기타 필요한 데이터 설정
+        // 예: SwordAttack, MagicAttack, ShieldAttack 등
+
+        // 추가적으로 카드의 각종 능력치나 속성을 설정할 수 있음
     }
 }

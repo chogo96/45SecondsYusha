@@ -7,7 +7,6 @@ using UnityEngine.UI;
 [RequireComponent(typeof(BoxCollider))]
 public class PackOpeningArea : MonoBehaviour
 {
-
     public bool AllowedToDragAPack { get; set; }
 
     public GameObject AttacksCardPackPrefab;
@@ -29,6 +28,7 @@ public class PackOpeningArea : MonoBehaviour
     public Color32 EpicColor;
     public Color32 RareColor;
     public Color32 NormalColor;
+    public Color32 BasicColor;
 
     public Dictionary<RarityOptions, Color32> GlowColorsByRarity = new Dictionary<RarityOptions, Color32>();
 
@@ -59,6 +59,7 @@ public class PackOpeningArea : MonoBehaviour
         _boxCollider = GetComponent<BoxCollider>();
         AllowedToDragAPack = true;
 
+        GlowColorsByRarity.Add(RarityOptions.Basic, BasicColor);
         GlowColorsByRarity.Add(RarityOptions.Normal, NormalColor);
         GlowColorsByRarity.Add(RarityOptions.Rare, RareColor);
         GlowColorsByRarity.Add(RarityOptions.Epic, EpicColor);
@@ -69,14 +70,17 @@ public class PackOpeningArea : MonoBehaviour
     {
         RaycastHit[] hits;
         // raycst to mousePosition and store all the hits in the array
-        hits = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition), 30f);
+        hits = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition));
 
         bool passedThroughTableCollider = false;
         foreach (RaycastHit h in hits)
         {
             // check if the collider that we hit is the collider on this GameObject
             if (h.collider == _boxCollider)
+            {
+                Debug.Log("커서가 위에 닿았아요");
                 passedThroughTableCollider = true;
+            }
         }
         return passedThroughTableCollider;
     }

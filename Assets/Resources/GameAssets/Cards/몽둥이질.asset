@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: "\uBABD\uB465\uC774\uC9C8"
   m_EditorClassIdentifier: 
   CharacterAsset: {fileID: 0}
-  Description: 
-  Tags: "\uC18C\uBA78"
+  Description: 1234
+  Tags: "\uC18C\uBA78, \uB9C8\uBC95string"
   Rarity: 0
   CardImage: {fileID: 21300000, guid: e881bb6a7545be642834948f9c5d8cca, type: 3}
   TokenCard: 0
