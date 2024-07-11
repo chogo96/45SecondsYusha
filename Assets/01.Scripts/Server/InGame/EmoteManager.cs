@@ -40,7 +40,7 @@ public class EmoteManager : MonoBehaviourPun
     /// 각 이모티콘 버튼을 누를 때 호출되는 함수
     /// </summary>
     /// <param name="emoteIndex">이모티콘 인덱스 값</param>
-    public void OnEmoteButtonClicked(int emoteIndex)
+    private void OnEmoteButtonClicked(int emoteIndex)
     {
         Debug.Log("Emote button clicked, index: " + emoteIndex);
 

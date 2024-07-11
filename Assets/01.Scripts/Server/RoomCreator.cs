@@ -9,10 +9,8 @@ using UnityEngine.UI;
 public class RoomCreator : MonoBehaviourPunCallbacks
 {
     private Button _createRoomButton;
-    private Button _maxPlayer1;
-    private Button _maxPlayer2;
-    private Button _maxPlayer3;
-    private Button _maxPlayer4;
+    private Button[] _maxPlayer;
+
     private TMP_InputField _inputFieldRoomName;
     private TMP_Text _textRoomName;
 
@@ -39,24 +37,31 @@ public class RoomCreator : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
+        _maxPlayer = new Button[4];
+        // 버튼 찾기 및 배열에 추가
+        for (int i = 0; i < _maxPlayer.Length; i++)
+        {
+            string buttonName = $"RoomOption/MaxPlayer/MaxPlayer_Button/Button - {i + 1}";
+            _maxPlayer[i] = transform.Find(buttonName).GetComponent<Button>();
+            int index = i;
+            _maxPlayer[i].onClick.AddListener(() => OnClickButton(index));
+        }
+
         _createRoomButton = transform.Find("RoomOption/Button - RoomCreate").GetComponent<Button>();
-
-        _maxPlayer1 = transform.Find("RoomOption/MaxPlayer/MaxPlayer_Button/Button - 1").GetComponent<Button>();
-        _maxPlayer2 = transform.Find("RoomOption/MaxPlayer/MaxPlayer_Button/Button - 2").GetComponent<Button>();
-        _maxPlayer3 = transform.Find("RoomOption/MaxPlayer/MaxPlayer_Button/Button - 3").GetComponent<Button>();
-        _maxPlayer4 = transform.Find("RoomOption/MaxPlayer/MaxPlayer_Button/Button - 4").GetComponent<Button>();
-
         _inputFieldRoomName = transform.Find("RoomOption/RoomName/InputField (TMP) - RoomName").GetComponent<TMP_InputField>();
         _textRoomName = transform.Find("RoomOption/MaxPlayer/Text (TMP) - SelectPlayer").GetComponent<TMP_Text>();
-        _newRoom = transform.Find("Buttons/Button - NewRoom").GetComponent<Button>();
-        _reSearch = transform.Find("Buttons/Button - ReSearch").GetComponent<Button>();
+
         _roomOptionPanel = transform.Find("RoomOption").gameObject;
         _inRoomPanel = transform.Find("InRoom").gameObject;
+
         _roomExit = transform.Find("InRoom/Button - Exit").GetComponent<Button>();
         _roomStart = transform.Find("InRoom/Button - Start").GetComponent<Button>();
 
-        _panelMatchmaking = transform.Find("Panel - Matchmaking").gameObject;
+        _newRoom = transform.Find("Buttons/Button - NewRoom").GetComponent<Button>();
+        _reSearch = transform.Find("Buttons/Button - ReSearch").GetComponent<Button>();
         _matchmaking = transform.Find("Buttons/Button - Matchmaking").GetComponent<Button>();
+
+        _panelMatchmaking = transform.Find("Panel - Matchmaking").gameObject;
         _cancelMatchmaking = transform.Find("Panel - Matchmaking/Button - MatchmakingCancel").GetComponent<Button>();
         _matchmakingPlayer = transform.Find("Panel - Matchmaking/Text (TMP) -  Matching").GetComponent<TMP_Text>();
     }
@@ -64,10 +69,6 @@ public class RoomCreator : MonoBehaviourPunCallbacks
     void Start()
     {
         _createRoomButton.onClick.AddListener(CreateCustomRoom);
-        _maxPlayer1.onClick.AddListener(OnClickButton1);
-        _maxPlayer2.onClick.AddListener(OnClickButton2);
-        _maxPlayer3.onClick.AddListener(OnClickButton3);
-        _maxPlayer4.onClick.AddListener(OnClickButton4);
         _newRoom.onClick.AddListener(OnClickNewRoomButton);
         _roomExit.onClick.AddListener(OnClickRoomExit);
         _roomStart.onClick.AddListener(OnClickRoomStart);
@@ -249,24 +250,24 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         roomListDisplay.OnRoomListUpdate(roomList);
     }
 
-    #region 방 생성 UI 최대 인원수 버튼
-    private void OnClickButton1()
+    private void OnClickButton(int index)
     {
-        _textRoomName.text = "1";
+        switch (index)
+        {
+            case 0:
+                _textRoomName.text = "1";
+                break;
+            case 1:
+                _textRoomName.text = "2";
+                break;
+            case 2:
+                _textRoomName.text = "3";
+                break;
+            case 3:
+                _textRoomName.text = "4";
+                break;
+        }
     }
-    private void OnClickButton2()
-    {
-        _textRoomName.text = "2";
-    }
-    private void OnClickButton3()
-    {
-        _textRoomName.text = "3";
-    }
-    private void OnClickButton4()
-    {
-        _textRoomName.text = "4";
-    }
-    #endregion
 
     private void OnClickNewRoomButton()
     {
