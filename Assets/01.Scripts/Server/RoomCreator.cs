@@ -1,5 +1,7 @@
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -35,6 +37,10 @@ public class RoomCreator : MonoBehaviourPunCallbacks
     private const string _customRoomType = "Custom";
     private bool isMatchmaking = false;
 
+    // 커스텀방에서 매칭방으로 변경하는버튼
+    private Button _matchmakingStart;
+    private bool isChangedRoom = false;
+
     private void Awake()
     {
         _maxPlayer = new Button[4];
@@ -64,6 +70,9 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         _panelMatchmaking = transform.Find("Panel - Matchmaking").gameObject;
         _cancelMatchmaking = transform.Find("Panel - Matchmaking/Button - MatchmakingCancel").GetComponent<Button>();
         _matchmakingPlayer = transform.Find("Panel - Matchmaking/Text (TMP) -  Matching").GetComponent<TMP_Text>();
+
+
+        _matchmakingStart = transform.Find("InRoom/Button - MatchingStart").GetComponent<Button>();
     }
 
     void Start()
@@ -76,6 +85,9 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         _matchmaking.onClick.AddListener(OnClickMatchmake);
         _cancelMatchmaking.onClick.AddListener(OnClickCancelMatchmake);
 
+
+        _matchmakingStart.onClick.AddListener(UpdateFromCustomToMatching);
+
         if (PhotonNetwork.IsConnected)
         {
             PhotonNetwork.JoinLobby(); // 로비에 입장하여 방 목록을 받아옵니다.
@@ -86,6 +98,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         _panelMatchmaking.SetActive(false);
 
         PhotonNetwork.AutomaticallySyncScene = true;
+
     }
 
     // 랜덤 매칭 작업 시작
@@ -115,6 +128,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
     /// </summary>
     public void JoinRandomRoom()
     {
+
         string roomName = "Room_" + Random.Range(1000, 9999) + Random.Range(1000, 9999);
         PhotonNetwork.JoinRandomOrCreateRoom(
             new ExitGames.Client.Photon.Hashtable { { "roomType", _matchmakingRoomType } }, // 방 속성 필터
@@ -138,9 +152,16 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         CreateMatchmakingRoom();
     }
 
-    private void OnClickCancelMatchmake()
+    /// <summary>
+    /// 매칭중 취소버튼 눌렀을때 실행할 함수.
+    /// </summary>
+    public void OnClickCancelMatchmake()
     {
-        if (isMatchmaking)
+        if(isChangedRoom && isMatchmaking)
+        {
+            UpdateFromMatchingToCustom();
+        }
+        else
         {
             isMatchmaking = false;
             PhotonNetwork.LeaveRoom();
@@ -150,6 +171,10 @@ public class RoomCreator : MonoBehaviourPunCallbacks
     }
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
+        if (isMatchmaking)
+        {
+            JoinRandomRoom(); // 방을 나간 후 다시 매칭 시도
+        }
         string roomType = (string)PhotonNetwork.CurrentRoom.CustomProperties["roomType"];
 
         if (roomType == _matchmakingRoomType)
@@ -161,10 +186,84 @@ public class RoomCreator : MonoBehaviourPunCallbacks
     // 랜덤 매칭 작업 끝
 
 
+
     /// <summary>
-    /// 커스텀 방 만들기 함수
+    /// 커스텀방 정보를 매치메이킹 방으로 변경하는 함수
     /// </summary>
-    void CreateCustomRoom()
+    public void UpdateFromCustomToMatching()
+    {
+        // 방에 입장한 상태인지 확인 + 방장만 변경 가능
+        if (PhotonNetwork.InRoom && PhotonNetwork.IsMasterClient)
+        {
+            ExitGames.Client.Photon.Hashtable newProperties = new ExitGames.Client.Photon.Hashtable
+            {
+                { "roomType", _matchmakingRoomType }
+            };
+            PhotonNetwork.CurrentRoom.SetCustomProperties(newProperties);
+            Debug.Log("방 정보가 업데이트되었습니다.");
+            isChangedRoom = true;
+            isMatchmaking = true;
+            _matchmakingPlayer.text = $"Matching ( {PhotonNetwork.CurrentRoom.PlayerCount} / {PhotonNetwork.CurrentRoom.MaxPlayers} )";
+            _panelMatchmaking.SetActive(true);
+        }
+        else
+        {
+            Debug.LogError("방에 입장한 상태가 아닙니다.");
+        }
+    }/// <summary>
+     /// 매칭 방 정보를 커스텀 방으로 변경하는 함수
+     /// </summary>
+    public void UpdateFromMatchingToCustom()
+    {
+        // 문제점. 취소 버튼을 누르기전에 매칭유저가 들어왔다면 방으로 그 유저랑 같이 들어옴
+        // 방에 입장한 상태인지 확인 + 방장만 변경 가능
+        if (PhotonNetwork.InRoom && PhotonNetwork.IsMasterClient)
+        {
+            ExitGames.Client.Photon.Hashtable newProperties = new ExitGames.Client.Photon.Hashtable
+            {
+                { "roomType", _customRoomType }
+            };
+            PhotonNetwork.CurrentRoom.SetCustomProperties(newProperties);
+            Debug.Log("방 정보가 업데이트되었습니다.");
+            KickNonChangedRoomPlayers(); //같은방 유저였던 유저 제외 강퇴 함수.
+            isChangedRoom = false;
+            isMatchmaking = false;
+            _panelMatchmaking.SetActive(false);
+        }
+        else
+        {
+            Debug.LogError("방에 입장한 상태가 아닙니다.");
+        }
+    }
+
+    /// <summary>
+    /// 같은방 유저였던 유저 제외 강퇴 함수.
+    /// </summary>
+    /// <param name="isChangedRoom">bool타입 커스텀방에서 부터 있던 유저인가?</param>
+    public void KickNonChangedRoomPlayers()
+    {
+        //ExitGames.Client.Photon.Hashtable playerProperties = new ExitGames.Client.Photon.Hashtable
+        //{
+        //    { "isChangedRoom", isChangedRoom }
+        //};
+        //PhotonNetwork.LocalPlayer.SetCustomProperties(playerProperties);
+        foreach (Player player in PhotonNetwork.PlayerList)
+        {
+            if (!isChangedRoom)
+            {
+                PhotonNetwork.LeaveRoom(); //방나가기.
+                //// 유저 강퇴
+                //PhotonNetwork.CloseConnection(player);
+                //Debug.Log($"{player.NickName} 유저가 강퇴되었습니다.");
+            }
+        }
+    }
+
+
+        /// <summary>
+        /// 커스텀 방 만들기 함수
+        /// </summary>
+        void CreateCustomRoom()
     {
         if (int.Parse(_textRoomName.text) >= 5)
         {
@@ -289,6 +388,10 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         }
     }
 
+
+    /// <summary>
+    /// 매치메이킹 버튼 눌렀을때 실행할 함수.
+    /// </summary>
     private void OnClickMatchmake()
     {
         _panelMatchmaking.SetActive(true);
