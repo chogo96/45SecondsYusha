@@ -21,8 +21,8 @@ public class PackOpeningArea : MonoBehaviour
     public float EpicProbability;
     [Range(0, 1)]
     public float RareProbability;
-    // these are the glow colors that will show while opening cards
-    // or you can use colors from  RarityColors
+    // 카드 열면서 보여질 glow 색상
+    // 직접 설정할 수도있고 카드의 색상을 따로 설정할 수 있음
     [Header("Colors")]
     public Color32 MythicsColor;
     public Color32 EpicColor;
@@ -48,7 +48,7 @@ public class PackOpeningArea : MonoBehaviour
             numOfCardsOpened = value;
             if (value == SlotsForCards.Length)
             {
-                // activate the Done button
+                // 5개 다 열었으면 done버튼 활성화
                 DoneButton.gameObject.SetActive(true);
             }
         }
@@ -69,16 +69,14 @@ public class PackOpeningArea : MonoBehaviour
     public bool CursorOverArea()
     {
         RaycastHit[] hits;
-        // raycst to mousePosition and store all the hits in the array
         hits = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition));
 
         bool passedThroughTableCollider = false;
-        foreach (RaycastHit h in hits)
+        foreach (RaycastHit hit in hits)
         {
-            // check if the collider that we hit is the collider on this GameObject
-            if (h.collider == _boxCollider)
+            // 콜라이더가 있으면
+            if (hit.collider == _boxCollider)
             {
-                Debug.Log("커서가 위에 닿았아요");
                 passedThroughTableCollider = true;
             }
         }
@@ -87,14 +85,12 @@ public class PackOpeningArea : MonoBehaviour
 
     public void ShowPackOpening(Vector3 cardsInitialPosition)
     {
-        // ShopManager.Instance.PacksCreated--;
-        // Allow To Drag Another Pack Only After DoneButton Is pressed
-        // 1) Determine rarity of all cards
+        // done버튼이 눌리고 나서 카드를 열 수 있게 하는 함수
         RarityOptions[] rarity = new RarityOptions[SlotsForCards.Length];
         bool AtLeastOneRareGiven = false;
         for (int i = 0; i < rarity.Length; i++)
         {
-            // determine rarity of this card
+            // 이 카드의 레어도 확인
             float prob = Random.Range(0f, 1f);
             if (prob < MythicProbability)
             {
@@ -134,7 +130,7 @@ public class PackOpeningArea : MonoBehaviour
         List<CardAsset> CardsOfThisRarity = CardCollection.instance.GetCardsWithRarity(rarity);
         CardAsset cardAsset = CardsOfThisRarity[Random.Range(0, CardsOfThisRarity.Count)];
 
-        // add this card to your collection. 
+        // 카드 콜렉션에 카드에셋 추가
         CardCollection.instance.QuantityOfEachCard[cardAsset]++;
 
         GameObject card;
@@ -164,9 +160,9 @@ public class PackOpeningArea : MonoBehaviour
         NumberOfCardsOpenedFromPack = 0;
         while (CardsFromPackCreated.Count > 0)
         {
-            GameObject g = CardsFromPackCreated[0];
+            GameObject gameObject = CardsFromPackCreated[0];
             CardsFromPackCreated.RemoveAt(0);
-            Destroy(g);
+            Destroy(gameObject);
         }
         BackButton.interactable = true;
     }

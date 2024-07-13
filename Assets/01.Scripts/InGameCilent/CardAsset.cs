@@ -32,7 +32,7 @@ public class CardAsset : ScriptableObject, IComparable<CardAsset>
     [PreviewSprite]
     public Sprite CardImage;
     public bool TokenCard = false; //만약 토큰 카드면 콜렉션에서 안보이게 할 것임
-    public int OverrideLimitOfTHisCardInDeck = 0;// 이 카드가 과연 덱에 몇장까지 들어갈 수 있나? (신화급 1장, 그 외엔 3장까지)
+    public int LimitOfThisCardInDeck = 0;// 이 카드가 과연 덱에 몇장까지 들어갈 수 있나? (신화급 1장, 그 외엔 3장까지)
 
     public TypesOfCards TypeOfCard;
 

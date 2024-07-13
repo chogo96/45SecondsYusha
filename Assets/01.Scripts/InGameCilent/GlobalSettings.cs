@@ -27,7 +27,6 @@ public class GlobalSettings : SingletonMonoBase<GlobalSettings>
     public GameObject DamageEffectPrefab;
     public GameObject ExplosionPrefab;
     [Header("Other")]
-    public Button EndTurnButton;
     public GameObject GameOverPanel;
     //public Dictionary<AreaPosition, Player> Players = new Dictionary<AreaPosition, Player>();
 
@@ -46,27 +45,9 @@ public class GlobalSettings : SingletonMonoBase<GlobalSettings>
 
     public bool CanControlThisPlayer(Player ownerPlayer)
     {
-        bool PlayersTurn = (TurnManager.Instance.whoseTurn == ownerPlayer);
+        bool PlayersTurn = (TurnManager.instance.whoseTurn == ownerPlayer);
         return ownerPlayer.HasRejoined;
         //bool NotDrawingAnyCards = !Command.CardDrawPending();
         //return ownerPlayer.PArea.AllowedToControlThisPlayer && ownerPlayer.PArea.ControlsON && PlayersTurn && NotDrawingAnyCards;
     }
-
-    //public void EnableEndTurnButtonOnStart(Player P)
-    //{
-    //    if (P == LowPlayer && CanControlThisPlayer(AreaPosition.Low) ||
-    //        P == TopPlayer && CanControlThisPlayer(AreaPosition.Top))
-    //        EndTurnButton.interactable = true;
-    //    else
-    //        EndTurnButton.interactable = false;
-
-    //}
-
-    //public bool IsPlayer(int id)
-    //{
-    //    if (LowPlayer.ID == id || TopPlayer.ID == id)
-    //        return true;
-    //    else
-    //        return false;
-    //}
 }
