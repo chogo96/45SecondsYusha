@@ -44,7 +44,7 @@ public class BetterCardRotation : MonoBehaviour
             }
             else
             {
-                //  앞쪽을 보여줌 
+                // 앞쪽을 보여줌 
                 CardFront.gameObject.SetActive(true);
                 CardBack.gameObject.SetActive(false);
             }

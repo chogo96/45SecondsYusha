@@ -1,13 +1,12 @@
+using UnityEditor;
 using UnityEngine;
 using System.Collections;
-
-public enum CharClass { Attacker, Buffer, Healer, Tanker }
 
 public class CharacterAsset : ScriptableObject
 {
     public CharClass Class;
     public string ClassName;
-    public int MaxHealth = 30;
+    //public int MaxHealth = 30;
     public string HeroPowerName;
     public Sprite AvatarImage;
     public Sprite HeroPowerIconImage;
@@ -18,3 +17,4 @@ public class CharacterAsset : ScriptableObject
     public Color32 ClassCardTint;
     public Color32 ClassRibbonsTint;
 }
+public enum CharClass { Attacker, Buffer, Healer, Tanker }

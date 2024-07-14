@@ -19,11 +19,6 @@ public class Order : MonoBehaviour
     {
         SetOrder(isMostFront ? 100 : originOrder);
     }
-    //private void Start()
-    //{
-    //    SetOrder(0);
-    //}
-
     public void SetOrder(int order)
     {
         int mulOrder = order * 10;

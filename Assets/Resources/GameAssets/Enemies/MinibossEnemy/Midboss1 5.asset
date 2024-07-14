@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf70ea5f95cd4964d80f93019b4fd8b1, type: 3}
+  m_Name: Midboss1 5
+  m_EditorClassIdentifier: 
+  enemySprite: {fileID: 508425759, guid: 9d882fa432b28df49aa7bcc41bf227dc, type: 3}
+  RequiredSwordAttack: 3
+  RequiredMagicAttack: 2
+  RequiredShieldAttack: 1
+  Complete: 0
+  debuffs: []
+  specialEffects: []

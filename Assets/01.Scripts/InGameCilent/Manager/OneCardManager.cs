@@ -83,6 +83,6 @@ public class OneCardManager : MonoBehaviour
             Debug.Log("RarityStoneImage is null on object:" + gameObject.name);
 
         // NEW apply rarity color to a card 
-        RarityStoneImage.color = RarityColors.Instance.ColorsDictionary[cardAsset.Rarity];
+        RarityStoneImage.color = RarityColors.instance.ColorsDictionary[cardAsset.Rarity];
     }
 }

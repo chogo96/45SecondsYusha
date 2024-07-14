@@ -12,7 +12,7 @@ public class TurnManager : MonoBehaviour
     public CardAsset CoinCard;
 
     // for Singleton Pattern
-    public static TurnManager Instance;
+    public static TurnManager instance;
 
 
     // a static array that will store both players, should always have 2 players

@@ -16,8 +16,6 @@ public class MeshRendererSortingLayersEditor : Editor
 	{
 		sortingLayerNames = GetSortingLayerNames();
 		renderer = (target as Renderer).gameObject.GetComponent<Renderer>();
-		//light2d = (target as DynamicLight);
-		
 		for (int i = 0; i<sortingLayerNames.Length;i++)
 		{
 			if (sortingLayerNames[i] == renderer.sortingLayerName)
@@ -51,7 +49,10 @@ public class MeshRendererSortingLayersEditor : Editor
 		}
 	}
 	
-	// Get the sorting layer names
+	/// <summary>
+	/// sortinglayer 이름 가져오는 함수
+	/// </summary>
+	/// <returns></returns>
 	public string[] GetSortingLayerNames()
 	{
 		Type internalEditorUtilityType = typeof(InternalEditorUtility);
