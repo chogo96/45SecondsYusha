@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnemyData : ScriptableObject
 {
+    [PreviewSprite]
     public Sprite enemySprite;
     public int RequiredSwordAttack;
     public int RequiredMagicAttack;
