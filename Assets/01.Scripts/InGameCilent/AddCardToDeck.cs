@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
+using TMPro;
 
 public class AddCardToDeck : MonoBehaviour
 {
 
-    public Text QuantityText;
-    private float InitialScale;
-    private float scaleFactor = 1.1f;
+    public TMP_Text QuantityText;
+    private Vector3 _initialScale;
+    private float scaleFactor = 1.5f;
     private CardAsset cardAsset;
 
     void Awake()
     {
-        InitialScale = transform.localScale.x;
+        _initialScale = new Vector3(60.0f, 60.0f, 60.0f); // 원하는 초기 크기로 설정
     }
 
     public void SetCardAsset(CardAsset asset) { cardAsset = asset; }
@@ -38,15 +39,15 @@ public class AddCardToDeck : MonoBehaviour
 
     void OnMouseEnter()
     {
-        if (CraftingScreen.instance.Visible)
-            return;
+        //if (CraftingScreen.instance.Visible)
+        //    return;
 
-        transform.DOScale(InitialScale * scaleFactor, 0.5f);
+        transform.DOScale(_initialScale * scaleFactor, 0.5f);
     }
 
     void OnMouseExit()
     {
-        transform.DOScale(InitialScale, 0.5f);
+        transform.DOScale(_initialScale, 0.5f);
     }
 
     void Update()
@@ -56,14 +57,14 @@ public class AddCardToDeck : MonoBehaviour
     }
 
     /// <summary>
-    /// 우클릭 시 카드가 제작 됨
+    /// 우클릭 시 카드가 제작 됨 나중에 구현할 예정
     /// </summary>
     void OnRightClick()
     {
-        if (CraftingScreen.instance.Visible)
-        {
-            return;
-        }
+        //if (CraftingScreen.instance.Visible)
+        //{
+        //    return;
+        //}
 
 
         Ray clickPoint = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -74,7 +75,7 @@ public class AddCardToDeck : MonoBehaviour
             if (hitPoint.collider == this.GetComponent<Collider>())
             {
                 Debug.Log("Right Clicked on " + this.name);
-                CraftingScreen.instance.ShowCraftingScreen(GetComponent<OneCardManager>().cardAsset);
+                //CraftingScreen.instance.ShowCraftingScreen(GetComponent<OneCardManager>().cardAsset);
             }
         }
     }

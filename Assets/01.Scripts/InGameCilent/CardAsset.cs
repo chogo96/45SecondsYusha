@@ -46,8 +46,42 @@ public class CardAsset : ScriptableObject, IComparable<CardAsset>
     public string CardScriptName;
     public TargetingOptions Targets;
 
+    // CompareTo 메서드 수정: Rarity를 기준으로 비교
     public int CompareTo(CardAsset other)
     {
-        throw new NotImplementedException();
+        if (other == null)
+            return 1;
+
+        int rarityComparison = this.Rarity.CompareTo(other.Rarity);
+
+        if (rarityComparison != 0)
+            return rarityComparison;
+        else
+            // 동일하다면 이름순으로 정렬하자 
+            return name.CompareTo(other.name);
+    }
+
+    // Define the is greater than operator.
+    public static bool operator >(CardAsset operand1, CardAsset operand2)
+    {
+        return operand1.CompareTo(operand2) > 0;
+    }
+
+    // Define the is less than operator.
+    public static bool operator <(CardAsset operand1, CardAsset operand2)
+    {
+        return operand1.CompareTo(operand2) < 0;
+    }
+
+    // Define the is greater than or equal to operator.
+    public static bool operator >=(CardAsset operand1, CardAsset operand2)
+    {
+        return operand1.CompareTo(operand2) >= 0;
+    }
+
+    // Define the is less than or equal to operator.
+    public static bool operator <=(CardAsset operand1, CardAsset operand2)
+    {
+        return operand1.CompareTo(operand2) <= 0;
     }
 }

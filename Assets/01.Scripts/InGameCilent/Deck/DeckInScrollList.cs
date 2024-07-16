@@ -4,12 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using TMPro;
 
 public class DeckInScrollList : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
 
     public Image AvatarImage;
-    public Text NameText;
+    public TMP_Text NameText;
     public GameObject DeleteDeckButton;
     public DeckInfo savedDeckInfo;
 

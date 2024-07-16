@@ -6,7 +6,7 @@ public class CollectionBrowser : MonoBehaviour
 {
 
     public Transform[] Slots;
-    public GameObject SpellMenuPrefab;
+    //public GameObject SpellMenuPrefab;
     public GameObject CreatureMenuPrefab;
 
     public GameObject OneCharacterTabs;
@@ -200,7 +200,7 @@ public class CollectionBrowser : MonoBehaviour
             }
             else
             {
-                newMenuCard = Instantiate(SpellMenuPrefab, Slots[i].position, Quaternion.identity) as GameObject;
+                newMenuCard = Instantiate(CreatureMenuPrefab, Slots[i].position, Quaternion.identity) as GameObject;
             }
 
             newMenuCard.transform.SetParent(this.transform);

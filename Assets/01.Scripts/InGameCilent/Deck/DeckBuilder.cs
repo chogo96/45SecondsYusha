@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using TMPro;
 public class DeckBuilder : MonoBehaviour
 {
     public GameObject CardNamePrefab;
     public Transform Content;
-    public InputField DeckName;
+    public TMP_InputField DeckName;
 
     public int SameCardLimit = 3;
     public int AmountOfCardsInDeck = 30;

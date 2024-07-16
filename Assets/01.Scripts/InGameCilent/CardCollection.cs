@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System;
-public class CardCollection : SingletonMonoBase<CardCollection>
+public class CardCollection : MonoBehaviour
 {
     public int DefaultNumberOfBasicCards = 0; //기본적으로 들고있어야하는 기초카드의 갯수
 
@@ -12,9 +12,11 @@ public class CardCollection : SingletonMonoBase<CardCollection>
     public Dictionary<CardAsset, int> QuantityOfEachCard = new Dictionary<CardAsset, int>();
 
     private CardAsset[] _allCardArray;
-
+    public static CardCollection instance;
     private void Awake()
     {
+
+        instance = this;
         _allCardArray = Resources.LoadAll<CardAsset>("");
         foreach (CardAsset cardAsset in _allCardArray)
         {
