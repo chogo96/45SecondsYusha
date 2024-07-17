@@ -7,15 +7,14 @@ public class PortraitMenu : MonoBehaviour
 {
 
     public CharacterAsset asset;
-    private PlayerPortraitVisual portrait;
+    public PlayerPortraitVisual portrait;
     private float InitialScale;
     private float TargetScale = 1.3f;
     private bool selected = false;
 
     void Awake()
     {
-        portrait = GetComponent<PlayerPortraitVisual>();
-        portrait.charAsset = asset;
+        //portrait = GetComponent<PlayerPortraitVisual>();
         portrait.ApplyLookFromAsset();
         InitialScale = transform.localScale.x;
     }

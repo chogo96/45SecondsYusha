@@ -8,8 +8,8 @@ using TMPro;
 public class GlobalSettings : SingletonMonoBase<GlobalSettings>
 {
     [Header("Players")]
-    public Player TopPlayer;
-    public Player LowPlayer;
+    public PlayerScripts TopPlayer;
+    public PlayerScripts LowPlayer;
     [Header("Colors")]
     public Color32 CardBodyStandardColor;
     public Color32 CardRibbonsStandardColor;
@@ -28,7 +28,7 @@ public class GlobalSettings : SingletonMonoBase<GlobalSettings>
     public GameObject ExplosionPrefab;
     [Header("Other")]
     public GameObject GameOverPanel;
-    //public Dictionary<AreaPosition, Player> Players = new Dictionary<AreaPosition, Player>();
+    public Dictionary<AreaPosition, PlayerScripts> Players = new Dictionary<AreaPosition, PlayerScripts>();
 
     //void Awake()
     //{
@@ -43,11 +43,11 @@ public class GlobalSettings : SingletonMonoBase<GlobalSettings>
     //    return Players[owner].PArea.AllowedToControlThisPlayer && Players[owner].PArea.ControlsON && PlayersTurn && NotDrawingAnyCards;
     //}
 
-    public bool CanControlThisPlayer(Player ownerPlayer)
-    {
-        bool PlayersTurn = (TurnManager.instance.whoseTurn == ownerPlayer);
-        return ownerPlayer.HasRejoined;
-        //bool NotDrawingAnyCards = !Command.CardDrawPending();
-        //return ownerPlayer.PArea.AllowedToControlThisPlayer && ownerPlayer.PArea.ControlsON && PlayersTurn && NotDrawingAnyCards;
-    }
+    //public bool CanControlThisPlayer(Player ownerPlayer)
+    //{
+    //    bool PlayersTurn = (TurnManager.instance.whoseTurn == ownerPlayer);
+    //    return ownerPlayer.HasRejoined;
+    //    //bool NotDrawingAnyCards = !Command.CardDrawPending();
+    //    //return ownerPlayer.PArea.AllowedToControlThisPlayer && ownerPlayer.PArea.ControlsON && PlayersTurn && NotDrawingAnyCards;
+    //}
 }

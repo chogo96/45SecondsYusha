@@ -12,16 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0597bb8b2c363fc45bdaea7095ffe68b, type: 3}
   m_Name: "\uC219\uB828\uB41C \uBABD\uB465\uC774\uC9C8"
   m_EditorClassIdentifier: 
+  CardName: "\uC219\uB828\uB41C\uBABD\uB465\uC774\uC9C8"
   CharacterAsset: {fileID: 0}
-  Description: 1234
+  Description: "\uC9F1\uC9F1\uC388\uBABD\uB465\uC774\uC774\uB2E4."
   Tags: "\uC18C\uBA78, \uB9C8\uBC95"
   Rarity: 1
   CardImage: {fileID: 21300000, guid: 0f2f165eea06b2d4ba19c672dc4e2e38, type: 3}
   TokenCard: 0
-  OverrideLimitOfTHisCardInDeck: 3
+  LimitOfThisCardInDeck: 0
   TypeOfCard: 0
-  SwordAttack: 0
+  SwordAttack: 2
   MagicAttack: 0
   ShieldAttack: 1
-  CardScriptName: 
+  CardScriptName: "\uC219\uB828\uB41C \uBABD\uB465\uC774\uC9C8"
   Targets: 4

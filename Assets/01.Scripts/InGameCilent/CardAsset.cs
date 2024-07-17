@@ -20,7 +20,7 @@ public enum TypesOfCards
     Attacks, Magics, Techniques
 }
 public class CardAsset : ScriptableObject, IComparable<CardAsset>
-{ 
+{
     // 이 카드의 대부분의 정보를 담을 것
     [Header("카드 정보")]
     public CharacterAsset CharacterAsset; //만약 이 값이 없으면 중립 카드임 , 직업카드 여부
@@ -33,7 +33,7 @@ public class CardAsset : ScriptableObject, IComparable<CardAsset>
     public Sprite CardImage;
     public bool TokenCard = false; //만약 토큰 카드면 콜렉션에서 안보이게 할 것임
     public int LimitOfThisCardInDeck = 0;// 이 카드가 과연 덱에 몇장까지 들어갈 수 있나? (신화급 1장, 그 외엔 3장까지)
-
+    public bool IsVanishCard;
     public TypesOfCards TypeOfCard;
 
     [Header("Card Info")]
@@ -85,3 +85,4 @@ public class CardAsset : ScriptableObject, IComparable<CardAsset>
         return operand1.CompareTo(operand2) <= 0;
     }
 }
+

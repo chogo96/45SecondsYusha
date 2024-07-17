@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using TMPro;
 
 public class CharacterSelectionTabs : MonoBehaviour
 {
@@ -35,6 +35,6 @@ public class CharacterSelectionTabs : MonoBehaviour
     public void SetClassOnClassTab(CharacterAsset asset)
     {
         ClassTab.Asset = asset;
-        ClassTab.GetComponentInChildren<Text>().text = asset.name;
+        ClassTab.GetComponentInChildren<TMP_Text>().text = asset.name;
     }
 }

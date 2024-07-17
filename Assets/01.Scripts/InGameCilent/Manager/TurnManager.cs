@@ -16,7 +16,7 @@ public class TurnManager : MonoBehaviour
 
 
     // a static array that will store both players, should always have 2 players
-    public static Player[] Players;
+    public static PlayerScripts[] Players;
 
     // PRIVATE FIELDS
     // reference to a timer to measure 

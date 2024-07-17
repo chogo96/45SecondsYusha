@@ -12,7 +12,7 @@ public class OneCardManager : MonoBehaviour
     [Header("Text Component References")]
     public TMP_Text NameText;
     public TMP_Text DescriptionText;
-    public TMP_Text AttackText;
+    //public TMP_Text AttackText;
     [Header("Image References")]
     public Image CardTopRibbonImage;
     public Image CardLowRibbonImage;
@@ -67,11 +67,12 @@ public class OneCardManager : MonoBehaviour
         // 4) 그래픽 이미지 변경
         CardGraphicImage.sprite = cardAsset.CardImage;
 
-        if (cardAsset.TypeOfCard == TypesOfCards.Attacks)
-        {
-            //공격 카드임
-            AttackText.text = cardAsset.SwordAttack.ToString();
-        }
+        //공격카드 수치 보이기 위한 것
+        //if (cardAsset.TypeOfCard == TypesOfCards.Attacks)
+        //{
+        //    //공격 카드임
+        //    AttackText.text = cardAsset.SwordAttack.ToString();
+        //}
 
         if (PreviewManager != null)
         {

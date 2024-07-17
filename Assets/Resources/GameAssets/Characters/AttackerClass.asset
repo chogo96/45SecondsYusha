@@ -14,18 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Class: 0
   ClassName: 
-  MaxHealth: 30
   HeroPowerName: 
-  AvatarImage: {fileID: 0}
-  HeroPowerIconImage: {fileID: 0}
-  AvatarBGImage: {fileID: 0}
-  HeroPowerBGImage: {fileID: 0}
+  AvatarImage: {fileID: 363298660, guid: 867111f16de5c514eafc48c9adb70ade, type: 3}
+  HeroPowerIconImage: {fileID: -202816048, guid: a4daabe85b3643a48820e07ca1e49468,
+    type: 3}
+  AvatarBGImage: {fileID: 21300000, guid: 2eb445e29410ff241a2c025be02be7f1, type: 3}
+  HeroPowerBGImage: {fileID: 21300000, guid: 1f99f84295dc7c24eb4ac9952fd47744, type: 3}
   AvatarBGTint:
     serializedVersion: 2
-    rgba: 0
+    rgba: 255
   HeroPowerBGTint:
     serializedVersion: 2
-    rgba: 0
+    rgba: 255
   ClassCardTint:
     serializedVersion: 2
     rgba: 0

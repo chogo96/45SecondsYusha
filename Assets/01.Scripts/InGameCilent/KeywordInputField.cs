@@ -6,11 +6,11 @@ using TMPro;
 public class KeywordInputField : MonoBehaviour
 {
 
-    private TMP_InputField iField;
+    public TMP_InputField iField;
 
     void Awake()
     {
-        iField = GetComponent<TMP_InputField>();
+        //iField = GetComponent<TMP_InputField>();
     }
 
     public void Clear()

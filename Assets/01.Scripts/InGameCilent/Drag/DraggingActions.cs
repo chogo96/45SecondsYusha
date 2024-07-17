@@ -17,10 +17,10 @@ public abstract class DraggingActions : MonoBehaviour
     {
         get
         {
-            return GlobalSettings.instance.CanControlThisPlayer(playerOwner);
+            return true;
         }
     }
-    protected virtual Player playerOwner
+    protected virtual PlayerScripts playerOwner
     {
         get
         {
