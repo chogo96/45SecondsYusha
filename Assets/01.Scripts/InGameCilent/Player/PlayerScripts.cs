@@ -18,6 +18,9 @@ public class PlayerScripts : MonoBehaviour, ICharacter
     public Deck deck;
     public Hand hand;
     public Table table;
+    private PlayerDeckVisual playerDeckVisual;
+
+    private bool isFillingHand = false;
 
     public static PlayerScripts[] Players;
 
@@ -55,12 +58,21 @@ public class PlayerScripts : MonoBehaviour, ICharacter
     {
         Players = GameObject.FindObjectsOfType<PlayerScripts>();
         PlayerID = IDFactory.GetUniqueID();
+        playerDeckVisual = FindObjectOfType<PlayerDeckVisual>();
+    }
+
+    void Start()
+    {
+        InitializePlayerDeck();
+        //StartCoroutine(DrawInitialCards());
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.D))
+        {
             DrawACard();
+        }
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
@@ -84,8 +96,46 @@ public class PlayerScripts : MonoBehaviour, ICharacter
         }
     }
 
+    private void InitializePlayerDeck()
+    {
+        if (deck != null)
+        {
+            deck.ShuffleDeck();
+        }
+    }
+
+    private IEnumerator DrawInitialCards()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            DrawACard(true); // 빠르게 드로우할 경우 fast=true
+            yield return new WaitForSeconds(0.5f); // 드로우 간격을 두기 위해 잠시 대기
+        }
+    }
+
+    //public void DrawACard(bool fast = false)
+    //{
+    //    if (deck.Cards.Count > 0)
+    //    {
+    //        if (hand.CardsInHand.Count < PArea.handVisual.slots.Children.Length)
+    //        {
+    //            CardLogic newCard = new CardLogic(deck.Cards[0], this);
+    //            hand.CardsInHand.Insert(0, newCard);
+    //            deck.Cards.RemoveAt(0);
+    //            new DrawACardCommand(hand.CardsInHand[0], this, fast, fromDeck: true).AddToQueue();
+    //            playerDeckVisual.UpdateDeckCount(); // 덱의 카드 개수를 업데이트
+    //            Debug.Log("카드 호출");
+    //        }
+    //    }
+    //    else
+    //    {
+    //        // 덱을 다 썼을 때 탈진 효과 넣는 곳
+    //    }
+    //}
+
     public void DrawACard(bool fast = false)
     {
+        Debug.Log("DrawACard called"); // 디버그 메시지 추가
         if (deck.Cards.Count > 0)
         {
             if (hand.CardsInHand.Count < PArea.handVisual.slots.Children.Length)
@@ -94,11 +144,12 @@ public class PlayerScripts : MonoBehaviour, ICharacter
                 hand.CardsInHand.Insert(0, newCard);
                 deck.Cards.RemoveAt(0);
                 new DrawACardCommand(hand.CardsInHand[0], this, fast, fromDeck: true).AddToQueue();
+                playerDeckVisual.UpdateDeckCount(); // 덱의 카드 개수를 업데이트
             }
         }
         else
         {
-            //덱을 다썼을때 탈진 효과 넣는 곳
+            // 덱을 다 썼을 때 탈진 효과 넣는 곳
         }
     }
 
@@ -147,11 +198,11 @@ public class PlayerScripts : MonoBehaviour, ICharacter
     {
         if (card != null && card.cardAsset != null)
         {
-            if (!string.IsNullOrEmpty(card.cardAsset.CardScriptName))
-            {
-                SpellEffect effect = Activator.CreateInstance(Type.GetType(card.cardAsset.CardScriptName)) as SpellEffect;
-                effect?.ActivateEffect(this, target);
-            }
+            //if (!string.IsNullOrEmpty(card.cardAsset.CardScriptName))
+            //{
+            //    SpellEffect effect = Activator.CreateInstance(Type.GetType(card.cardAsset.CardScriptName)) as SpellEffect;
+            //    effect?.ActivateEffect(this, target);
+            //}
 
             if (card.cardAsset.IsVanishCard)
             {
@@ -161,6 +212,12 @@ public class PlayerScripts : MonoBehaviour, ICharacter
             {
                 DiscardCard(card);
             }
+        }
+
+        // 손패의 카드 개수가 4장 이하일 때 덱에서 카드를 채우는 로직 추가
+        if (hand.CardsInHand.Count <= 4 && !isFillingHand)
+        {
+            StartCoroutine(FillHandCoroutine());
         }
     }
 
@@ -190,8 +247,7 @@ public class PlayerScripts : MonoBehaviour, ICharacter
     {
         ICharacter target = null;
         usedHeroPowerThisGame = true;
-        HeroPowerEffect.ActivateEffect(this,target);
-
+        HeroPowerEffect.ActivateEffect(this, target);
     }
 
     public void LoadCharacterInfoFromAsset()
@@ -207,5 +263,28 @@ public class PlayerScripts : MonoBehaviour, ICharacter
         {
             Debug.LogWarning("Check hero power name for character " + charAsset.ClassName);
         }
+    }
+    // 손패를 5장으로 채우는 코루틴
+    private IEnumerator FillHandCoroutine()
+    {
+        isFillingHand = true;
+        while (hand.CardsInHand.Count < 5)
+        {
+            bool cardAdded = false;
+            DrawACard();
+
+            // Wait until the card is added to the hand
+            while (!cardAdded)
+            {
+                yield return new WaitForSeconds(0.1f); // Check every 0.1 seconds
+                if (hand.CardsInHand.Count == PArea.handVisual.CardsInHand.Count)
+                {
+                    cardAdded = true;
+                }
+            }
+
+            yield return new WaitForSeconds(0.5f); // Wait for 0.5 seconds before drawing the next card
+        }
+        isFillingHand = false;
     }
 }

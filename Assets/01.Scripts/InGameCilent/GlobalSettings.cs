@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using Photon.Realtime;
 using TMPro;
 
-public class GlobalSettings : SingletonMonoBase<GlobalSettings>
+public class GlobalSettings : MonoBehaviour
 {
     [Header("Players")]
     public PlayerScripts TopPlayer;
@@ -29,7 +29,14 @@ public class GlobalSettings : SingletonMonoBase<GlobalSettings>
     [Header("Other")]
     public GameObject GameOverPanel;
     public Dictionary<AreaPosition, PlayerScripts> Players = new Dictionary<AreaPosition, PlayerScripts>();
+    public static GlobalSettings instance;
 
+    private void Awake()
+    {
+        if (instance != this && instance != null)
+            Destroy(instance.gameObject);
+        instance = this;
+    }
     //void Awake()
     //{
     //    Players.Add(AreaPosition.Top, TopPlayer);

@@ -18,10 +18,11 @@ MonoBehaviour:
   Rarity: 0
   CardImage: {fileID: 0}
   TokenCard: 0
-  OverrideLimitOfTHisCardInDeck: 0
+  LimitOfThisCardInDeck: 0
+  IsVanishCard: 0
   TypeOfCard: 0
   SwordAttack: 0
   MagicAttack: 0
   ShieldAttack: 0
-  CardScriptName: 
+  CardScriptName: Simple
   Targets: 0
