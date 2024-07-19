@@ -1047,8 +1047,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 844583967}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.68842065, y: -0.0006518856, z: 0.0006255877, w: -0.7253111}
-  m_LocalPosition: {x: 501.2583, y: 288.58246, z: -6.075228}
+  m_LocalRotation: {x: 0.6436899, y: 0.0011476193, z: -0.000959981, w: 0.765285}
+  m_LocalPosition: {x: -0.12658691, y: 8.050415, z: -1.8372898}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1836,6 +1836,12 @@ MonoBehaviour:
   Sword: 0
   Magic: 0
   Shield: 0
+  PlayerID: 0
+  charAsset: {fileID: 0}
+  PArea: {fileID: 0}
+  usedHeroPowerThisGame: 0
+  deck: {fileID: 0}
+  hand: {fileID: 0}
 --- !u!1 &1522831184
 GameObject:
   m_ObjectHideFlags: 0

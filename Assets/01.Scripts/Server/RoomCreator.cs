@@ -1,11 +1,9 @@
-using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class RoomCreator : MonoBehaviourPunCallbacks
@@ -168,24 +166,26 @@ public class RoomCreator : MonoBehaviourPunCallbacks
             _panelMatchmaking.SetActive(false);
         }
     }
+
+
     public override void OnLeftRoom()
     {
         if (isMatchmaking)
         {
-            //Todo : 현재 반복문 무한지속됨 수정필요 StartCoroutine(C_WaitForReadyAndJoinRandomRoom());
+            StartCoroutine(C_WaitForReadyAndJoinRandomRoom());
         }
     }
 
     /// <summary>
-    /// 서버 연결될때까지 기다리는 코루틴
+    /// 서버 연결될때까지 기다리고 연결되면 JoinRandomRoom 실행하는 코루틴
     /// </summary>
     /// <returns>연결될때까지 기다림.</returns>
+
     private IEnumerator C_WaitForReadyAndJoinRandomRoom()
     {
-
-        while (!PhotonNetwork.IsConnectedAndReady || PhotonNetwork.NetworkClientState != ClientState.ConnectedToMasterServer)
+        while (!PhotonNetwork.IsConnectedAndReady || (PhotonNetwork.NetworkClientState != ClientState.ConnectedToMasterServer && PhotonNetwork.NetworkClientState != ClientState.JoinedLobby))
         {
-            Debug.Log("Waiting for connection to Master server...");
+            Debug.Log($"Waiting for connection to Master server... IsConnectedAndReady: {PhotonNetwork.IsConnectedAndReady}, NetworkClientState: {PhotonNetwork.NetworkClientState}");
             yield return null; // 다음 프레임까지 대기
         }
 
@@ -194,9 +194,15 @@ public class RoomCreator : MonoBehaviourPunCallbacks
     }
 
 
+
+
+    /// <summary>
+    /// 플레이어 가 매칭취소했을때 다른유저들 UI 수정하는 기능
+    /// </summary>
+    /// <param name="otherPlayer"></param>
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        
+
         string roomType = (string)PhotonNetwork.CurrentRoom.CustomProperties["roomType"];
 
         if (roomType == _matchmakingRoomType)
