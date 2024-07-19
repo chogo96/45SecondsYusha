@@ -1778,7 +1778,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardAsset: {fileID: 11400000, guid: 899644f12b18f4e40a0b2720eb6006bc, type: 2}
-  PreviewManager: {fileID: 114846405754131034}
+  PreviewManager: {fileID: 0}
   NameText: {fileID: 2611624616683042534}
   DescriptionText: {fileID: 8239575201397620053}
   CardTopRibbonImage: {fileID: 114218383493805470}
