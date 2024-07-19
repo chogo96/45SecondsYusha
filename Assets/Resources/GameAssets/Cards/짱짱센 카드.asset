@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0597bb8b2c363fc45bdaea7095ffe68b, type: 3}
   m_Name: "\uC9F1\uC9F1\uC13C \uCE74\uB4DC"
   m_EditorClassIdentifier: 
-  CardName: "\uC5C4\uCCAD\uC13C\uCE74\uB4DC!"
   CharacterAsset: {fileID: 0}
   Description: 1234
   Tags: "\uC18C\uBA78, \uB9C8\uBC95string"
@@ -20,6 +19,7 @@ MonoBehaviour:
   CardImage: {fileID: 21300000, guid: 0d66754c00a0721499f861bc92fa1418, type: 3}
   TokenCard: 0
   LimitOfThisCardInDeck: 0
+  IsVanishCard: 1
   TypeOfCard: 0
   SwordAttack: 1
   MagicAttack: 0

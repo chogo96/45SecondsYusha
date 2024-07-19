@@ -1,25 +1,24 @@
 using UnityEngine;
-using System.Collections;
-using DG.Tweening;
 
-// this class should be attached to the deck
-// generates new cards and places them into the hand
 public class PlayerDeckVisual : MonoBehaviour
 {
-
     public AreaPosition owner;
     public float HeightOfOneCard = 0.012f;
 
-    void Start()
+    private Deck deck;
+    private HandVisual handVisual;
+
+    private void Start()
     {
-        CardsInDeck = GlobalSettings.instance.Players[owner].deck.Cards.Count;
+        deck = FindObjectOfType<Deck>();
+        handVisual = FindObjectOfType<HandVisual>(); // 손패를 시각화하는 컴포넌트를 찾습니다.
+        UpdateDeckCount();
     }
 
     private int cardsInDeck = 0;
     public int CardsInDeck
     {
         get { return cardsInDeck; }
-
         set
         {
             cardsInDeck = value;
@@ -27,4 +26,8 @@ public class PlayerDeckVisual : MonoBehaviour
         }
     }
 
+    public void UpdateDeckCount()
+    {
+        CardsInDeck = deck.GetCardCount();
+    }
 }

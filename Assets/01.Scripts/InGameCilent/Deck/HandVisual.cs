@@ -2,10 +2,10 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using UnityEngine.EventSystems;
 
 public class HandVisual : MonoBehaviour
 {
-    // PUBLIC FIELDS
     public AreaPosition owner;
     public bool TakeCardsOpenly = true;
     public SameDistanceChildren slots;
@@ -16,54 +16,59 @@ public class HandVisual : MonoBehaviour
     public Transform OtherCardDrawSourceTransform;
     public Transform PlayPreviewSpot;
 
-    // PRIVATE : a list of all card visual representations as GameObjects
-    private List<GameObject> CardsInHand = new List<GameObject>();
+    public List<GameObject> CardsInHand = new List<GameObject>();
+    private bool isFillingHand = false; // 손패를 채우는 중인지 확인하는 변수
 
-    // ADDING OR REMOVING CARDS FROM HAND
-
-    // add a new card GameObject to hand
     public void AddCard(GameObject card)
     {
-        // we allways insert a new card as 0th element in CardsInHand List 
         CardsInHand.Insert(0, card);
-
-        // parent this card to our Slots GameObject
         card.transform.SetParent(slots.transform);
-
-        // re-calculate the position of the hand
         PlaceCardsOnNewSlots();
         UpdatePlacementOfSlots();
+
+        // 드래그 기능을 카드에 추가합니다.
+        card.AddComponent<Draggable>();
+        card.GetComponent<Draggable>().HowToStart = Draggable.StartDragBehavior.OnMouseDown;
+        card.GetComponent<Draggable>().HowToEnd = Draggable.EndDragBehavior.OnMouseUp;
+
+        // 손패의 카드 개수가 4장 이하일 때 코루틴을 시작합니다.
+        if (CardsInHand.Count <= 4 && !isFillingHand)
+        {
+            StartCoroutine(FillHandCoroutine());
+        }
     }
 
-    // remove a card GameObject from hand
     public void RemoveCard(GameObject card)
     {
-        // remove a card from the list
         CardsInHand.Remove(card);
-
-        // re-calculate the position of the hand
         PlaceCardsOnNewSlots();
         UpdatePlacementOfSlots();
+
+        // 손패의 카드 개수가 4장 이하일 때 코루틴을 시작합니다.
+        if (CardsInHand.Count <= 4 && !isFillingHand)
+        {
+            StartCoroutine(FillHandCoroutine());
+        }
     }
 
-    // remove card with a given index from hand
     public void RemoveCardAtIndex(int index)
     {
         CardsInHand.RemoveAt(index);
-        // re-calculate the position of the hand
         PlaceCardsOnNewSlots();
         UpdatePlacementOfSlots();
+
+        // 손패의 카드 개수가 4장 이하일 때 코루틴을 시작합니다.
+        if (CardsInHand.Count <= 4 && !isFillingHand)
+        {
+            StartCoroutine(FillHandCoroutine());
+        }
     }
 
-    // get a card GameObject with a given index in hand
     public GameObject GetCardAtIndex(int index)
     {
         return CardsInHand[index];
     }
 
-    // MANAGING CARDS AND SLOTS
-
-    // move Slots GameObject according to the number of cards in hand
     void UpdatePlacementOfSlots()
     {
         float posX;
@@ -72,62 +77,68 @@ public class HandVisual : MonoBehaviour
         else
             posX = 0f;
 
-        // tween Slots GameObject to new position in 0.3 seconds
         slots.gameObject.transform.DOLocalMoveX(posX, 0.3f);
     }
 
-    // shift all cards to their new slots
     public void PlaceCardsOnNewSlots()
     {
         foreach (GameObject g in CardsInHand)
         {
-            // tween this card to a new Slot
             g.transform.DOLocalMoveX(slots.Children[CardsInHand.IndexOf(g)].transform.localPosition.x, 0.3f);
-
-            // apply correct sorting order and HandSlot value for later 
             WhereIsTheCardOrCreature w = g.GetComponent<WhereIsTheCardOrCreature>();
             w.Slot = CardsInHand.IndexOf(g);
             w.SetHandSortingOrder();
         }
     }
 
-    // CARD DRAW METHODS
-
-    // creates a card and returns a new card as a GameObject
-    GameObject CreateACardAtPosition(CardAsset c, Vector3 position, Vector3 eulerAngles)
+    GameObject CreateACardAtPosition(CardAsset cardAsset, Vector3 position, Vector3 eulerAngles)
     {
-        // Instantiate a card depending on its type
-        GameObject card;
-        if (c.TypeOfCard == TypesOfCards.Attacks)
+        GameObject card = null;
+
+        if (cardAsset.TypeOfCard == TypesOfCards.Attacks)
         {
-            // this card is a creature card
-            card = GameObject.Instantiate(GlobalSettings.instance.CreatureCardPrefab, position, Quaternion.Euler(eulerAngles)) as GameObject;
+            if (GlobalSettings.instance.CreatureCardPrefab == null)
+            {
+                Debug.LogError("CreatureCardPrefab is not assigned in GlobalSettings.");
+            }
+            card = Instantiate(GlobalSettings.instance.CreatureCardPrefab, position, Quaternion.Euler(eulerAngles));
         }
         else
         {
-            // this is a spell: checking for targeted or non-targeted spell
-            if (c.Targets == TargetingOptions.Nothing)
+            if (cardAsset.Targets == TargetingOptions.Nothing)
             {
-                card = GameObject.Instantiate(GlobalSettings.instance.NoTargetSpellCardPrefab, position, Quaternion.Euler(eulerAngles)) as GameObject;
+                if (GlobalSettings.instance.NoTargetSpellCardPrefab == null)
+                {
+                    Debug.LogError("NoTargetSpellCardPrefab is not assigned in GlobalSettings.");
+                }
+                card = Instantiate(GlobalSettings.instance.NoTargetSpellCardPrefab, position, Quaternion.Euler(eulerAngles));
             }
             else
             {
-                card = GameObject.Instantiate(GlobalSettings.instance.TargetedSpellCardPrefab, position, Quaternion.Euler(eulerAngles)) as GameObject;
-                // pass targeting options to DraggingActions
+                if (GlobalSettings.instance.TargetedSpellCardPrefab == null)
+                {
+                    Debug.LogError("TargetedSpellCardPrefab is not assigned in GlobalSettings.");
+                }
+                card = Instantiate(GlobalSettings.instance.TargetedSpellCardPrefab, position, Quaternion.Euler(eulerAngles));
                 DragSpellOnTarget dragSpell = card.GetComponentInChildren<DragSpellOnTarget>();
-                dragSpell.Targets = c.Targets;
+                dragSpell.Targets = cardAsset.Targets;
             }
         }
 
-        // apply the look of the card based on the info from CardAsset
-        OneCardManager manager = card.GetComponent<OneCardManager>();
-        manager.cardAsset = c;
-        manager.ReadCardFromAsset();
+        if (card != null)
+        {
+            OneCardManager manager = card.GetComponent<OneCardManager>();
+            manager.cardAsset = cardAsset;
+            manager.ReadCardFromAsset();
+        }
+        else
+        {
+            Debug.LogError("Failed to create card: " + cardAsset.name);
+        }
 
         return card;
     }
 
-    // gives player a new card from a given position
     public void GivePlayerACard(CardAsset c, int UniqueID, bool fast = false, bool fromDeck = true)
     {
         GameObject card;
@@ -136,39 +147,31 @@ public class HandVisual : MonoBehaviour
         else
             card = CreateACardAtPosition(c, OtherCardDrawSourceTransform.position, new Vector3(0f, -179f, 0f));
 
-        // Set a tag to reflect where this card is
         foreach (Transform t in card.GetComponentsInChildren<Transform>())
             t.tag = owner.ToString() + "Card";
-        // pass this card to HandVisual class
         AddCard(card);
 
-        // Bring card to front while it travels from draw spot to hand
         WhereIsTheCardOrCreature w = card.GetComponent<WhereIsTheCardOrCreature>();
         w.BringToFront();
         w.Slot = 0;
         w.VisualState = VisualStates.Transition;
 
-        // pass a unique ID to this card.
         IDHolder id = card.AddComponent<IDHolder>();
         id.UniqueID = UniqueID;
 
-        // move card to the hand;
         Sequence s = DOTween.Sequence();
         if (!fast)
         {
-            // Debug.Log ("Not fast!!!");
             s.Append(card.transform.DOMove(DrawPreviewSpot.position, GlobalSettings.instance.CardTransitionTime));
             if (TakeCardsOpenly)
                 s.Insert(0f, card.transform.DOLocalRotate(Vector3.zero, GlobalSettings.instance.CardTransitionTime));
             else
                 s.Insert(0f, card.transform.DOLocalRotate(new Vector3(0f, -179f, 0f), GlobalSettings.instance.CardTransitionTime));
             s.AppendInterval(GlobalSettings.instance.CardPreviewTime);
-            // displace the card so that we can select it in the scene easier.
             s.Append(card.transform.DOLocalMove(slots.Children[0].transform.localPosition, GlobalSettings.instance.CardTransitionTime));
         }
         else
         {
-            // displace the card so that we can select it in the scene easier.
             s.Append(card.transform.DOLocalMove(slots.Children[0].transform.localPosition, GlobalSettings.instance.CardTransitionTimeFast));
             if (TakeCardsOpenly)
                 s.Insert(0f, card.transform.DOLocalRotate(Vector3.zero, GlobalSettings.instance.CardTransitionTimeFast));
@@ -179,25 +182,17 @@ public class HandVisual : MonoBehaviour
         s.OnComplete(() => ChangeLastCardStatusToInHand(card, w));
     }
 
-    // this method will be called when the card arrived to hand 
     void ChangeLastCardStatusToInHand(GameObject card, WhereIsTheCardOrCreature w)
     {
-        //Debug.Log("Changing state to Hand for card: " + card.gameObject.name);
         if (owner == AreaPosition.Low)
             w.VisualState = VisualStates.LowHand;
         else
             w.VisualState = VisualStates.TopHand;
 
-        // set correct sorting order
         w.SetHandSortingOrder();
-        // end command execution for DrawACArdCommand
         Command.CommandExecutionComplete();
     }
 
-
-    // PLAYING SPELLS
-
-    // 2 Overloaded method to show a spell played from hand
     public void PlayASpellFromHand(int CardID)
     {
         GameObject card = IDHolder.GetGameObjectWithID(CardID);
@@ -209,7 +204,6 @@ public class HandVisual : MonoBehaviour
         Command.CommandExecutionComplete();
         CardVisual.GetComponent<WhereIsTheCardOrCreature>().VisualState = VisualStates.Transition;
         RemoveCard(CardVisual);
-
         CardVisual.transform.SetParent(null);
 
         Sequence s = DOTween.Sequence();
@@ -218,10 +212,34 @@ public class HandVisual : MonoBehaviour
         s.AppendInterval(2f);
         s.OnComplete(() =>
         {
-            //Command.CommandExecutionComplete();
             Destroy(CardVisual);
         });
     }
 
+    // 손패를 5장으로 채우는 코루틴
+    private IEnumerator FillHandCoroutine()
+    {
+        isFillingHand = true;
+        PlayerScripts playerScript = FindObjectOfType<PlayerScripts>(); // PlayerScripts를 찾습니다.
 
+        while (CardsInHand.Count < 5)
+        {
+            yield return new WaitForSeconds(0.5f);
+
+            // PlayerScripts의 DrawACard 메서드를 호출합니다.
+            playerScript.DrawACard();
+
+            // Wait until the card is added to the hand
+            bool cardAdded = false;
+            while (!cardAdded)
+            {
+                yield return new WaitForSeconds(0.1f); // Check every 0.1 seconds
+                if (CardsInHand.Count == playerScript.hand.CardsInHand.Count)
+                {
+                    cardAdded = true;
+                }
+            }
+        }
+        isFillingHand = false;
+    }
 }
