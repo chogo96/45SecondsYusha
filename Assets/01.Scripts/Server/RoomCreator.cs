@@ -367,7 +367,6 @@ public class RoomCreator : MonoBehaviourPunCallbacks
             playerListDisplay.UpdatePlayerList();
             _matchmakingPlayer.text = $"Matching ( {PhotonNetwork.CurrentRoom.PlayerCount} / {PhotonNetwork.CurrentRoom.MaxPlayers} )";
             int playerNumber = PhotonNetwork.CurrentRoom.PlayerCount;
-            PhotonNetwork.NickName = $"Player {playerNumber}";
             playerListDisplay.UpdatePlayerList();
 
             // 현재 방의 인원이 4명인지 확인
@@ -381,8 +380,6 @@ public class RoomCreator : MonoBehaviourPunCallbacks
             // 방에 입장한 플레이어 수에 따라 닉네임 설정
             _inRoomPanel.SetActive(true);
             int playerNumber = PhotonNetwork.CurrentRoom.PlayerCount;
-            playerListDisplay.UpdatePlayerList();
-            PhotonNetwork.NickName = $"Player {playerNumber}";
             playerListDisplay.UpdatePlayerList(); // 방에 입장한 후 플레이어 목록 갱신
         }
     }
