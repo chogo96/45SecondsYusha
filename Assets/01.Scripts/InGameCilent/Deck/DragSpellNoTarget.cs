@@ -1,19 +1,17 @@
 using UnityEngine;
 using System.Collections;
 using DG.Tweening;
-
 public class DragSpellNoTarget : DraggingActions
 {
     private int savedHandSlot;
     private WhereIsTheCardOrCreature whereIsCard;
     private OneCardManager manager;
+    private bool hasEndedDrag = false;  // 중복 호출 방지 플래그
 
     public override bool CanDrag
     {
         get
         {
-            // TEST LINE: this is just to test playing creatures before the game is complete 
-            // return true;
 
             // TODO : include full field check
             return base.CanDrag;
@@ -29,9 +27,9 @@ public class DragSpellNoTarget : DraggingActions
     public override void OnStartDrag()
     {
         savedHandSlot = whereIsCard.Slot;
-
         whereIsCard.VisualState = VisualStates.Dragging;
         whereIsCard.BringToFront();
+        hasEndedDrag = false;  // 드래그 시작 시 플래그 초기화
     }
 
     public override void OnDraggingInUpdate()
@@ -41,28 +39,15 @@ public class DragSpellNoTarget : DraggingActions
 
     public override void OnEndDrag()
     {
-        // 드래그가 성공적으로 끝났을 때 카드를 사용하고 소멸 또는 폐기 덱으로 이동
+        if (hasEndedDrag) return;  // 이미 드래그가 끝난 경우 리턴
+        hasEndedDrag = true;  // 드래그 끝 플래그 설정
+
+        // 드래그가 성공적으로 끝났을 때 카드를 사용
         if (DragSuccessful())
         {
             // play this card
             playerOwner.PlayACardFromHand(GetComponent<IDHolder>().UniqueID, -1);
             playerOwner.PArea.handVisual.PlayASpellFromHand(GetComponent<IDHolder>().UniqueID);
-
-            // 사용된 카드 처리
-            CardLogic cardLogic;
-            if (CardLogic.CardsCreatedThisGame.TryGetValue(GetComponent<IDHolder>().UniqueID, out cardLogic))
-            {
-                if (cardLogic.cardAsset.IsVanishCard)
-                {
-                    // 카드가 소멸하는 경우
-                    VanishCard(cardLogic.cardAsset);
-                }
-                else
-                {
-                    // 카드가 소멸하지 않는 경우
-                    DiscardCard(cardLogic.cardAsset);
-                }
-            }
         }
         else
         {
@@ -88,17 +73,5 @@ public class DragSpellNoTarget : DraggingActions
     {
         // TableVisual을 사용하지 않으므로 항상 드래그가 성공한 것으로 간주
         return true;
-    }
-
-    private void VanishCard(CardAsset cardAsset)
-    {
-        playerOwner.deck.VanishDeck.Add(cardAsset);
-        Debug.Log($"Card {cardAsset.name} vanished.");
-    }
-
-    private void DiscardCard(CardAsset cardAsset)
-    {
-        playerOwner.deck.DiscardDeck.Add(cardAsset);
-        Debug.Log($"Card {cardAsset.name} discarded.");
     }
 }

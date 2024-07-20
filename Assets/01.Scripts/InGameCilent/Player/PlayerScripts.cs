@@ -45,6 +45,7 @@ public class PlayerScripts : MonoBehaviour, ICharacter
     public void SetCurrentEnemy(Enemy enemy)
     {
         currentEnemy = enemy;
+        Debug.Log($"SetCurrentEnemy: {currentEnemy}");
     }
 
     public void ResetValues()
@@ -64,7 +65,6 @@ public class PlayerScripts : MonoBehaviour, ICharacter
     void Start()
     {
         InitializePlayerDeck();
-        //StartCoroutine(DrawInitialCards());
     }
 
     void Update()
@@ -74,26 +74,7 @@ public class PlayerScripts : MonoBehaviour, ICharacter
             DrawACard();
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            Sword++;
-            Debug.Log("검!");
-            currentEnemy?.CheckDeathCondition(Sword, Magic, Shield);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            Magic++;
-            Debug.Log("마법!");
-            currentEnemy?.CheckDeathCondition(Sword, Magic, Shield);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            Shield++;
-            Debug.Log("방패!");
-            currentEnemy?.CheckDeathCondition(Sword, Magic, Shield);
-        }
+        // 키보드 입력으로 카드 속성 값을 증가시키는 부분 제거
     }
 
     private void InitializePlayerDeck()
@@ -108,11 +89,30 @@ public class PlayerScripts : MonoBehaviour, ICharacter
     {
         for (int i = 0; i < 5; i++)
         {
-            DrawACard(true); // 빠르게 드로우할 경우 fast=true
-            yield return new WaitForSeconds(0.5f); // 드로우 간격을 두기 위해 잠시 대기
+            DrawACard(true);
+            yield return new WaitForSeconds(0.5f);
         }
     }
 
+    public void DrawACard(bool fast = false)
+    {
+        Debug.Log("DrawACard called");
+        if (deck.Cards.Count > 0)
+        {
+            if (hand.CardsInHand.Count < PArea.handVisual.slots.Children.Length)
+            {
+                CardLogic newCard = new CardLogic(deck.Cards[0], this);
+                hand.CardsInHand.Insert(0, newCard);
+                deck.Cards.RemoveAt(0);
+                new DrawACardCommand(hand.CardsInHand[0], this, fast, fromDeck: true).AddToQueue();
+                playerDeckVisual.UpdateDeckCount();
+            }
+        }
+        else
+        {
+            // 덱을 다 썼을 때 탈진 효과 넣는 곳
+        }
+    }
     //public void DrawACard(bool fast = false)
     //{
     //    if (deck.Cards.Count > 0)
@@ -132,27 +132,6 @@ public class PlayerScripts : MonoBehaviour, ICharacter
     //        // 덱을 다 썼을 때 탈진 효과 넣는 곳
     //    }
     //}
-
-    public void DrawACard(bool fast = false)
-    {
-        Debug.Log("DrawACard called"); // 디버그 메시지 추가
-        if (deck.Cards.Count > 0)
-        {
-            if (hand.CardsInHand.Count < PArea.handVisual.slots.Children.Length)
-            {
-                CardLogic newCard = new CardLogic(deck.Cards[0], this);
-                hand.CardsInHand.Insert(0, newCard);
-                deck.Cards.RemoveAt(0);
-                new DrawACardCommand(hand.CardsInHand[0], this, fast, fromDeck: true).AddToQueue();
-                playerDeckVisual.UpdateDeckCount(); // 덱의 카드 개수를 업데이트
-            }
-        }
-        else
-        {
-            // 덱을 다 썼을 때 탈진 효과 넣는 곳
-        }
-    }
-
     public void GetACardNotFromDeck(CardAsset cardAsset)
     {
         if (hand.CardsInHand.Count < PArea.handVisual.slots.Children.Length)
@@ -198,12 +177,18 @@ public class PlayerScripts : MonoBehaviour, ICharacter
     {
         if (card != null && card.cardAsset != null)
         {
-            //if (!string.IsNullOrEmpty(card.cardAsset.CardScriptName))
-            //{
-            //    SpellEffect effect = Activator.CreateInstance(Type.GetType(card.cardAsset.CardScriptName)) as SpellEffect;
-            //    effect?.ActivateEffect(this, target);
-            //}
+            // 카드의 SwordAttack, MagicAttack, ShieldAttack 값을 플레이어에게 반영
+            Sword += card.cardAsset.SwordAttack;
+            Magic += card.cardAsset.MagicAttack;
+            Shield += card.cardAsset.ShieldAttack;
 
+            Debug.Log($"Sword: {Sword}, Magic: {Magic}, Shield: {Shield}");
+            Debug.Log($"CurrentEnemy: {currentEnemy}");
+
+            // 현재 적의 생존 조건 확인
+            currentEnemy?.CheckDeathCondition(Sword, Magic, Shield);
+
+            // 카드 처리 로직을 이곳에서 처리
             if (card.cardAsset.IsVanishCard)
             {
                 VanishCard(card);
@@ -264,7 +249,7 @@ public class PlayerScripts : MonoBehaviour, ICharacter
             Debug.LogWarning("Check hero power name for character " + charAsset.ClassName);
         }
     }
-    // 손패를 5장으로 채우는 코루틴
+
     private IEnumerator FillHandCoroutine()
     {
         isFillingHand = true;
@@ -273,17 +258,16 @@ public class PlayerScripts : MonoBehaviour, ICharacter
             bool cardAdded = false;
             DrawACard();
 
-            // Wait until the card is added to the hand
             while (!cardAdded)
             {
-                yield return new WaitForSeconds(0.1f); // Check every 0.1 seconds
+                yield return new WaitForSeconds(0.1f);
                 if (hand.CardsInHand.Count == PArea.handVisual.CardsInHand.Count)
                 {
                     cardAdded = true;
                 }
             }
 
-            yield return new WaitForSeconds(0.5f); // Wait for 0.5 seconds before drawing the next card
+            yield return new WaitForSeconds(0.5f);
         }
         isFillingHand = false;
     }

@@ -95,11 +95,22 @@ public class EnemySpawner : MonoBehaviour
 
     void OnEnable()
     {
-        Enemy.OnEnemyDeath += SpawnNextEnemy;
+        Enemy.OnEnemyDeath += HandleEnemyDeath;
     }
 
     void OnDisable()
     {
-        Enemy.OnEnemyDeath -= SpawnNextEnemy;
+        Enemy.OnEnemyDeath -= HandleEnemyDeath;
+    }
+
+    private void HandleEnemyDeath()
+    {
+        StartCoroutine(SpawnNextEnemyAfterDelay(1f));
+    }
+
+    private IEnumerator SpawnNextEnemyAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        SpawnNextEnemy();
     }
 }

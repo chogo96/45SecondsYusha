@@ -34,6 +34,10 @@ public class Enemy : MonoBehaviour
 
         // 플레이어 스크립트 참조
         _playerScripts = FindObjectOfType<PlayerScripts>();
+        if (_playerScripts != null)
+        {
+            _playerScripts.SetCurrentEnemy(this);
+        }
     }
 
     void Update()
@@ -47,7 +51,7 @@ public class Enemy : MonoBehaviour
         {
             Debug.Log("승리!");
         }
-
+        Debug.Log("사망!");
         OnEnemyDeath?.Invoke();
         _playerScripts?.ResetValues(); // 플레이어 값 초기화
         Destroy(gameObject);
@@ -55,6 +59,7 @@ public class Enemy : MonoBehaviour
 
     public void CheckDeathCondition(int sword, int magic, int shield)
     {
+        Debug.Log("죽었음? 혹은 넘어감?");
         if ((requiredSword == 0 || sword >= requiredSword) &&
             (requiredMagic == 0 || magic >= requiredMagic) &&
             (requiredShield == 0 || shield >= requiredShield))

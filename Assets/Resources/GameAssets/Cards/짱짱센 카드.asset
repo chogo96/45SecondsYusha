@@ -22,7 +22,7 @@ MonoBehaviour:
   IsVanishCard: 1
   TypeOfCard: 0
   SwordAttack: 1
-  MagicAttack: 0
+  MagicAttack: 1
   ShieldAttack: 1
   CardScriptName: EpicCard
   Targets: 4
