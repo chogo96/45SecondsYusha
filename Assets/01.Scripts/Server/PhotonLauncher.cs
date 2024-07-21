@@ -7,6 +7,8 @@ public class PhotonLauncher : MonoBehaviourPunCallbacks
 {
     private static PhotonLauncher instance;
 
+
+
     void Awake()
     {
         if (instance == null)
@@ -43,7 +45,6 @@ public class PhotonLauncher : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         Debug.Log("Joined Lobby");
-        
     }
 
     public override void OnDisconnected(DisconnectCause cause)

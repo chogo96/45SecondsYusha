@@ -2,8 +2,11 @@ using UnityEngine;
 using System.Collections;
 using System;
 using static UnityEngine.Rendering.DebugUI;
+using Photon.Pun;
+using Photon.Realtime;
+using static UnityEngine.GraphicsBuffer;
 
-public class PlayerScripts : MonoBehaviour, ICharacter
+public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
 {
     public int Sword;
     public int Magic;
@@ -64,6 +67,7 @@ public class PlayerScripts : MonoBehaviour, ICharacter
 
     void Start()
     {
+        
         InitializePlayerDeck();
     }
 
@@ -165,12 +169,26 @@ public class PlayerScripts : MonoBehaviour, ICharacter
                 }
             }
 
+
             PlayACardFromHand(card, target);
         }
         else
         {
             Debug.LogError("Card not found");
         }
+    }
+
+
+    [PunRPC]
+    public void RealTimeBossStatusCheck(int sword, int magic, int shield)
+    {
+        // 여기에 보스 상태Text 갱신 여부 적어주면됌
+
+        Debug.Log($"Sword: {Sword}, Magic: {Magic}, Shield: {Shield}");
+        Debug.Log($"CurrentEnemy: {currentEnemy}");
+
+        // 현재 적의 생존 조건 확인
+        currentEnemy?.CheckDeathCondition(Sword, Magic, Shield);
     }
 
     public void PlayACardFromHand(CardLogic card, ICharacter target)
@@ -182,11 +200,15 @@ public class PlayerScripts : MonoBehaviour, ICharacter
             Magic += card.cardAsset.MagicAttack;
             Shield += card.cardAsset.ShieldAttack;
 
-            Debug.Log($"Sword: {Sword}, Magic: {Magic}, Shield: {Shield}");
-            Debug.Log($"CurrentEnemy: {currentEnemy}");
+            photonView.RPC("RealTimeBossStatusCheck", RpcTarget.All, Sword, Magic, Shield);
+
+            #region RPC호출로_인한_주석처리
+            // Debug.Log($"Sword: {Sword}, Magic: {Magic}, Shield: {Shield}");
+            // Debug.Log($"CurrentEnemy: {currentEnemy}");
 
             // 현재 적의 생존 조건 확인
-            currentEnemy?.CheckDeathCondition(Sword, Magic, Shield);
+            // currentEnemy?.CheckDeathCondition(Sword, Magic, Shield);
+            #endregion
 
             // 카드 처리 로직을 이곳에서 처리
             if (card.cardAsset.IsVanishCard)
