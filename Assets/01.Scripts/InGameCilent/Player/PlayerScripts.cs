@@ -26,7 +26,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
     private bool isFillingHand = false;
 
     public static PlayerScripts[] Players;
-
+    private BuffManager _buffManager;
     public int ID
     {
         get { return PlayerID; }
@@ -63,11 +63,11 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         Players = GameObject.FindObjectsOfType<PlayerScripts>();
         PlayerID = IDFactory.GetUniqueID();
         playerDeckVisual = FindObjectOfType<PlayerDeckVisual>();
+        _buffManager = GameObject.Find("BuffManager").GetComponent<BuffManager>();
     }
 
     void Start()
     {
-        
         InitializePlayerDeck();
     }
 
@@ -256,7 +256,17 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         usedHeroPowerThisGame = true;
         HeroPowerEffect.ActivateEffect(this, target);
     }
+    // 특정 상황에서 출혈 디버프를 적용
+    public void ApplyBleedToPlayer()
+    {
+        _buffManager.ApplyBleedEffect();
+    }
 
+    // 특정 상황에서 출혈 디버프를 제거
+    public void RemoveBleedFromPlayer()
+    {
+        _buffManager.RemoveBleedEffect();
+    }
     public void LoadCharacterInfoFromAsset()
     {
         PArea.Portrait.charAsset = charAsset;

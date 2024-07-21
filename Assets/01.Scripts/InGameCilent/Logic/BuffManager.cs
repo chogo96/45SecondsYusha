@@ -17,7 +17,7 @@ public class BuffManager : MonoBehaviour
 
     private void Start()
     {
-        _deck = GetComponent<Deck>();
+        _deck = GameObject.Find("Deck1").GetComponent<Deck>();
     }
     public void ApplyBleedEffect()
     {

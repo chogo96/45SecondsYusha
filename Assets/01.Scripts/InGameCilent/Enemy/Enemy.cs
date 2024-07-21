@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Enemy : MonoBehaviour
 {
     public int requiredSword;
@@ -12,12 +13,10 @@ public class Enemy : MonoBehaviour
 
     public bool IsFinalBoss { get; set; } // 최종 보스 여부
 
-    private PlayerScripts _playerScripts; // 플레이어 스크립트를 참조
-
     public delegate void EnemyDeath();
     public static event EnemyDeath OnEnemyDeath;
 
-    public void Initialize(EnemyData data, bool isFinalBoss = false)
+    public void Initialize(EnemyData data, List<PlayerScripts> players, bool isFinalBoss = false)
     {
         requiredSword = data.RequiredSwordAttack;
         requiredMagic = data.RequiredMagicAttack;
@@ -32,11 +31,22 @@ public class Enemy : MonoBehaviour
             StartCoroutine(HandleSpecialEffect(effect));
         }
 
-        // 플레이어 스크립트 참조
-        _playerScripts = FindObjectOfType<PlayerScripts>();
-        if (_playerScripts != null)
+        // 디버프 적용
+        foreach (var debuff in _debuffs)
         {
-            _playerScripts.SetCurrentEnemy(this);
+            if (debuff.name == "출혈")
+            {
+                ApplyRandomBleedDebuffToPlayer(players);
+            }
+        }
+    }
+
+    private void ApplyRandomBleedDebuffToPlayer(List<PlayerScripts> players)
+    {
+        if (players.Count > 0)
+        {
+            int randomIndex = Random.Range(0, players.Count);
+            players[randomIndex].ApplyBleedToPlayer();
         }
     }
 
@@ -53,7 +63,6 @@ public class Enemy : MonoBehaviour
         }
         Debug.Log("사망!");
         OnEnemyDeath?.Invoke();
-        _playerScripts?.ResetValues(); // 플레이어 값 초기화
         Destroy(gameObject);
     }
 
@@ -73,7 +82,8 @@ public class Enemy : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(effect.Cooldown);
-            // 특수 효과 적용 로직 (예: 플레이어에게 디버프 적용)
+
+            // 특수 효과 적용 로직 (예: 다른 디버프 적용)
         }
     }
 }

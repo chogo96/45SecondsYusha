@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class EnemySpawner : MonoBehaviour
 {
     public GameObject enemyPrefab; // 적 프리팹
@@ -11,14 +12,13 @@ public class EnemySpawner : MonoBehaviour
     public List<EnemyData> normalEnemies; // 일반 몹 데이터 리스트
     public List<EnemyData> midBosses; // 중간 보스 데이터 리스트
     public List<EnemyData> finalBosses; // 최종 보스 데이터 리스트
+    public List<PlayerScripts> players; // 플레이어 리스트
 
     private List<EnemyData> spawnOrder; // 스폰 순서를 담는 리스트
     private int currentEnemyIndex = 0;
-    private PlayerScripts playerScripts;
 
     void Start()
     {
-        playerScripts = FindObjectOfType<PlayerScripts>();
         GenerateSpawnOrder();
         SpawnNextEnemy();
     }
@@ -69,14 +69,8 @@ public class EnemySpawner : MonoBehaviour
                 enemyImage.sprite = enemyData.enemySprite;
 
                 Enemy enemy = newEnemy.GetComponent<Enemy>();
-                enemy.Initialize(enemyData);
-
-                // 최종 보스 여부 설정
                 bool isFinalBoss = (currentEnemyIndex == spawnOrder.Count - 1);
-                enemy.Initialize(enemyData, isFinalBoss);
-
-                // 플레이어의 현재 적 설정
-                playerScripts.SetCurrentEnemy(enemy);
+                enemy.Initialize(enemyData, players, isFinalBoss);
 
                 // 적 데이터 삭제 (한 번 소환된 적은 다시 나오지 않음)
                 normalEnemies.Remove(enemyData);
