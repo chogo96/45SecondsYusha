@@ -15,7 +15,7 @@ public class Enemy : MonoBehaviour
 
     public delegate void EnemyDeath();
     public static event EnemyDeath OnEnemyDeath;
-
+    private PlayerScripts _playerScripts;
     public void Initialize(EnemyData data, List<PlayerScripts> players, bool isFinalBoss = false)
     {
         requiredSword = data.RequiredSwordAttack;
@@ -24,7 +24,6 @@ public class Enemy : MonoBehaviour
         _debuffs = data.debuffs;
         _specialEffects = data.specialEffects;
         IsFinalBoss = isFinalBoss;
-
         // 특수 효과 초기화
         foreach (var effect in _specialEffects)
         {
@@ -38,6 +37,12 @@ public class Enemy : MonoBehaviour
             {
                 ApplyRandomBleedDebuffToPlayer(players);
             }
+        }
+        // 플레이어 스크립트 참조
+        _playerScripts = FindObjectOfType<PlayerScripts>();
+        if (_playerScripts != null)
+        {
+            _playerScripts.SetCurrentEnemy(this);
         }
     }
 
@@ -68,6 +73,7 @@ public class Enemy : MonoBehaviour
 
     public void CheckDeathCondition(int sword, int magic, int shield)
     {
+
         Debug.Log("죽었음? 혹은 넘어감?");
         if ((requiredSword == 0 || sword >= requiredSword) &&
             (requiredMagic == 0 || magic >= requiredMagic) &&

@@ -15,7 +15,7 @@ public class BuffManager : MonoBehaviour
     private Deck _deck;
     private Coroutine _bleedCoroutine;
 
-    private void Start()
+    private void Awake()
     {
         _deck = GameObject.Find("Deck1").GetComponent<Deck>();
     }
