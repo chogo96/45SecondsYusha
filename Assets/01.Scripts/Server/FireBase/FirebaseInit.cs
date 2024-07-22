@@ -4,11 +4,13 @@ using Firebase.Database;
 using UnityEngine;
 using System.Threading.Tasks;
 using System;
+using Firebase.Firestore;
 
 public class FirebaseInit : MonoBehaviour
 {
     public static FirebaseAuth auth;
     public static FirebaseDatabase database;
+    public FirebaseFirestore firestore;
     public string databaseURL = "https://your-database-name.firebaseio.com/";
 
     public static event Action OnFirebaseInitialized;
@@ -23,6 +25,11 @@ public class FirebaseInit : MonoBehaviour
         OnFirebaseInitialized?.Invoke();
     }
 
+
+    /// <summary>
+    /// 파이어 베이스 초기화 함수
+    /// </summary>
+    /// <returns></returns>
     private async Task InitializeFirebase()
     {
         try
@@ -48,6 +55,7 @@ public class FirebaseInit : MonoBehaviour
 
                 auth = FirebaseAuth.GetAuth(app);
                 database = FirebaseDatabase.GetInstance(app);
+                firestore = FirebaseFirestore.DefaultInstance;
 
                 Debug.Log("FirebaseInit: FirebaseAuth and FirebaseDatabase instances initialized.");
             }

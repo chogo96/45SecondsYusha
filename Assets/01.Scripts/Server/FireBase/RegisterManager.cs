@@ -57,11 +57,11 @@ public class RegisterManager : MonoBehaviour
 
         try
         {
-            // Create the user
+            // 유저정보 만들기
             AuthResult authResult = await auth.CreateUserWithEmailAndPasswordAsync(email, password);
             FirebaseUser newUser = authResult.User;
 
-            // Save nickname to database
+            // 파이어베이스에 닉네임 저장
             User newUserProfile = new User(nickname);
             string json = JsonUtility.ToJson(newUserProfile);
 

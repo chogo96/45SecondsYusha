@@ -63,7 +63,7 @@ public class LoginManager : MonoBehaviour
     {
         Debug.Log("Firebase initialized, setting auth and databaseReference");
 
-        auth = FirebaseInit.auth;
+        auth = FirebaseInit.auth; // ¾ÆÇÂ ¼Õ°¡¶ô
         databaseReference = FirebaseInit.database.RootReference;
 
         if (auth == null)
