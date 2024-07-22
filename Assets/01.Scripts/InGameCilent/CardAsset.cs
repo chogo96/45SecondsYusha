@@ -43,6 +43,8 @@ public class CardAsset : ScriptableObject, IComparable<CardAsset>
     public int MagicAttack;
     [Range(0, 3)]
     public int ShieldAttack;
+    [Range(0, 4)]
+    public int RandomAttack;
     public string CardScriptName;
     public TargetingOptions Targets;
 

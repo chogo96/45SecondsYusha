@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class CardManager : MonoBehaviour
 {
@@ -18,11 +19,11 @@ public class CardManager : MonoBehaviour
         cardImage.sprite = cardAsset.CardImage;
 
         // 카드 설명 설정
-        Text descriptionText = card.transform.Find("Description").GetComponent<Text>();
+        TMP_Text descriptionText = card.transform.Find("Description").GetComponent<TMP_Text>();
         descriptionText.text = cardAsset.Description;
 
         // 카드 태그 설정
-        Text tagsText = card.transform.Find("Tags").GetComponent<Text>();
+        TMP_Text tagsText = card.transform.Find("Tags").GetComponent<TMP_Text>();
         tagsText.text = cardAsset.Tags;
 
         // 카드 희귀도 설정 (필요한 경우 색상 변경 등)

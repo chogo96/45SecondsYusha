@@ -11,7 +11,8 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
     public int Sword;
     public int Magic;
     public int Shield;
-    private Enemy currentEnemy;
+    public int RandomValue;
+    private Enemy _currentEnemy;
     public int PlayerID;
     public CharacterAsset charAsset;
     public PlayerArea PArea;
@@ -21,7 +22,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
     public Deck deck;
     public Hand hand;
     public Table table;
-    private PlayerDeckVisual playerDeckVisual;
+    private PlayerDeckVisual _playerDeckVisual;
 
     private bool isFillingHand = false;
 
@@ -47,8 +48,8 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
 
     public void SetCurrentEnemy(Enemy enemy)
     {
-        currentEnemy = enemy;
-        Debug.Log($"SetCurrentEnemy: {currentEnemy}");
+        _currentEnemy = enemy;
+        Debug.Log($"SetCurrentEnemy: {_currentEnemy}");
     }
 
     public void ResetValues()
@@ -62,7 +63,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
     {
         Players = GameObject.FindObjectsOfType<PlayerScripts>();
         PlayerID = IDFactory.GetUniqueID();
-        playerDeckVisual = FindObjectOfType<PlayerDeckVisual>();
+        _playerDeckVisual = FindObjectOfType<PlayerDeckVisual>();
         _buffManager = GameObject.Find("BuffManager").GetComponent<BuffManager>();
     }
 
@@ -109,7 +110,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                 hand.CardsInHand.Insert(0, newCard);
                 deck.Cards.RemoveAt(0);
                 new DrawACardCommand(hand.CardsInHand[0], this, fast, fromDeck: true).AddToQueue();
-                playerDeckVisual.UpdateDeckCount();
+                _playerDeckVisual.UpdateDeckCount();
             }
         }
         else
@@ -185,10 +186,10 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         // 여기에 보스 상태Text 갱신 여부 적어주면됌
 
         Debug.Log($"Sword: {Sword}, Magic: {Magic}, Shield: {Shield}");
-        Debug.Log($"CurrentEnemy: {currentEnemy}");
+        Debug.Log($"CurrentEnemy: {_currentEnemy}");
 
         // 현재 적의 생존 조건 확인
-        currentEnemy?.CheckDeathCondition(Sword, Magic, Shield);
+        _currentEnemy?.CheckDeathCondition(Sword, Magic, Shield);
     }
 
     public void PlayACardFromHand(CardLogic card, ICharacter target)
@@ -199,6 +200,29 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             Sword += card.cardAsset.SwordAttack;
             Magic += card.cardAsset.MagicAttack;
             Shield += card.cardAsset.ShieldAttack;
+            RandomValue = card.cardAsset.RandomAttack;
+
+            // 공격력 값을 배열에 저장
+            int[] attackValues = { card.cardAsset.SwordAttack, card.cardAsset.MagicAttack, card.cardAsset.ShieldAttack };
+            System.Random random = new System.Random();
+            int index = random.Next(attackValues.Length);
+            int randomAttackValue = attackValues[index];
+
+            // 무작위로 선택된 공격력 값을 플레이어에게 반영
+            if (index == 0)
+            {
+                Sword += randomAttackValue;
+            }
+            else if (index == 1)
+            {
+                Magic += randomAttackValue;
+            }
+            else if (index == 2)
+            {
+                Shield += randomAttackValue;
+            }
+
+
 
             photonView.RPC("RealTimeBossStatusCheck", RpcTarget.All, Sword, Magic, Shield);
 

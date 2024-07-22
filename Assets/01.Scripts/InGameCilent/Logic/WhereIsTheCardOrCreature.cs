@@ -109,6 +109,4 @@ public class WhereIsTheCardOrCreature : MonoBehaviour {
     {
         return (-(placeInHand + 1) * 10); 
     }
-
-
 }
