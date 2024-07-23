@@ -18,7 +18,7 @@ public class CollectionBrowser : MonoBehaviour
 
     private CharacterAsset _character;
 
-    private List<GameObject> CreatedCards = new List<GameObject>();
+    public List<GameObject> CreatedCards = new List<GameObject>();
 
     #region PROPERTIES
     private bool _showingCardsPlayerDoesNotOwn = false;
@@ -189,32 +189,34 @@ public class CollectionBrowser : MonoBehaviour
         }
 
 
-        for (int i = 0; i < CardsOnThisPage.Count; i++)
-        {
-            GameObject newMenuCard;
+        //for (int i = 0; i < CardsOnThisPage.Count; i++)
+        //{
+        //    GameObject newMenuCard;
 
-            if (CardsOnThisPage[i].TypeOfCard == TypesOfCards.Attacks)
-            {
-                // 공격카드
-                newMenuCard = Instantiate(CreatureMenuPrefab, Slots[i].position, Quaternion.identity) as GameObject;
-            }
-            else
-            {
-                newMenuCard = Instantiate(CreatureMenuPrefab, Slots[i].position, Quaternion.identity) as GameObject;
-            }
+        //    if (CardsOnThisPage[i].TypeOfCard == TypesOfCards.Attacks)
+        //    {
+        //        // 공격카드
+        //        newMenuCard = Instantiate(CreatureMenuPrefab, Slots[i].position, Quaternion.identity) as GameObject;
+        //    }
+        //    else
+        //    {
+        //        newMenuCard = Instantiate(CreatureMenuPrefab, Slots[i].position, Quaternion.identity) as GameObject;
+        //    }
 
-            newMenuCard.transform.SetParent(this.transform);
+        //    newMenuCard.transform.SetParent(this.transform);
 
-            CreatedCards.Add(newMenuCard);
+        //    CreatedCards.Add(newMenuCard);
 
-            OneCardManager manager = newMenuCard.GetComponent<OneCardManager>();
-            manager.cardAsset = CardsOnThisPage[i];
-            manager.ReadCardFromAsset();
+        //    OneCardManager manager = newMenuCard.GetComponent<OneCardManager>();
+        //    manager.cardAsset = CardsOnThisPage[i];
+        //    manager.ReadCardFromAsset();
 
-            AddCardToDeck addCardComponent = newMenuCard.GetComponent<AddCardToDeck>();
-            addCardComponent.SetCardAsset(CardsOnThisPage[i]);
-            addCardComponent.UpdateQuantity();
-        }
+        //    AddCardToDeck addCardComponent = newMenuCard.GetComponent<AddCardToDeck>();
+        //    addCardComponent.SetCardAsset(CardsOnThisPage[i]);
+        //    addCardComponent.UpdateQuantity();
+        //}
+        FirebaseCardManager firebaseCardManager = FindObjectOfType<FirebaseCardManager>();
+        firebaseCardManager.LoadCardNames(LoginManager.Email);
     }
 
     public void Next()

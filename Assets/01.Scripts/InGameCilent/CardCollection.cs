@@ -10,6 +10,8 @@ public class CardCollection : MonoBehaviour
     private Dictionary<string, CardAsset> AllCardsDictionary = new Dictionary<string, CardAsset>();
 
     public Dictionary<CardAsset, int> QuantityOfEachCard = new Dictionary<CardAsset, int>();
+    //private FirebaseCardManager firebaseCardManager = FindObjectOfType<FirebaseCardManager>();
+
 
     private CardAsset[] _allCardArray;
     public static CardCollection instance;
@@ -25,6 +27,7 @@ public class CardCollection : MonoBehaviour
                 AllCardsDictionary.Add(cardAsset.name, cardAsset);
             }
         }
+        
         LoadQuantityOfCardsFromPlayerPrefs();
     }
     /// <summary>

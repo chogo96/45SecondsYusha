@@ -1912,7 +1912,6 @@ GameObject:
   - component: {fileID: 277620480}
   - component: {fileID: 277620479}
   - component: {fileID: 277620481}
-  - component: {fileID: 277620482}
   m_Layer: 5
   m_Name: OpeningArea
   m_TagString: Untagged
@@ -2022,20 +2021,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5bd51bbfed99b74fa00376a0e0d20a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  firebaseInit: {fileID: 906497565}
   allCards: []
---- !u!114 &277620482
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 277620477}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4cfab10fe707a4d468404b34e7da3583, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  databaseURL: https://your-database-name.firebaseio.com/
+  CreatureMenuPrefab: {fileID: 1123242445954250, guid: 53739aa31d5a6b74ba85b244fab56e49,
+    type: 3}
+  viewCards: []
+  Slots: []
 --- !u!1 &277728720
 GameObject:
   m_ObjectHideFlags: 0
@@ -6059,6 +6050,51 @@ RectTransform:
   m_AnchoredPosition: {x: 2.0200195, y: 1.1999512}
   m_SizeDelta: {x: 8.599976, y: 2.4000244}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &906497564
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 906497566}
+  - component: {fileID: 906497565}
+  m_Layer: 0
+  m_Name: FirebaseReset
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &906497565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 906497564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cfab10fe707a4d468404b34e7da3583, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  databaseURL: https://your-database-name.firebaseio.com/
+--- !u!4 &906497566
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 906497564}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.01649955, y: 5.77538, z: 437.08423}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &906508218
 GameObject:
   m_ObjectHideFlags: 0
@@ -14063,6 +14099,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2047396001}
   - component: {fileID: 2047396002}
+  - component: {fileID: 2047396003}
   m_Layer: 5
   m_Name: GridForCards
   m_TagString: Untagged
@@ -14121,6 +14158,35 @@ MonoBehaviour:
   KeywordInputFieldScript: {fileID: 2125311133}
   CardsThatYouDoNotHaveToggleScript: {fileID: 1226081797}
   RarityFilter: {fileID: 1259167508}
+  CreatedCards: []
+--- !u!114 &2047396003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2047396000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5bd51bbfed99b74fa00376a0e0d20a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  firebaseInit: {fileID: 906497565}
+  allCards: []
+  CreatureMenuPrefab: {fileID: 1918141010709076, guid: a8f2e65dde704fe46877d37caa5cf02d,
+    type: 3}
+  viewCards: []
+  Slots:
+  - {fileID: 179446811}
+  - {fileID: 284404314}
+  - {fileID: 1504241301}
+  - {fileID: 230452563}
+  - {fileID: 644319115}
+  - {fileID: 2094338748}
+  - {fileID: 696274443}
+  - {fileID: 1167749787}
+  - {fileID: 1213236955}
+  - {fileID: 88742233}
 --- !u!1 &2049332522
 GameObject:
   m_ObjectHideFlags: 0
@@ -15511,3 +15577,4 @@ SceneRoots:
   - {fileID: 1842661922}
   - {fileID: 1630807908}
   - {fileID: 956972696}
+  - {fileID: 906497566}
