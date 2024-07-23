@@ -16,6 +16,7 @@ public class Enemy : MonoBehaviour
     public delegate void EnemyDeath();
     public static event EnemyDeath OnEnemyDeath;
     private PlayerScripts _playerScripts;
+    private EnemyUIManager _enemyUIManager;
     public void Initialize(EnemyData data, List<PlayerScripts> players, bool isFinalBoss = false)
     {
         requiredSword = data.RequiredSwordAttack;
@@ -43,8 +44,15 @@ public class Enemy : MonoBehaviour
         if (_playerScripts != null)
         {
             _playerScripts.SetCurrentEnemy(this);
+            InGameManager.instance.ResetValues();
+        }
+        _enemyUIManager = FindObjectOfType<EnemyUIManager>();
+        if(_enemyUIManager != null)
+        {
+            _enemyUIManager.UpdateUI(requiredSword, requiredMagic, requiredShield);
         }
     }
+
 
     private void ApplyRandomBleedDebuffToPlayer(List<PlayerScripts> players)
     {
@@ -92,4 +100,5 @@ public class Enemy : MonoBehaviour
             // 특수 효과 적용 로직 (예: 다른 디버프 적용)
         }
     }
+
 }

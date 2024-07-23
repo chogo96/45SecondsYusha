@@ -3,7 +3,7 @@ using System.Collections;
 
 public interface ICharacter : IIdentifiable
 {
-    void Die();
+    //void Die();
 }
 
 public interface IIdentifiable

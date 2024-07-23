@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: "\uC77C\uBC18\uBAB9 8"
   m_EditorClassIdentifier: 
   enemySprite: {fileID: 819179342, guid: 5b34ab02340731945a5000945fed345c, type: 3}
-  RequiredSwordAttack: 9
-  RequiredMagicAttack: 2
-  RequiredShieldAttack: 3
+  RequiredSwordAttack: 3
+  RequiredMagicAttack: 0
+  RequiredShieldAttack: 0
   Complete: 0
   debuffs: []
   specialEffects: []
