@@ -68,11 +68,15 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         PlayerID = IDFactory.GetUniqueID();
         _playerDeckVisual = FindObjectOfType<PlayerDeckVisual>();
         _buffManager = GameObject.Find("BuffManager").GetComponent<BuffManager>();
+        InitializePlayerDeck();
     }
 
     void Start()
     {
-        InitializePlayerDeck();
+        if (hand.CardsInHand.Count <= 4 && !isFillingHand)
+        {
+            StartCoroutine(FillHandCoroutine());
+        }
     }
 
     void Update()
@@ -176,6 +180,24 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
 
     public void PlayACardFromHand(CardLogic card, ICharacter target)
     {
+        if (BuffManager.instance.BlindDebuff)
+        {
+            if (UnityEngine.Random.Range(0, 2) == 0)
+            {
+                Debug.Log("카드가 실명 효과로 버려졌습니다!! ^^");
+
+                // 카드 처리 로직을 이곳에서 처리
+                if (card.cardAsset.IsVanishCard)
+                {
+                    VanishCard(card);
+                }
+                else
+                {
+                    DiscardCard(card);
+                }
+                return;
+            }
+        }
         if (card != null && card.cardAsset != null)
         {
             _previousSword = InGameManager.instance.Sword;
@@ -283,6 +305,28 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
     public void RemoveBleedFromPlayer()
     {
         _buffManager.RemoveBleedEffect();
+    }
+
+    // 특정 상황에서 실명 디버프를 적용
+    public void ApplyBlindToPlayer()
+    {
+        _buffManager.ApplyBlindEffect();
+    }
+
+    // 특정 상황에서 실명 디버프를 제거
+    public void RemoveBlindFromPlayer()
+    {
+        _buffManager.RemoveBlindEffect();
+    }
+    // 특정 상황에서 실명 디버프를 적용
+    public void ApplyConfusionToPlayer()
+    {
+        _buffManager.ApplyConfusionEffect();
+    }
+    // 특정 상황에서 실명 디버프를 제거
+    public void RemoveConfusionToPlayer()
+    {
+        _buffManager.RemoveConfusionEffect();
     }
     public void LoadCharacterInfoFromAsset()
     {

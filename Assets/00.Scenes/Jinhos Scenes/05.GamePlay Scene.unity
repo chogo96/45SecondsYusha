@@ -3388,25 +3388,8 @@ MonoBehaviour:
   canvasTransform: {fileID: 1429192502}
   normalEnemies:
   - {fileID: 11400000, guid: ecda038759c46f44ab10f2b1c5477c96, type: 2}
-  - {fileID: 11400000, guid: 4653c02358476a741843ad2c8e8c9fa9, type: 2}
-  - {fileID: 11400000, guid: 0c237f7bbdc9e474f90f35ca51d66de2, type: 2}
-  - {fileID: 11400000, guid: 18e87bd94fa72f448b0dde74004a2545, type: 2}
-  - {fileID: 11400000, guid: 0e5ae84d7c385eb4aabb3a6b386fb94a, type: 2}
-  - {fileID: 11400000, guid: 23b4d584da02fcb48803f8206a614a72, type: 2}
-  - {fileID: 11400000, guid: f273a354bacc59f4fbb3bdfe5ae72c1d, type: 2}
-  - {fileID: 11400000, guid: 5bfdf77dea6a0144c8ae53526f26c2c8, type: 2}
-  - {fileID: 11400000, guid: 6fad3e179f4f388498b991eb4ff8235b, type: 2}
-  - {fileID: 11400000, guid: 322476cd843783546b25bfd335ac0667, type: 2}
-  - {fileID: 11400000, guid: 067626f7bdf523d42978ffcb99602725, type: 2}
-  - {fileID: 11400000, guid: 4bb98e315eb938a4197b355f88fd0108, type: 2}
-  - {fileID: 11400000, guid: d822553fec65bf54f944078ad4c2a07b, type: 2}
-  - {fileID: 11400000, guid: be24ff8ea20f45a47b392bc2acc7f55b, type: 2}
-  - {fileID: 11400000, guid: 1b998ec535a23054a8fa87a82d899edc, type: 2}
-  - {fileID: 11400000, guid: 3c3066702effa77408a52e9cb2c6c5c8, type: 2}
-  - {fileID: 11400000, guid: b57152c9c08fc12459c5fd3044e7d4ff, type: 2}
-  - {fileID: 11400000, guid: e5b44654d1bdd234f928c7cce821fb5c, type: 2}
-  - {fileID: 11400000, guid: 950595fabee22a945b15c0498263ba44, type: 2}
   - {fileID: 11400000, guid: 7cdf7c9cf03d2cf44b1f83ff2f6a3952, type: 2}
+  - {fileID: 11400000, guid: 950595fabee22a945b15c0498263ba44, type: 2}
   midBosses:
   - {fileID: 11400000, guid: 051811764737eb2439bc6ba695b11148, type: 2}
   - {fileID: 11400000, guid: acea7a8e07fe1eb41bfd76c1ec8a5ed9, type: 2}
@@ -4156,6 +4139,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BleedDebuff: 0
+  BlindDebuff: 0
+  ConfusionDebuff: 0
   BleedInterval: 2
 --- !u!4 &1299687912
 Transform:

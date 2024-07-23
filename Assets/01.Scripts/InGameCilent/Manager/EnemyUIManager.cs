@@ -29,12 +29,17 @@ public class EnemyUIManager : MonoBehaviour
 
     private void UpdateImages(Transform parent, GameObject prefab, int count)
     {
+        
         // 기존 이미지 삭제
         foreach (Transform child in parent)
         {
             Destroy(child.gameObject);
         }
-
+        if (BuffManager.instance.ConfusionDebuff)
+        {
+            Debug.Log("혼란스러워서 적의 요구치가 보이지 않습니다ㅏㅏㅏㅏ!!!!");
+            return;
+        }
         // 새로운 이미지 생성 및 초기 알파값 설정
         for (int i = 0; i < count; i++)
         {

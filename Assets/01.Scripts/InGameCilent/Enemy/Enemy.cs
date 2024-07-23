@@ -38,6 +38,14 @@ public class Enemy : MonoBehaviour
             {
                 ApplyRandomBleedDebuffToPlayer(players);
             }
+            if (debuff.name == "실명")
+            {
+                ApplyRandomBlindDebuffToPlayer(players);
+            }
+            if (debuff.name == "혼란")
+            {
+                ApplyRandomConfusionDebuffToPlayer(players);     
+            }
         }
         // 플레이어 스크립트 참조
         _playerScripts = FindObjectOfType<PlayerScripts>();
@@ -62,7 +70,22 @@ public class Enemy : MonoBehaviour
             players[randomIndex].ApplyBleedToPlayer();
         }
     }
-
+    private void ApplyRandomBlindDebuffToPlayer(List<PlayerScripts> players)
+    {
+        if (players.Count > 0)
+        {
+            int randomIndex = Random.Range(0, players.Count);
+            players[randomIndex].ApplyBlindToPlayer();
+        }
+    }
+    private void ApplyRandomConfusionDebuffToPlayer(List<PlayerScripts> players)
+    {
+        if (players.Count > 0)
+        {
+            int randomIndex = Random.Range(0, players.Count);
+            players[randomIndex].ApplyConfusionToPlayer();
+        }
+    }
     void Update()
     {
         // 적의 업데이트 로직 (필요 시 추가)
