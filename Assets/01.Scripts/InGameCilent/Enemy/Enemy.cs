@@ -16,6 +16,7 @@ public class Enemy : MonoBehaviour
     public delegate void EnemyDeath();
     public static event EnemyDeath OnEnemyDeath;
     private PlayerScripts _playerScripts;
+    private EnemyUIManager _enemyUIManager;
     public void Initialize(EnemyData data, List<PlayerScripts> players, bool isFinalBoss = false)
     {
         requiredSword = data.RequiredSwordAttack;
@@ -37,14 +38,29 @@ public class Enemy : MonoBehaviour
             {
                 ApplyRandomBleedDebuffToPlayer(players);
             }
+            if (debuff.name == "실명")
+            {
+                ApplyRandomBlindDebuffToPlayer(players);
+            }
+            if (debuff.name == "혼란")
+            {
+                ApplyRandomConfusionDebuffToPlayer(players);     
+            }
         }
         // 플레이어 스크립트 참조
         _playerScripts = FindObjectOfType<PlayerScripts>();
         if (_playerScripts != null)
         {
             _playerScripts.SetCurrentEnemy(this);
+            InGameManager.instance.ResetValues();
+        }
+        _enemyUIManager = FindObjectOfType<EnemyUIManager>();
+        if(_enemyUIManager != null)
+        {
+            _enemyUIManager.UpdateUI(requiredSword, requiredMagic, requiredShield);
         }
     }
+
 
     private void ApplyRandomBleedDebuffToPlayer(List<PlayerScripts> players)
     {
@@ -54,7 +70,22 @@ public class Enemy : MonoBehaviour
             players[randomIndex].ApplyBleedToPlayer();
         }
     }
-
+    private void ApplyRandomBlindDebuffToPlayer(List<PlayerScripts> players)
+    {
+        if (players.Count > 0)
+        {
+            int randomIndex = Random.Range(0, players.Count);
+            players[randomIndex].ApplyBlindToPlayer();
+        }
+    }
+    private void ApplyRandomConfusionDebuffToPlayer(List<PlayerScripts> players)
+    {
+        if (players.Count > 0)
+        {
+            int randomIndex = Random.Range(0, players.Count);
+            players[randomIndex].ApplyConfusionToPlayer();
+        }
+    }
     void Update()
     {
         // 적의 업데이트 로직 (필요 시 추가)
@@ -92,4 +123,5 @@ public class Enemy : MonoBehaviour
             // 특수 효과 적용 로직 (예: 다른 디버프 적용)
         }
     }
+
 }

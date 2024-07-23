@@ -15,7 +15,7 @@ MonoBehaviour:
   enemySprite: {fileID: 879923448, guid: 5b34ab02340731945a5000945fed345c, type: 3}
   RequiredSwordAttack: 1
   RequiredMagicAttack: 2
-  RequiredShieldAttack: 3
+  RequiredShieldAttack: 0
   Complete: 0
   debuffs: []
   specialEffects: []
