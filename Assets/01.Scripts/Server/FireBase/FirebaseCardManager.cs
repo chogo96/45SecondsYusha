@@ -6,20 +6,61 @@ using UnityEngine;
 
 public class FirebaseCardManager : MonoBehaviour
 {
-    public FirebaseInit firebaseInit;
+    private FirebaseInit firebaseInit;
     public List<CardAsset> allCards; // 프로젝트 내 모든 카드 데이터의 리스트
 
-
-    // 카드 이름만 Firestore에 저장
-    public void SaveCardData(List<CardAsset> cards, string userEmail)
+    private void Awake()
     {
+        FirebaseInit.OnFirebaseInitialized += FirebaseGetcomponent;
+    }
+
+
+    private void FirebaseGetcomponent()
+    {
+        firebaseInit = FindObjectOfType<FirebaseInit>();
+        if (firebaseInit == null)
+        {
+            Debug.LogError("FirebaseInit 인스턴스를 찾을 수 없습니다.");
+        }
+        else
+        {
+            Debug.Log("FirebaseInit 인스턴스를 찾았습니다.");
+        }
+
+    }
+
+    private void OnDestroy()
+    {
+        // 이벤트 구독 해제
+        FirebaseInit.OnFirebaseInitialized -= FirebaseGetcomponent;
+    }
+
+    /// <summary>
+    /// 카드 이름만 Firestore에 저장
+    /// </summary>
+    /// <param name="cards">뽑은 카드들</param>
+    /// <param name="userEmail">유저 이메일</param>
+    public void SaveCardData(Dictionary<CardAsset, int> cards, string userEmail)
+    {
+
+        if (firebaseInit == null || firebaseInit.firestore == null)
+        {
+            Debug.LogError("firebaseInit 또는 firestore가 null입니다. SaveCardData를 호출할 수 없습니다.");
+            return;
+        }
+
+
         CollectionReference cardsRef = firebaseInit.firestore.Collection("users").Document(userEmail).Collection("cards");
 
-        foreach (CardAsset card in cards)
+        foreach (var cardEntry in cards)
         {
+            CardAsset card = cardEntry.Key;
+            int cardCount = cardEntry.Value;
+
             Dictionary<string, object> cardData = new Dictionary<string, object>
             {
                 { "cardName", card.CardScriptName },
+                { "cardCount", cardCount }
             };
             cardsRef.Document(card.CardScriptName).SetAsync(cardData);
         }

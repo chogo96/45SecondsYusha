@@ -133,6 +133,16 @@ public class PackOpeningArea : MonoBehaviour
         // 카드 콜렉션에 카드에셋 추가
         CardCollection.instance.QuantityOfEachCard[cardAsset]++;
 
+        FirebaseCardManager firebaseCardManager = FindObjectOfType<FirebaseCardManager>();
+        if (firebaseCardManager != null)
+        {
+            firebaseCardManager.SaveCardData(CardCollection.instance.QuantityOfEachCard, LoginManager.Email);
+        }
+        else
+        {
+            Debug.LogError("FirebaseCardManager 인스턴스를 찾을 수 없습니다.");
+        }
+
         GameObject card;
         if (cardAsset.TypeOfCard == TypesOfCards.Attacks)
         {

@@ -26,6 +26,11 @@ public class LoginManager : MonoBehaviour
 
     private TMP_Text _errorMessage;
 
+    public static string Email
+    {
+        get; private set;
+    }
+
 
 
     private void Awake()
@@ -104,6 +109,7 @@ public class LoginManager : MonoBehaviour
             // Sign in the user
             AuthResult authResult = await auth.SignInWithEmailAndPasswordAsync(email, password);
             FirebaseUser user = authResult.User;
+            Email = user.Email;
 
             _errorMessage.text = "User signed in successfully!";
 
@@ -160,7 +166,8 @@ public class LoginManager : MonoBehaviour
         {
             
             // æ¿ ¿Ãµø
-            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("01.Start Scene");
+            //AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("01.Start Scene");
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("MainScene");
 
             while (!asyncLoad.isDone)
             {
