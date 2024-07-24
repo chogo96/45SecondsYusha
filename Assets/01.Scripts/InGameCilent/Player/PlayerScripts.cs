@@ -229,7 +229,18 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             {
                 InGameManager.instance.Shield += randomAttackValue;
             }
+            if (card.cardAsset.RemoveDebuff == "실명")
+            {
+                BuffManager.instance.RemoveBlindEffect();
+            }
+            if (card.cardAsset.RemoveDebuff == "출혈")
+            {
+                BuffManager.instance.RemoveBleedEffect();
+            }
+            if (card.cardAsset.RemoveDebuff == "혼란")
+            {
 
+            }
             photonView.RPC("RealTimeBossStatusCheck", RpcTarget.All, InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
 
             #region RPC호출로_인한_주석처리
@@ -266,6 +277,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                 _enemyUIManager.ChangeAlphaForIncrement(magicIncrement, _enemyUIManager.magicImageParent, Magic, _currentEnemy.requiredMagic);
                 _enemyUIManager.ChangeAlphaForIncrement(shieldIncrement, _enemyUIManager.shieldImageParent, Shield, _currentEnemy.requiredShield);
             }
+            deck.ReturnRandomCardsFromDiscard(card.cardAsset.RandomRestoreDeck);
         }
 
         // 손패의 카드 개수가 4장 이하일 때 덱에서 카드를 채우는 로직 추가

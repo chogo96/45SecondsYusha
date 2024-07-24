@@ -54,4 +54,20 @@ public class Deck : MonoBehaviour
     {
         return Cards.Count;
     }
+    // discarddeck 중 랜덤한 카드를 n장 덱으로 되돌리는 메소드
+    public void ReturnRandomCardsFromDiscard(int n)
+    {
+        for (int i = 0; i < n; i++)
+        {
+            if (DiscardDeck.Count == 0)
+                break;
+
+            int randomIndex = Random.Range(0, DiscardDeck.Count);
+            CardAsset card = DiscardDeck[randomIndex];
+            DiscardDeck.RemoveAt(randomIndex);
+            Cards.Add(card);
+        }
+        // 덱을 다시 섞습니다.
+        ShuffleDeck();
+    }
 }

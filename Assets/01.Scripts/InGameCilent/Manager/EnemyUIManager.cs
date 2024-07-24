@@ -37,7 +37,7 @@ public class EnemyUIManager : MonoBehaviour
         }
         if (BuffManager.instance.ConfusionDebuff)
         {
-            Debug.Log("혼란스러워서 적의 요구치가 보이지 않습니다ㅏㅏㅏㅏ!!!!");
+            Debug.Log("혼란스러워서 적의 요구치가 보이지 않습니다!!!!");
             return;
         }
         // 새로운 이미지 생성 및 초기 알파값 설정
