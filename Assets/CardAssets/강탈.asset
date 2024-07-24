@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0597bb8b2c363fc45bdaea7095ffe68b, type: 3}
+  m_Name: "\uAC15\uD0C8"
+  m_EditorClassIdentifier: 
+  CharacterAsset: {fileID: 0}
+  Description: "\uB4F1\uAC00\uAD50\uD658\uC774\uC796\uC544? \uC5F0\uAE08\uC220\uC0AC...!\n\uC5B4
+    \uC5EC\uAE30\uAC00 \uC544\uB2CC\uAC00?\n\uC5EC\uAE34 \uBB38\uB3C4 \uC5C6\uACE0
+    \uC544\uBB34 \uAC83\uB3C4 \uC5C6\uB294\uAC78?\n-\uB204\uAD70\uAC00\uC758 \uBA54\uBAA8-"
+  Tags: Buffer
+  Rarity: 3
+  CardImage: {fileID: 0}
+  TokenCard: 0
+  LimitOfThisCardInDeck: 3
+  IsVanishCard: 0
+  TypeOfCard: 0
+  SwordAttack: 0
+  MagicAttack: 0
+  ShieldAttack: 0
+  RandomAttack: 0
+  CardScriptName: "\uAC15\uD0C8"
+  Targets: 2

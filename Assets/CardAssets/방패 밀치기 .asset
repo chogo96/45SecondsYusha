@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0597bb8b2c363fc45bdaea7095ffe68b, type: 3}
+  m_Name: "\uBC29\uD328 \uBC00\uCE58\uAE30 "
+  m_EditorClassIdentifier: 
+  CharacterAsset: {fileID: 0}
+  Description: "\uC55E\uC774 \uD568\uC815\uC77C\uC9C0 Enemy\uC77C\uC9C0 \uBAA8\uB974\uB294
+    \uC0C1\uD669\uC5D0\uC11C\uB3C4, \uADF8\uC758 \uBC29\uD328\uB294 \uAD73\uAC74\uD788
+    \uBE5B\uB0AC\uB2E4. \uADF8\uB294 \uBB34\uBAA8\uD558\uC9C0\uB9CC \uACFC\uAC10\uD55C
+    \uC77C\uACA9\uC744 \uC900\uBE44\uD558\uBA70 \uC804\uC9C4\uD588\uB2E4."
+  Tags: Tanker
+  Rarity: 3
+  CardImage: {fileID: 0}
+  TokenCard: 0
+  LimitOfThisCardInDeck: 3
+  IsVanishCard: 0
+  TypeOfCard: 0
+  SwordAttack: 0
+  MagicAttack: 0
+  ShieldAttack: 0
+  RandomAttack: 0
+  CardScriptName: "\uBC29\uD328 \uBC00\uCE58\uAE30 "
+  Targets: 1

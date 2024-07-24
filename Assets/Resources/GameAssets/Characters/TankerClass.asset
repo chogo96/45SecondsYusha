@@ -10,22 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0651ca3a14c550b42abeb42b8f0eeb0b, type: 3}
-  m_Name: AttackerClass
+  m_Name: TankerClass
   m_EditorClassIdentifier: 
-  Class: 0
-  ClassName: "\uC5B4\uD0DC\uCEE4"
-  HeroPowerName: "\uAD11\uBD84"
-  AvatarImage: {fileID: 363298660, guid: 867111f16de5c514eafc48c9adb70ade, type: 3}
-  HeroPowerIconImage: {fileID: -202816048, guid: a4daabe85b3643a48820e07ca1e49468,
-    type: 3}
-  AvatarBGImage: {fileID: 21300000, guid: 2eb445e29410ff241a2c025be02be7f1, type: 3}
-  HeroPowerBGImage: {fileID: 21300000, guid: 1f99f84295dc7c24eb4ac9952fd47744, type: 3}
+  Class: 3
+  ClassName: 
+  HeroPowerName: 
+  AvatarImage: {fileID: 0}
+  HeroPowerIconImage: {fileID: 0}
+  AvatarBGImage: {fileID: 0}
+  HeroPowerBGImage: {fileID: 0}
   AvatarBGTint:
     serializedVersion: 2
-    rgba: 255
+    rgba: 0
   HeroPowerBGTint:
     serializedVersion: 2
-    rgba: 255
+    rgba: 0
   ClassCardTint:
     serializedVersion: 2
     rgba: 0

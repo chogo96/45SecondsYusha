@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0597bb8b2c363fc45bdaea7095ffe68b, type: 3}
+  m_Name: "\uC2EC\uD310"
+  m_EditorClassIdentifier: 
+  CharacterAsset: {fileID: 0}
+  Description: "\uB9C8\uC655\uC758 \uC545\uC774 \uC810\uC810 \uC138\uC0C1\uC744 \uC7A0\uC2DD\uD574
+    \uAC00\uC790, \uBAA8\uB4E0 \uC774\uB4E4\uC774 \uAC04\uC808\uD788 \uAE30\uB3C4\uB97C
+    \uC62C\uB838\uB2E4. \uADF8\uB9AC\uD558\uC5EC \uB9C8\uCE68\uB0B4 \uC2EC\uD310\uC758
+    \uB54C\uAC00 \uB2E4\uAC00\uC654\uB2E4."
+  Tags: Healer
+  Rarity: 4
+  CardImage: {fileID: 0}
+  TokenCard: 0
+  LimitOfThisCardInDeck: 1
+  IsVanishCard: 1
+  TypeOfCard: 0
+  SwordAttack: 0
+  MagicAttack: 0
+  ShieldAttack: 0
+  RandomAttack: 4
+  CardScriptName: "\uC2EC\uD310"
+  Targets: 4

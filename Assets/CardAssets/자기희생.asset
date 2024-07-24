@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0597bb8b2c363fc45bdaea7095ffe68b, type: 3}
+  m_Name: "\uC790\uAE30\uD76C\uC0DD"
+  m_EditorClassIdentifier: 
+  CharacterAsset: {fileID: 0}
+  Description: "\uADF8\uC758 \uC790\uAE30 \uD30C\uAD34Enemy\uC778 \uD76C\uC0DD\uC740
+    \uC22D\uACE0\uD560\uC9C0 \uBAA8\uB974\uC9C0\uB9CC, \uACFC\uC5F0 \uC633\uB2E4\uACE0
+    \uD560 \uC218 \uC788\uC744\uAE4C? \uC790\uC2E0\uC758 \uBAA9\uC228\uC744 \uAC78\uACE0
+    \uC774\uB8EC \uD589\uB3D9\uC774 \uADF8 \uAC00\uCE58\uC640 \uB9DE\uBA39\uC744
+    \uC218 \uC788\uC744\uAE4C? \uBAA9\uD45C\uB97C \uC774\uB8E8\uC5C8\uC744 \uB54C,
+    \uB3CC\uC544\uBCFC \uC0AC\uC9C4 \uC18D\uC5D0 \uC790\uC2E0\uC774 \uC5C6\uB2E4\uBA74
+    \uADF8 \uC5BC\uB9C8\uB098 \uC4F8\uC4F8\uD55C \uC77C\uC778\uAC00."
+  Tags: Tanker
+  Rarity: 4
+  CardImage: {fileID: 0}
+  TokenCard: 0
+  LimitOfThisCardInDeck: 1
+  IsVanishCard: 1
+  TypeOfCard: 0
+  SwordAttack: 0
+  MagicAttack: 0
+  ShieldAttack: 0
+  RandomAttack: 0
+  CardScriptName: "\uC790\uAE30\uD76C\uC0DD"
+  Targets: 4
