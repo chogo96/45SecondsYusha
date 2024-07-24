@@ -239,7 +239,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             }
             if (card.cardAsset.RemoveDebuff == "혼란")
             {
-
+                BuffManager.instance.RemoveConfusionEffect();
             }
             photonView.RPC("RealTimeBossStatusCheck", RpcTarget.All, InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
 
@@ -278,6 +278,14 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                 _enemyUIManager.ChangeAlphaForIncrement(shieldIncrement, _enemyUIManager.shieldImageParent, Shield, _currentEnemy.requiredShield);
             }
             deck.ReturnRandomCardsFromDiscard(card.cardAsset.RandomRestoreDeck);
+            // 2초 후에 추가 공격을 수행하는 코루틴 시작 (조건 확인)
+            if (card.cardAsset.AdditionalSwordAttack > 0 ||
+                card.cardAsset.AdditionalMagicAttack > 0 ||
+                card.cardAsset.AdditionalShieldAttack > 0 ||
+                card.cardAsset.AdditionalRandomAttack > 0)
+            {
+                StartCoroutine(PerformAdditionalAttack(card.cardAsset));
+            }
         }
 
         // 손패의 카드 개수가 4장 이하일 때 덱에서 카드를 채우는 로직 추가
@@ -287,6 +295,47 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         }
     }
 
+    private IEnumerator PerformAdditionalAttack(CardAsset cardAsset)
+    {
+        // 2초 대기
+        yield return new WaitForSeconds(2f);
+
+        // 추가 공격력 반영
+        if (cardAsset.AdditionalSwordAttack > 0)
+        {
+            InGameManager.instance.Sword += cardAsset.AdditionalSwordAttack;
+        }
+        if (cardAsset.AdditionalMagicAttack > 0)
+        {
+            InGameManager.instance.Magic += cardAsset.AdditionalMagicAttack;
+        }
+        if (cardAsset.AdditionalShieldAttack > 0)
+        {
+            InGameManager.instance.Shield += cardAsset.AdditionalShieldAttack;
+        }
+        if (cardAsset.AdditionalRandomAttack > 0)
+        {
+            int[] additionalAttackValues = { cardAsset.AdditionalSwordAttack, cardAsset.AdditionalMagicAttack, cardAsset.AdditionalShieldAttack };
+            System.Random random = new System.Random();
+            int randomIndex = random.Next(additionalAttackValues.Length);
+            int additionalRandomAttackValue = additionalAttackValues[randomIndex];
+
+            if (randomIndex == 0)
+            {
+                InGameManager.instance.Sword += additionalRandomAttackValue;
+            }
+            else if (randomIndex == 1)
+            {
+                InGameManager.instance.Magic += additionalRandomAttackValue;
+            }
+            else if (randomIndex == 2)
+            {
+                InGameManager.instance.Shield += additionalRandomAttackValue;
+            }
+        }
+
+        photonView.RPC("RealTimeBossStatusCheck", RpcTarget.All, InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
+    }
 
     private void VanishCard(CardLogic card)
     {

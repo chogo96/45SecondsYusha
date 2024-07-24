@@ -10,20 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0597bb8b2c363fc45bdaea7095ffe68b, type: 3}
-  m_Name: "\uC804\uB825\uC758 \uBC29\uD328 \uD6C4\uB9AC\uAE30"
+  m_Name: "\uBABD\uB465\uC774\uC9C8"
   m_EditorClassIdentifier: 
   CharacterAsset: {fileID: 0}
-  Description: "\uAE61!"
-  Tags: Tanker
-  Rarity: 3
-  CardImage: {fileID: 0}
+  Description: "\uC880 \uC13C \uBABD\uB465\uC774\uC774\uB2E4."
+  Tags: "\uC18C\uBA78, \uB9C8\uBC95string"
+  Rarity: 0
+  CardImage: {fileID: 21300000, guid: e881bb6a7545be642834948f9c5d8cca, type: 3}
   TokenCard: 0
-  LimitOfThisCardInDeck: 3
+  LimitOfThisCardInDeck: 0
   IsVanishCard: 0
   TypeOfCard: 0
   SwordAttack: 0
   MagicAttack: 0
   ShieldAttack: 1
-  RandomAttack: 0
-  CardScriptName: "\uC804\uB825\uC758 \uBC29\uD328 \uD6C4\uB9AC\uAE30"
+  CardScriptName: Simple
   Targets: 4

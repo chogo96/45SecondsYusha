@@ -47,6 +47,15 @@ public class CardAsset : ScriptableObject, IComparable<CardAsset>
     public int RandomAttack;
     [Range(0, 15)]
     public int RandomRestoreDeck;
+    [Range(0,3)]
+    public int AdditionalSwordAttack;
+    [Range(0,3)]
+    public int AdditionalMagicAttack;
+    [Range(0,3)]
+    public int AdditionalShieldAttack;
+    [Range(0, 3)]
+    public int AdditionalRandomAttack;
+
     public string CardScriptName;
     public string RemoveDebuff;
     public TargetingOptions Targets;

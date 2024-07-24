@@ -10,20 +10,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0597bb8b2c363fc45bdaea7095ffe68b, type: 3}
-  m_Name: "\uBABD\uB465\uC774\uC9C8"
+  m_Name: "\uC804\uB825\uC758 \uBC29\uD328 \uD6C4\uB9AC\uAE30"
   m_EditorClassIdentifier: 
   CharacterAsset: {fileID: 0}
-  Description: "\uB69D\uB531!"
-  Tags: Neutral
-  Rarity: 0
+  Description: "\uAE61!"
+  Tags: Tanker
+  Rarity: 3
   CardImage: {fileID: 0}
   TokenCard: 0
   LimitOfThisCardInDeck: 3
   IsVanishCard: 0
   TypeOfCard: 0
-  SwordAttack: 1
+  SwordAttack: 0
   MagicAttack: 0
-  ShieldAttack: 0
+  ShieldAttack: 1
   RandomAttack: 0
-  CardScriptName: "\uBABD\uB465\uC774\uC9C8"
+  RandomRestoreDeck: 0
+  AdditionalSwordAttack: 0
+  AdditionalMagicAttack: 0
+  AdditionalShieldAttack: 1
+  AdditionalRandomAttack: 0
+  CardScriptName: "\uC804\uB825\uC758 \uBC29\uD328 \uD6C4\uB9AC\uAE30"
+  RemoveDebuff: 
   Targets: 4
