@@ -46,6 +46,10 @@ MonoBehaviour:
   - KickPlayer
   - PlayACardFromHand
   - RealTimeBossStatusCheck
+  - UiTimerUpdate
+  - TimePlus
+  - TimePlusMinus
+  - UseSkillSignal
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

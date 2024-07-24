@@ -7,7 +7,7 @@ using UnityEngine;
 public class FirebaseCardManager : MonoBehaviour
 {
     public FirebaseInit firebaseInit;
-    public List<CardAsset> allCards; // 프로젝트 내 모든 카드 데이터의 리스트
+    private List<CardAsset> _allCards; // 프로젝트 내 모든 카드 데이터의 리스트
 
     public GameObject CreatureMenuPrefab;
     public List<CardAsset> viewCards = new List<CardAsset>(); // 프로젝트 내 모든 카드 데이터의 리스트
