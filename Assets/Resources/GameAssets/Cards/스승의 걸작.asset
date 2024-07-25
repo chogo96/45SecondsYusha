@@ -30,5 +30,13 @@ MonoBehaviour:
   MagicAttack: 0
   ShieldAttack: 0
   RandomAttack: 0
+  RandomRestoreDeck: 0
+  AdditionalSwordAttack: 0
+  AdditionalMagicAttack: 0
+  AdditionalShieldAttack: 0
+  AdditionalRandomAttack: 0
+  DrawFromDeck: 0
   CardScriptName: "\uC2A4\uC2B9\uC758 \uAC78\uC791"
+  RemoveDebuff: "\uBAA8\uB4E0\uBC84\uD504"
   Targets: 3
+  DiscardFromDeck: 0

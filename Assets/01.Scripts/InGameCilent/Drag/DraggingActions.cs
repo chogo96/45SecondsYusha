@@ -24,11 +24,11 @@ public abstract class DraggingActions : MonoBehaviour
     {
         get
         {
-            if (tag.Contains("Low"))
+            if (tag.Contains("1Card"))
             {
                 return GlobalSettings.instance.LowPlayer;
             }
-            else if (tag.Contains("Top"))
+            else if (tag.Contains("2Card"))
             {
                 return GlobalSettings.instance.TopPlayer;
             }

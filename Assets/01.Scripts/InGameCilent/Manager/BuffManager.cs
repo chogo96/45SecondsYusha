@@ -67,6 +67,7 @@ public class BuffManager : MonoBehaviour
         {
             ConfusionDebuff = false;
         }
+      
     }
     private IEnumerator BleedEffect()
     {

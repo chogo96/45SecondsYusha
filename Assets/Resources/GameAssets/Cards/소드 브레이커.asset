@@ -32,7 +32,9 @@ MonoBehaviour:
   AdditionalSwordAttack: 0
   AdditionalMagicAttack: 0
   AdditionalShieldAttack: 0
-  AdditionalRandomAttack: 1
+  AdditionalRandomAttack: 0
+  DrawFromDeck: 0
   CardScriptName: "\uC18C\uB4DC \uBE0C\uB808\uC774\uCEE4"
-  RemoveDebuff: 
+  RemoveDebuff: 0
   Targets: 4
+  DiscardFromDeck: 0

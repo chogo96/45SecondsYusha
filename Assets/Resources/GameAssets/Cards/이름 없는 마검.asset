@@ -17,7 +17,7 @@ MonoBehaviour:
     \uAC80\uC744 \uBF51\uC544 \uC62C\uB9AC\uB294 \uC21C\uAC04, \uB098\uB294 \uBAA8\uB4E0
     \uD798\uC744 \uC783\uACE0 \uADF8 \uC790\uB9AC\uC5D0\uC11C \uC4F0\uB7EC\uC84C\uB2E4.
     \uC7A0\uC2DC \uD6C4 \uAE68\uC5B4\uB0AC\uC744 \uB54C, \uB0B4 \uBAB8 \uC18D\uC5D0
-    \uC774\uC9C8Enemy\uC778 \uD798\uC774 \uD750\uB974\uACE0 \uC788\uC74C\uC744 \uB290\uAF08\uB2E4.
+    \uC774\uC9C8\uC801\uC778 \uD798\uC774 \uD750\uB974\uACE0 \uC788\uC74C\uC744 \uB290\uAF08\uB2E4.
     \uADF8 \uD798\uC740 \uB9C8\uCE58 \uB098\uB97C \uC9D1\uC5B4\uC0BC\uD0A4\uB824\uB294
     \uB4EF, \uAC15\uB82C\uD558\uAC8C \uC694\uB3D9\uCE58\uACE0 \uC788\uC5C8\uB2E4."
   Tags: Attacker
@@ -31,5 +31,13 @@ MonoBehaviour:
   MagicAttack: 0
   ShieldAttack: 0
   RandomAttack: 0
+  RandomRestoreDeck: 0
+  AdditionalSwordAttack: 0
+  AdditionalMagicAttack: 0
+  AdditionalShieldAttack: 0
+  AdditionalRandomAttack: 0
+  DrawFromDeck: 0
   CardScriptName: "\uC774\uB984 \uC5C6\uB294 \uB9C8\uAC80"
+  RemoveDebuff: 0
   Targets: 1
+  DiscardFromDeck: 0

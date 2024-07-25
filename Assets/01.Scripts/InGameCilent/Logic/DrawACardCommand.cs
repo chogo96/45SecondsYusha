@@ -15,11 +15,11 @@ public class DrawACardCommand : Command
         get { return p; }
     }
 
-    public DrawACardCommand(CardLogic cl, PlayerScripts p, bool fast, bool fromDeck)
+    public DrawACardCommand(CardLogic cl, PlayerScripts p,/* bool fast,*/ bool fromDeck)
     {
         this.cl = cl;
         this.p = p;
-        this.fast = fast;
+        //this.fast = fast;
         this.fromDeck = fromDeck;
     }
 

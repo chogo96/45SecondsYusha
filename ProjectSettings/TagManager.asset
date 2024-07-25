@@ -6,6 +6,10 @@ TagManager:
   tags:
   - LowPlayer
   - LowCard
+  - 1Card
+  - 2Card
+  - 3Card
+  - 4Card
   layers:
   - Default
   - TransparentFX

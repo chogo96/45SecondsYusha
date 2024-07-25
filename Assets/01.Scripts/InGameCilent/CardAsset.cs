@@ -55,10 +55,17 @@ public class CardAsset : ScriptableObject, IComparable<CardAsset>
     public int AdditionalShieldAttack;
     [Range(0, 3)]
     public int AdditionalRandomAttack;
-
+    [Range(0, 3)]
+    public int DrawFromDeck;
     public string CardScriptName;
     public string RemoveDebuff;
     public TargetingOptions Targets;
+
+    [Header("Cost")]
+    [Range(0,10)]
+    public int DiscardFromDeck;
+    
+    
 
     // CompareTo 메서드 수정: Rarity를 기준으로 비교
     public int CompareTo(CardAsset other)
