@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: "\uBCA0\uD14C\uB791"
   m_EditorClassIdentifier: 
   CharacterAsset: {fileID: 0}
-  Description: "Normal\uD574 \uBCF4\uC774\uB294 \uBC29\uD328\uC9C0\uB9CC, \uC218\uB9CE\uC740
+  Description: "\uD3C9\uBC94\uD574 \uBCF4\uC774\uB294 \uBC29\uD328\uC9C0\uB9CC, \uC218\uB9CE\uC740
     \uC0C1\uCC98\uAC00 \uADF8\uC758 \uC804\uC7A5 \uACBD\uD5D8\uC744 \uC99D\uBA85\uD55C\uB2E4.
     \uADF8\uB7FC\uC5D0\uB3C4 \uBD88\uAD6C\uD558\uACE0, \uD749\uD130 \uD558\uB098
     \uC5C6\uB294 \uADF8\uC758 \uBAB8\uC740 \uADF8\uAC00 \uC5BC\uB9C8\uB098 \uB6F0\uC5B4\uB09C
@@ -29,5 +29,13 @@ MonoBehaviour:
   MagicAttack: 0
   ShieldAttack: 0
   RandomAttack: 0
+  RandomRestoreDeck: 0
+  AdditionalSwordAttack: 0
+  AdditionalMagicAttack: 0
+  AdditionalShieldAttack: 0
+  AdditionalRandomAttack: 0
+  DrawFromDeck: 0
   CardScriptName: "\uBCA0\uD14C\uB791"
+  RemoveDebuff: 0
   Targets: 1
+  DiscardFromDeck: 0

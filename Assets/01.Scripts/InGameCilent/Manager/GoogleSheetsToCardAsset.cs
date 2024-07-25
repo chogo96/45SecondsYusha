@@ -74,14 +74,18 @@ public class GoogleSheetsToCardAsset : MonoBehaviour
                     card.Rarity = ParseEnum<RarityOptions>(GetValue(row, 2));
                     card.TokenCard = ParseBool(GetValue(row, 4));
                     card.LimitOfThisCardInDeck = ParseInt(GetValue(row, 24));
-                    card.IsVanishCard = ParseBool(GetValue(row, 21));
                     card.TypeOfCard = ParseEnum<TypesOfCards>(GetValue(row, 3));
                     card.SwordAttack = ParseInt(GetValue(row, 5));
                     card.MagicAttack = ParseInt(GetValue(row, 7));
                     card.ShieldAttack = ParseInt(GetValue(row, 8));
                     card.RandomAttack = ParseInt(GetValue(row, 9));
-                    card.Description = GetValue(row, 23);
+                    card.RandomRestoreDeck = ParseInt(GetValue(row, 10));
                     card.Targets = ParseEnum<TargetingOptions>(GetValue(row, 19));
+                    card.RemoveDebuff = GetValue(row, 12);
+                    card.DiscardFromDeck = ParseInt(GetValue(row, 17));
+                    card.DrawFromDeck = ParseInt(GetValue(row, 18));
+                    card.IsVanishCard = ParseBool(GetValue(row, 21));
+                    card.Description = GetValue(row, 23);
 
                     // 이미지 파일 이름을 가져와서 Resources 폴더에서 로드
                     string imageName = GetValue(row, 13);

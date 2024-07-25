@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CharacterAsset: {fileID: 0}
   Description: "\uC2E0\uC758 \uC804\uC9C0\uC804\uB2A5\uD568\uACFC \uAC1C\uC778\uC758
-    \uD1B5\uCC30\uB825\uC774 \uC5B4\uC6B0\uB7EC\uC838, Enemy\uC758 \uC18D\uB0B4\uB97C
+    \uD1B5\uCC30\uB825\uC774 \uC5B4\uC6B0\uB7EC\uC838, \uC801\uC758 \uC18D\uB0B4\uB97C
     \uAFF0\uB6AB\uC5B4 \uBCF8\uB2E4. \uC55E\uC5D0 \uBB34\uC5C7\uC774 \uAE30\uB2E4\uB9AC\uACE0,
     \uBB34\uC5C7\uC774 \uB098\uB97C \uAC00\uB85C\uB9C9\uC73C\uBA70, \uBB34\uC5C7\uC774
     \uB098\uB97C \uC4F0\uB7EC\uB728\uB9B4\uC9C0..."
@@ -29,5 +29,13 @@ MonoBehaviour:
   MagicAttack: 0
   ShieldAttack: 0
   RandomAttack: 0
+  RandomRestoreDeck: 0
+  AdditionalSwordAttack: 0
+  AdditionalMagicAttack: 0
+  AdditionalShieldAttack: 0
+  AdditionalRandomAttack: 0
+  DrawFromDeck: 0
   CardScriptName: "\uD1B5\uCC30\uB825"
+  RemoveDebuff: 0
   Targets: 4
+  DiscardFromDeck: 0

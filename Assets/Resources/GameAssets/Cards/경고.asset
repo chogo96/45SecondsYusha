@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CharacterAsset: {fileID: 0}
   Description: "\uADF8\uB140\uC758 \uD589\uB3D9\uC740 \uC2E0\uB150\uC5D0\uC11C \uC6B0\uB7EC\uB098\uC640,
-    Enemy\uB4E4\uC5D0\uAC8C \uB9C8\uC9C0\uB9C9 \uACBD\uACE0\uB97C \uC804\uD558\uB294
+    \uC801\uB4E4\uC5D0\uAC8C \uB9C8\uC9C0\uB9C9 \uACBD\uACE0\uB97C \uC804\uD558\uB294
     \uB4EF\uD55C \uAC15\uB82C\uD55C \uBA54\uC2DC\uC9C0\uB97C \uB2F4\uACE0 \uC788\uB2E4.
     \uC774\uB294 \uB2E8\uC21C\uD55C \uACBD\uACE0\uB97C \uB118\uC5B4, \uADF8\uB140\uC758
     \uAD73\uAC74\uD55C \uC2E0\uB150\uACFC \uACB0\uC5F0\uD55C \uC758\uC9C0\uAC00 \uC5B4\uB5BB\uAC8C
@@ -31,5 +31,13 @@ MonoBehaviour:
   MagicAttack: 2
   ShieldAttack: 0
   RandomAttack: 0
+  RandomRestoreDeck: 0
+  AdditionalSwordAttack: 0
+  AdditionalMagicAttack: 0
+  AdditionalShieldAttack: 0
+  AdditionalRandomAttack: 0
+  DrawFromDeck: 0
   CardScriptName: "\uACBD\uACE0"
+  RemoveDebuff: 0
   Targets: 4
+  DiscardFromDeck: 0

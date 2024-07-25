@@ -83,7 +83,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
     {
         if (Input.GetKeyDown(KeyCode.D))
         {
-            DrawACard();
+            DrawACard(1);
         }
 
         // 키보드 입력으로 카드 속성 값을 증가시키는 부분 제거
@@ -101,21 +101,21 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
     {
         for (int i = 0; i < 5; i++)
         {
-            DrawACard(true);
+            DrawACard(1);
             yield return new WaitForSeconds(0.5f);
         }
     }
-
-    public void DrawACard(bool fast = false)
+    public void DrawACard(int n)
     {
         if (deck.Cards.Count > 0)
         {
-            if (hand.CardsInHand.Count < PArea.handVisual.slots.Children.Length)
+            HandVisual handVisual = PArea.handVisual;  // 현재 플레이어의 HandVisual 참조
+            if (hand.CardsInHand.Count < handVisual.GetMaxSlots())
             {
                 CardLogic newCard = new CardLogic(deck.Cards[0], this);
                 hand.CardsInHand.Insert(0, newCard);
                 deck.Cards.RemoveAt(0);
-                new DrawACardCommand(hand.CardsInHand[0], this, fast, fromDeck: true).AddToQueue();
+                new DrawACardCommand(hand.CardsInHand[0],this,fromDeck: true).AddToQueue();
                 _playerDeckVisual.UpdateDeckCount();
             }
         }
@@ -124,18 +124,17 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             // 덱을 다 썼을 때 탈진 효과 넣는 곳
         }
     }
-
     public void GetACardNotFromDeck(CardAsset cardAsset)
     {
-        if (hand.CardsInHand.Count < PArea.handVisual.slots.Children.Length)
+        HandVisual handVisual = PArea.handVisual;  // 현재 플레이어의 HandVisual 참조
+        if (hand.CardsInHand.Count < handVisual.GetMaxSlots())
         {
             CardLogic newCard = new CardLogic(cardAsset, this);
             newCard.owner = this;
             hand.CardsInHand.Insert(0, newCard);
-            new DrawACardCommand(hand.CardsInHand[0], this, fast: true, fromDeck: false).AddToQueue();
+            new DrawACardCommand(hand.CardsInHand[0], this, fromDeck: false).AddToQueue();
         }
     }
-
     public void PlayACardFromHand(int CardUniqueID, int TargetUniqueID)
     {
         if (CardLogic.CardsCreatedThisGame.TryGetValue(CardUniqueID, out CardLogic card))
@@ -215,32 +214,137 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             System.Random random = new System.Random();
             int index = random.Next(attackValues.Length);
             int randomAttackValue = attackValues[index];
-
             // 무작위로 선택된 공격력 값을 플레이어에게 반영
-            if (index == 0)
+            switch (index)
             {
-                InGameManager.instance.Sword += randomAttackValue;
+                case 0:
+                    InGameManager.instance.Sword += randomAttackValue;
+                    break;
+                case 1:
+                    InGameManager.instance.Magic += randomAttackValue;
+                    break;
+                case 2:
+                    InGameManager.instance.Shield += randomAttackValue;
+                    break;
             }
-            else if (index == 1)
+
+            void RemoveDebuff(string debuff)
             {
-                InGameManager.instance.Magic += randomAttackValue;
+                switch (debuff)
+                {
+                    case "실명":
+                        BuffManager.instance.RemoveBlindEffect();
+                        break;
+                    case "출혈":
+                        BuffManager.instance.RemoveBleedEffect();
+                        break;
+                    case "혼란":
+                        BuffManager.instance.RemoveConfusionEffect();
+                        break;
+                    case "랜덤":
+                        RemoveRandomDebuff();
+                        break;
+                    case "모든":
+                        RemoveAllDebuffs();
+                        break;
+                    case "모든버프":
+                        RemoveAllDebuffs();
+                        break;
+                }
             }
-            else if (index == 2)
+
+            void RemoveRandomDebuff()
             {
-                InGameManager.instance.Shield += randomAttackValue;
+                int randomDebuffIndex = UnityEngine.Random.Range(0, 3);
+                switch (randomDebuffIndex)
+                {
+                    case 0:
+                        BuffManager.instance.RemoveBlindEffect();
+                        break;
+                    case 1:
+                        BuffManager.instance.RemoveBleedEffect();
+                        break;
+                    case 2:
+                        BuffManager.instance.RemoveConfusionEffect();
+                        break;
+                }
             }
-            if (card.cardAsset.RemoveDebuff == "실명")
+
+            void RemoveAllDebuffs()
             {
                 BuffManager.instance.RemoveBlindEffect();
-            }
-            if (card.cardAsset.RemoveDebuff == "출혈")
-            {
                 BuffManager.instance.RemoveBleedEffect();
-            }
-            if (card.cardAsset.RemoveDebuff == "혼란")
-            {
                 BuffManager.instance.RemoveConfusionEffect();
             }
+
+            // 디버프 제거 함수 호출
+            RemoveDebuff(card.cardAsset.RemoveDebuff);
+
+            if (card.cardAsset.DiscardFromDeck > 0)
+            {
+                deck.DiscardRandomCards(card.cardAsset.DiscardFromDeck);
+            }
+            if (card.cardAsset.DrawFromDeck > 0)
+            {
+                for (int i = 0; i < card.cardAsset.DrawFromDeck; i++)
+                {
+                    DrawACard(1);
+                }
+            }
+            #region 코드 정리 후 주석처리
+            //// 무작위로 선택된 공격력 값을 플레이어에게 반영
+            //if (index == 0)
+            //{
+            //    InGameManager.instance.Sword += randomAttackValue;
+            //}
+            //else if (index == 1)
+            //{
+            //    InGameManager.instance.Magic += randomAttackValue;
+            //}
+            //else if (index == 2)
+            //{
+            //    InGameManager.instance.Shield += randomAttackValue;
+            //}
+            //if (card.cardAsset.RemoveDebuff == "실명")
+            //{
+            //    BuffManager.instance.RemoveBlindEffect();
+            //}
+            //if (card.cardAsset.RemoveDebuff == "출혈")
+            //{
+            //    BuffManager.instance.RemoveBleedEffect();
+            //}
+            //if (card.cardAsset.RemoveDebuff == "혼란")
+            //{
+            //    BuffManager.instance.RemoveConfusionEffect();
+            //}
+            //if (card.cardAsset.RemoveDebuff == "랜덤")
+            //{
+            //    if (UnityEngine.Random.Range(0, 3) == 0)
+            //    {
+            //        BuffManager.instance.RemoveBlindEffect();
+            //    }
+            //    else if(UnityEngine.Random.Range(0, 3) == 1)
+            //    {
+            //        BuffManager.instance.RemoveBleedEffect();
+            //    }
+            //    else if (UnityEngine.Random.Range(0, 3) == 2)
+            //    {
+            //        BuffManager.instance.RemoveConfusionEffect();
+            //    }
+            //}
+            //if (card.cardAsset.RemoveDebuff == "모든")
+            //{
+            //    BuffManager.instance.RemoveBlindEffect();
+            //    BuffManager.instance.RemoveBleedEffect();
+            //    BuffManager.instance.RemoveConfusionEffect();
+            //}
+            //if (card.cardAsset.RemoveDebuff == "모든버프")
+            //{
+            //    BuffManager.instance.RemoveBlindEffect();
+            //    BuffManager.instance.RemoveBleedEffect();
+            //    BuffManager.instance.RemoveConfusionEffect();
+            //}
+            #endregion
             photonView.RPC("RealTimeBossStatusCheck", RpcTarget.All, InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
 
             #region RPC호출로_인한_주석처리
@@ -262,7 +366,6 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             }
 
             // 조건 확인 및 알파값 변경
-             _enemyUIManager = FindObjectOfType<EnemyUIManager>();
             if (_enemyUIManager != null)
             {
                 int swordIncrement = InGameManager.instance.Sword - _previousSword;
@@ -385,9 +488,30 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         _buffManager.ApplyConfusionEffect();
     }
     // 특정 상황에서 실명 디버프를 제거
-    public void RemoveConfusionToPlayer()
+    public void RemoveConfusionEffect()
     {
         _buffManager.RemoveConfusionEffect();
+        if (_buffManager.ConfusionDebuff)
+        {
+            // EnemyUIManager의 UpdateUI 메소드 호출
+            if (_enemyUIManager != null)
+            {
+                // 필요한 파라미터를 넘겨줌
+                _enemyUIManager.UpdateUI(_currentEnemy.requiredSword, _currentEnemy.requiredMagic, _currentEnemy.requiredShield);
+
+                int swordIncrement = InGameManager.instance.Sword - _previousSword;
+                int magicIncrement = InGameManager.instance.Magic - _previousMagic;
+                int shieldIncrement = InGameManager.instance.Shield - _previousShield;
+
+                Debug.Log($"Sword Increment: {swordIncrement}");
+                Debug.Log($"Magic Increment: {magicIncrement}");
+                Debug.Log($"Shield Increment: {shieldIncrement}");
+
+                _enemyUIManager.ChangeAlphaForIncrement(swordIncrement, _enemyUIManager.swordImageParent, Sword, _currentEnemy.requiredSword);
+                _enemyUIManager.ChangeAlphaForIncrement(magicIncrement, _enemyUIManager.magicImageParent, Magic, _currentEnemy.requiredMagic);
+                _enemyUIManager.ChangeAlphaForIncrement(shieldIncrement, _enemyUIManager.shieldImageParent, Shield, _currentEnemy.requiredShield);
+            }
+        }
     }
     public void LoadCharacterInfoFromAsset()
     {
@@ -410,7 +534,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         while (hand.CardsInHand.Count < 5)
         {
             bool cardAdded = false;
-            DrawACard();
+            DrawACard(1);
 
             while (!cardAdded)
             {

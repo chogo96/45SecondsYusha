@@ -34,6 +34,7 @@ public class InGameShop: MonoBehaviourPunCallbacks
         Debug.Log("카드가 더해짐");
         if (_enemySpawner != null)
         {
+            
             _enemySpawner.OnShopButtonPressed();
         }
         Destroy(gameObject); // 상점 UI 제거

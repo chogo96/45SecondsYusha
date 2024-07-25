@@ -29,7 +29,6 @@ public class EnemyUIManager : MonoBehaviour
 
     private void UpdateImages(Transform parent, GameObject prefab, int count)
     {
-        
         // 기존 이미지 삭제
         foreach (Transform child in parent)
         {

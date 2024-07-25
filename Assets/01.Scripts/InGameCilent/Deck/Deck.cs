@@ -54,6 +54,20 @@ public class Deck : MonoBehaviour
     {
         return Cards.Count;
     }
+    // 덱에서 랜덤한 카드를 n장 버리는 메소드
+    public void DiscardRandomCards(int n)
+    {
+        for (int i = 0; i < n; i++)
+        {
+            if (Cards.Count == 0)
+                break;
+
+            int randomIndex = Random.Range(0, Cards.Count);
+            CardAsset card = Cards[randomIndex];
+            Cards.RemoveAt(randomIndex);
+            DiscardDeck.Add(card);
+        }
+    }
     // discarddeck 중 랜덤한 카드를 n장 덱으로 되돌리는 메소드
     public void ReturnRandomCardsFromDiscard(int n)
     {
