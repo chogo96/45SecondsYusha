@@ -39,6 +39,9 @@ public class RoomCreator : MonoBehaviourPunCallbacks
     private Button _matchmakingStart;
     private bool isChangedRoom = false;
 
+    // PunChat 기능추가
+    private GameObject _punChatPanel;
+
     private void Awake()
     {
         _maxPlayer = new Button[4];
@@ -71,6 +74,8 @@ public class RoomCreator : MonoBehaviourPunCallbacks
 
 
         _matchmakingStart = transform.Find("InRoom/Button - MatchingStart").GetComponent<Button>();
+
+        _punChatPanel = transform.Find("PunChat").gameObject;
     }
 
     void Start()
@@ -96,6 +101,8 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         _panelMatchmaking.SetActive(false);
 
         PhotonNetwork.AutomaticallySyncScene = true;
+
+        _punChatPanel.SetActive(false);
     }
 
     // 랜덤 매칭 작업 시작
@@ -173,6 +180,10 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         if (isMatchmaking)
         {
             StartCoroutine(C_WaitForReadyAndJoinRandomRoom());
+        }
+        else
+        {
+            _punChatPanel.SetActive(false);
         }
     }
 
@@ -381,6 +392,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
             _inRoomPanel.SetActive(true);
             int playerNumber = PhotonNetwork.CurrentRoom.PlayerCount;
             playerListDisplay.UpdatePlayerList(); // 방에 입장한 후 플레이어 목록 갱신
+            _punChatPanel.SetActive(true);
         }
     }
 

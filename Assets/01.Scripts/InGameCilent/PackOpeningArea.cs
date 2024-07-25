@@ -116,16 +116,20 @@ public class PackOpeningArea : MonoBehaviour
             rarity[Random.Range(0, rarity.Length)] = RarityOptions.Rare;
         }
 
+        FirebaseCardManager firebaseCardManager = FindObjectOfType<FirebaseCardManager>();
+        Dictionary<CardAsset,int> openCardPackData = new Dictionary<CardAsset,int>();
+
         for (int i = 0; i < rarity.Length; i++)
         {
-            GameObject card = CardFromPack(rarity[i]);
+            GameObject card = CardFromPack(rarity[i], openCardPackData);
             CardsFromPackCreated.Add(card);
             card.transform.position = cardsInitialPosition;
             card.transform.DOMove(SlotsForCards[i].position, 0.5f);
         }
+        firebaseCardManager.SaveCardData(openCardPackData, LoginManager.Email);
     }
 
-    private GameObject CardFromPack(RarityOptions rarity)
+    private GameObject CardFromPack(RarityOptions rarity, Dictionary<CardAsset, int> openpack)
     {
         List<CardAsset> CardsOfThisRarity = CardCollection.instance.GetCardsWithRarity(rarity);
         CardAsset cardAsset = CardsOfThisRarity[Random.Range(0, CardsOfThisRarity.Count)];
@@ -133,14 +137,14 @@ public class PackOpeningArea : MonoBehaviour
         // 카드 콜렉션에 카드에셋 추가
         CardCollection.instance.QuantityOfEachCard[cardAsset]++;
 
-        FirebaseCardManager firebaseCardManager = FindObjectOfType<FirebaseCardManager>();
-        if (firebaseCardManager != null)
+        // 뽑힌 카드를 openpack 딕셔너리에 추가
+        if (openpack.ContainsKey(cardAsset))
         {
-            firebaseCardManager.SaveCardData(CardCollection.instance.QuantityOfEachCard, LoginManager.Email);
+            openpack[cardAsset] = CardCollection.instance.QuantityOfEachCard[cardAsset];
         }
         else
         {
-            Debug.LogError("FirebaseCardManager 인스턴스를 찾을 수 없습니다.");
+            openpack.Add(cardAsset, CardCollection.instance.QuantityOfEachCard[cardAsset]);
         }
 
         GameObject card;

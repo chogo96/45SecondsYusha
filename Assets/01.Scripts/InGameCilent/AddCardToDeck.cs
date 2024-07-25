@@ -12,10 +12,12 @@ public class AddCardToDeck : MonoBehaviour
     private Vector3 _initialScale;
     private float scaleFactor = 1.5f;
     private CardAsset cardAsset;
+    FirebaseCardManager firebaseCardManager;
 
     void Awake()
     {
         _initialScale = new Vector3(60.0f, 60.0f, 60.0f); // 원하는 초기 크기로 설정
+        firebaseCardManager = FindObjectOfType<FirebaseCardManager>();
     }
 
     public void SetCardAsset(CardAsset asset) { cardAsset = asset; }
@@ -26,13 +28,18 @@ public class AddCardToDeck : MonoBehaviour
         if (asset == null)
             return;
 
-        if (CardCollection.instance.QuantityOfEachCard[cardAsset] - DeckBuildingScreen.instance.BuilderScript.NumberOfThisCardInDeck(cardAsset) > 0)
+        Debug.Log("if문 실행전.");
+
+        if (/*CardCollection.instance.QuantityOfEachCard[cardAsset]*/firebaseCardManager.viewCardss[cardAsset] - DeckBuildingScreen.instance.BuilderScript.NumberOfThisCardInDeck(cardAsset) >= 0)
         {
+            Debug.Log("클릭 활성화. 추가");
             DeckBuildingScreen.instance.BuilderScript.AddCard(asset);
             UpdateQuantity();
         }
         else
         {
+            Debug.Log("카드없음 ㅅㄱ.");
+
             // 카드가 충분하지 않음을 알려줍시다.
         }
     }

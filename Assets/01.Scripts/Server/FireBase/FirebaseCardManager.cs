@@ -11,6 +11,10 @@ public class FirebaseCardManager : MonoBehaviour
 
     public GameObject CreatureMenuPrefab;
     public List<CardAsset> viewCards = new List<CardAsset>(); // 프로젝트 내 모든 카드 데이터의 리스트
+
+    public Dictionary<CardAsset, int> viewCardss = new Dictionary<CardAsset, int>();
+
+
     public Transform[] Slots;
     CollectionBrowser collectionBrowser = new CollectionBrowser();
 
@@ -103,17 +107,21 @@ public class FirebaseCardManager : MonoBehaviour
             QuerySnapshot snapshot = await cardsRef.GetSnapshotAsync();
             Debug.Log("카드 데이터 로드 완료");
             List<CardAsset> loadedCards = new List<CardAsset>();
+            Dictionary<CardAsset,int> loadedCardss = new Dictionary<CardAsset, int>();
 
             foreach (DocumentSnapshot document in snapshot.Documents)
             {
                 Debug.Log($"문서 ID: {document.Id}");
-                if (document.TryGetValue("cardName", out string cardName))
+                if (document.TryGetValue("cardName", out string cardName) && document.TryGetValue("cardCount", out int cardCount))
                 {
                     Debug.Log($"카드 이름: {cardName}");
+                    Debug.Log($"카드 수량: {cardCount}");
                     CardAsset card = FindCardByName(cardName);
                     if (card != null)
                     {
                         loadedCards.Add(card);
+                        loadedCardss.Add(card, cardCount);
+                        
                     }
                     else
                     {
@@ -125,6 +133,7 @@ public class FirebaseCardManager : MonoBehaviour
                     Debug.LogError("카드 이름을 가져오지 못했습니다.");
                 }
             }
+            viewCardss = loadedCardss;
 
             Debug.Log($"로드된 카드 수: {loadedCards.Count}");
 
@@ -138,6 +147,8 @@ public class FirebaseCardManager : MonoBehaviour
                     viewCards.Add(card);
                 }
             }
+            
+
 
             // 이전에 생성된 카드 UI 제거
             foreach (GameObject cardObject in collectionBrowser.CreatedCards)
@@ -145,6 +156,10 @@ public class FirebaseCardManager : MonoBehaviour
                 Destroy(cardObject);
             }
             collectionBrowser.CreatedCards.Clear();
+
+
+            
+
 
             for (int i = 0; i < viewCards.Count; i++)
             {
