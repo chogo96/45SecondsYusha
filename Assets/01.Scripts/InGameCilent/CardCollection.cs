@@ -27,7 +27,7 @@ public class CardCollection : MonoBehaviour
                 AllCardsDictionary.Add(cardAsset.name, cardAsset);
             }
         }
-        
+
         LoadQuantityOfCardsFromPlayerPrefs();
     }
     /// <summary>
@@ -75,7 +75,7 @@ public class CardCollection : MonoBehaviour
     /// </summary>
     void OnApplicationQuit()
     {
-        SaveQuantityOfCardsIntoPlayerPrefs();
+        //SaveQuantityOfCardsIntoPlayerPrefs();
     }
 
     public CardAsset GetCardAssetByName(string name)
