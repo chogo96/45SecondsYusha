@@ -5,6 +5,22 @@ using Photon.Pun;
 
 public class TankerSkills : MonoBehaviourPunCallbacks, SkillsInterface
 {
+    SkillsManager skillsManager;
+
+    private void Awake()
+    {
+        skillsManager = FindObjectOfType<SkillsManager>();
+    }
+    private void Start()
+    {
+        SetSkill();
+    }
+    public void SetSkill()
+    {
+        skillsManager.SetSkill(this);
+    }
+
+    // 탱커 - 인내심 > 영웅능력을 누르면 자신이 사용한 카드 덱에서 15장 되돌림
     public void UseSkill()
     {
         photonView.RPC("UseSkillSignal", RpcTarget.All);
