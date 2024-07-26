@@ -5,6 +5,22 @@ using Photon.Pun;
 
 public class HealerSkills : MonoBehaviourPunCallbacks, SkillsInterface
 {
+    SkillsManager skillsManager;
+
+    private void Awake()
+    {
+        skillsManager = FindObjectOfType<SkillsManager>();
+    }
+    private void Start()
+    {
+        SetSkill();
+    }
+    public void SetSkill()
+    {
+        skillsManager.SetSkill(this);
+    }
+
+    // 힐러 - 사용한 카드 덱에서 전체 다 5장씩 되돌림
     public void UseSkill()
     {
         photonView.RPC("UseSkillSignal", RpcTarget.All);
