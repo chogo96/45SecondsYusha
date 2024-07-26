@@ -206,10 +206,10 @@ public class GoogleSheetsToCardAsset : MonoBehaviour
             Directory.CreateDirectory(path);
         }
 
-        string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath($"{path}/{card.CardScriptName}.asset");
+        //string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath($"{path}/{card.CardScriptName}.asset");
 
-        AssetDatabase.CreateAsset(card, assetPathAndName);
-        AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
+        //AssetDatabase.CreateAsset(card, assetPathAndName);
+        //AssetDatabase.SaveAssets();
+        //AssetDatabase.Refresh();
     }
 }

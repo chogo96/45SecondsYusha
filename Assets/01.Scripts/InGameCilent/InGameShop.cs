@@ -1,7 +1,8 @@
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InGameShop: MonoBehaviour
+public class InGameShop: MonoBehaviourPunCallbacks
 {
     public Button button1;
     public Button button2;
@@ -17,6 +18,9 @@ public class InGameShop: MonoBehaviour
     {
         // 버튼 1 클릭 시 처리할 로직
         Debug.Log("시간이 더해짐");
+
+        photonView.RPC("TimePlusMinus", RpcTarget.All, 10);
+
         if (_enemySpawner != null)
         {
             _enemySpawner.OnShopButtonPressed();
