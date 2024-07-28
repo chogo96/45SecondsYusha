@@ -8,7 +8,6 @@ public class Enemy : MonoBehaviour
     public int requiredSword;
     public int requiredMagic;
     public int requiredShield;
-    private GameOverManager _gameOverManager;
     private List<Debuff> _debuffs;
     private List<SpecialEffect> _specialEffects;
 
@@ -20,7 +19,6 @@ public class Enemy : MonoBehaviour
     private EnemyUIManager _enemyUIManager;
     public void Initialize(EnemyData data, List<PlayerScripts> players, bool isFinalBoss = false)
     {
-        _gameOverManager = FindObjectOfType<GameOverManager>();
         requiredSword = data.RequiredSwordAttack;
         requiredMagic = data.RequiredMagicAttack;
         requiredShield = data.RequiredShieldAttack;
@@ -98,7 +96,6 @@ public class Enemy : MonoBehaviour
         if (IsFinalBoss)
         {
             Debug.Log("½Â¸®!");
-            _gameOverManager.DisplayWin();
         }
         Debug.Log("»ç¸Á!");
         OnEnemyDeath?.Invoke();
