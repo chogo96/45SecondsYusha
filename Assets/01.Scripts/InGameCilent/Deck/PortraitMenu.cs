@@ -25,7 +25,7 @@ public class PortraitMenu : MonoBehaviour
         if (!selected)
         {
             selected = true;
-            transform.DOScale(TargetScale, 0.5f);
+            transform.DOScale(TargetScale, 2f);
             CharacterSelectionScreen.instance.HeroPanel.SelectCharacter(this);
             // deselect all the other Portrait Menu buttons 
             PortraitMenu[] allPortraitButtons = GameObject.FindObjectsOfType<PortraitMenu>();

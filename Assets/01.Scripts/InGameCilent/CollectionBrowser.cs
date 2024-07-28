@@ -17,7 +17,12 @@ public class CollectionBrowser : MonoBehaviour
 
     private CharacterAsset _character;
     public List<GameObject> CreatedCards = new List<GameObject>();
+    FirebaseCardManager firebaseCardManager;
 
+    private void Awake()
+    {
+        firebaseCardManager = FindObjectOfType<FirebaseCardManager>();
+    }
     #region PROPERTIES
     private bool _showingCardsPlayerDoesNotOwn = false;
     public bool ShowingCardsPlayerDoesNotOwn
@@ -41,7 +46,7 @@ public class CollectionBrowser : MonoBehaviour
             UpdatePage();
         }
     }
-
+    
     private bool _includeAllRarities = true;
     public bool IncludeAllRarities
     {
@@ -160,7 +165,7 @@ public class CollectionBrowser : MonoBehaviour
     public void UpdatePage()
     {
         ShowCards(_showingCardsPlayerDoesNotOwn, _pageIndex, _includeAllRarities, _includeAllCharacters, _rarity, _asset, _keyword, _includeTokenCards);
-        FirebaseCardManager firebaseCardManager = FindObjectOfType<FirebaseCardManager>();
+        
         firebaseCardManager.LoadCardNames(LoginManager.Email);
     }
 

@@ -5778,7 +5778,7 @@ MonoBehaviour:
   charAsset: {fileID: 11400000, guid: 4212422ae3113844da10b942807dd8f2, type: 2}
   PArea: {fileID: 521163019}
   usedHeroPowerThisGame: 0
-  deck: {fileID: 1564834569}
+  _deck: {fileID: 0}
   hand: {fileID: 198096045}
 --- !u!114 &1456350524
 MonoBehaviour:
@@ -6196,37 +6196,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d6d2b41916851942aaddd2c07091f30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Cards:
-  - {fileID: 11400000, guid: 899644f12b18f4e40a0b2720eb6006bc, type: 2}
-  - {fileID: 11400000, guid: 899644f12b18f4e40a0b2720eb6006bc, type: 2}
-  - {fileID: 11400000, guid: 899644f12b18f4e40a0b2720eb6006bc, type: 2}
-  - {fileID: 11400000, guid: b0465e176f473a04d9448b2085a080d3, type: 2}
-  - {fileID: 11400000, guid: b0465e176f473a04d9448b2085a080d3, type: 2}
-  - {fileID: 11400000, guid: b0465e176f473a04d9448b2085a080d3, type: 2}
-  - {fileID: 11400000, guid: e35aa6f1a96b8064fa233c7be07d2762, type: 2}
-  - {fileID: 11400000, guid: 3b11e30e2d8f8884e917c6cc5ab75394, type: 2}
-  - {fileID: 11400000, guid: 3b11e30e2d8f8884e917c6cc5ab75394, type: 2}
-  - {fileID: 11400000, guid: 3b11e30e2d8f8884e917c6cc5ab75394, type: 2}
-  - {fileID: 11400000, guid: 3b11e30e2d8f8884e917c6cc5ab75394, type: 2}
-  - {fileID: 11400000, guid: 3b11e30e2d8f8884e917c6cc5ab75394, type: 2}
-  - {fileID: 11400000, guid: 3b11e30e2d8f8884e917c6cc5ab75394, type: 2}
-  - {fileID: 11400000, guid: 3b11e30e2d8f8884e917c6cc5ab75394, type: 2}
-  - {fileID: 11400000, guid: 3b11e30e2d8f8884e917c6cc5ab75394, type: 2}
-  - {fileID: 11400000, guid: 3b11e30e2d8f8884e917c6cc5ab75394, type: 2}
-  - {fileID: 11400000, guid: 3b11e30e2d8f8884e917c6cc5ab75394, type: 2}
-  - {fileID: 11400000, guid: 3b11e30e2d8f8884e917c6cc5ab75394, type: 2}
-  - {fileID: 11400000, guid: 3b11e30e2d8f8884e917c6cc5ab75394, type: 2}
-  - {fileID: 11400000, guid: 3b11e30e2d8f8884e917c6cc5ab75394, type: 2}
-  - {fileID: 11400000, guid: 3b11e30e2d8f8884e917c6cc5ab75394, type: 2}
-  - {fileID: 11400000, guid: 3b11e30e2d8f8884e917c6cc5ab75394, type: 2}
-  - {fileID: 11400000, guid: 3b11e30e2d8f8884e917c6cc5ab75394, type: 2}
-  - {fileID: 11400000, guid: 3b11e30e2d8f8884e917c6cc5ab75394, type: 2}
-  - {fileID: 11400000, guid: 3b11e30e2d8f8884e917c6cc5ab75394, type: 2}
-  - {fileID: 11400000, guid: 3b11e30e2d8f8884e917c6cc5ab75394, type: 2}
-  - {fileID: 11400000, guid: 3b11e30e2d8f8884e917c6cc5ab75394, type: 2}
-  - {fileID: 11400000, guid: 3b11e30e2d8f8884e917c6cc5ab75394, type: 2}
-  - {fileID: 11400000, guid: 3b11e30e2d8f8884e917c6cc5ab75394, type: 2}
-  - {fileID: 11400000, guid: 3b11e30e2d8f8884e917c6cc5ab75394, type: 2}
+  Cards: []
   DiscardDeck: []
   VanishDeck: []
 --- !u!1 &1612603271

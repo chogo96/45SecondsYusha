@@ -19,6 +19,6 @@ public class DeckSelectInLobby : MonoBehaviour
     public void StartGame()
     {
         // 게임 신으로 이동
-        SceneManager.LoadScene("GamePlay Scene");
+        SceneManager.LoadScene("05.GamePlay Scene");
     }
 }

@@ -11,7 +11,7 @@ public class DeckIcon : MonoBehaviour
     public GameObject DeckNotCompleteObject;
     private PlayerPortraitVisual portrait;
     private float InitialScale;
-    private float TargetScale = 1.3f;
+    private float TargetScale = 10f;
     private bool selected = false;
 
     public DeckInfo DeckInformation { get; set; }
@@ -42,7 +42,7 @@ public class DeckIcon : MonoBehaviour
             selected = true;
             // zoom in on the deck only if it is complete
             if (DeckInformation.IsComplete())
-                transform.DOScale(TargetScale, 0.5f);
+                transform.DOScale(TargetScale, 1f);
 
             DeckSelectionScreen.instance.HeroPanelDeckSelection.SelectDeck(this);
             // deselect all the other Portrait Menu buttons 
