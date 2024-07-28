@@ -19,6 +19,7 @@ public class CollectionBrowser : MonoBehaviour
     private CharacterAsset _character;
 
     public List<GameObject> CreatedCards = new List<GameObject>();
+    FirebaseCardManager firebaseCardManager;
 
     #region PROPERTIES
     private bool _showingCardsPlayerDoesNotOwn = false;
@@ -114,6 +115,11 @@ public class CollectionBrowser : MonoBehaviour
         }
     }
     #endregion
+
+    private void Awake()
+    {
+        firebaseCardManager = FindObjectOfType<FirebaseCardManager>();
+    }
 
     public void ShowCollectionForBrowsing()
     {
@@ -215,7 +221,6 @@ public class CollectionBrowser : MonoBehaviour
         //    addCardComponent.SetCardAsset(CardsOnThisPage[i]);
         //    addCardComponent.UpdateQuantity();
         //}
-        FirebaseCardManager firebaseCardManager = FindObjectOfType<FirebaseCardManager>();
         firebaseCardManager.LoadCardNames(LoginManager.Email);
     }
 
