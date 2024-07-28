@@ -166,8 +166,8 @@ public class LoginManager : MonoBehaviour
         {
             
             // æ¿ ¿Ãµø
-            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("01.Start Scene");
-            //AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("MainScene");
+            //AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("01.Start Scene");
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("MainScene");
 
             while (!asyncLoad.isDone)
             {
