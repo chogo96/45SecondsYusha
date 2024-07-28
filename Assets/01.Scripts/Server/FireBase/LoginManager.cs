@@ -164,10 +164,10 @@ public class LoginManager : MonoBehaviour
         // 포톤 서버 연결 확인
         if (PhotonNetwork.IsConnected)
         {
-            
+
             // 씬 이동
-            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("01.Start Scene");
-            //AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("MainScene");
+            //AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("01.Start Scene");
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("MainScene");
 
             while (!asyncLoad.isDone)
             {
