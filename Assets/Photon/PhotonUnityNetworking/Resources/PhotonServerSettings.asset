@@ -52,6 +52,9 @@ MonoBehaviour:
   - UseSkillSignal
   - GiveUpVote
   - RegisterVote
+  - DeckStateUpdate
+  - RPC_SetOtherPlayerPositions
+  - SpawnPlayer
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
