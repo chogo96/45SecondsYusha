@@ -81,10 +81,10 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            DrawACard(1);
-        }
+        //if (Input.GetKeyDown(KeyCode.D))
+        //{
+        //    DrawACard(1);
+        //}
 
         // 키보드 입력으로 카드 속성 값을 증가시키는 부분 제거
     }
