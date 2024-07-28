@@ -5,6 +5,7 @@ using static UnityEngine.Rendering.DebugUI;
 using Photon.Pun;
 using Photon.Realtime;
 using static UnityEngine.GraphicsBuffer;
+using System.Collections.Generic;
 
 public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
 {
@@ -22,7 +23,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
     private int _previousSword;
     private int _previousMagic;
     private int _previousShield;
-    public Deck deck;
+    public Deck _deck;
     public Hand hand;
     public Table table;
     private PlayerDeckVisual _playerDeckVisual;
@@ -73,14 +74,6 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
 
     void Start()
     {
-        //if (hand.CardsInHand.Count <= 4 && !isFillingHand)
-        //{
-        //    StartCoroutine(FillHandCoroutine());
-        //}
-    }
-
-    public override void OnJoinedRoom()
-    {
         if (hand.CardsInHand.Count <= 4 && !isFillingHand)
         {
             StartCoroutine(FillHandCoroutine());
@@ -89,19 +82,17 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            DrawACard(1);
-        }
 
-        // 키보드 입력으로 카드 속성 값을 증가시키는 부분 제거
     }
 
     private void InitializePlayerDeck()
     {
-        if (deck != null)
+        List<CardAsset> selectedDeckCards = DeckGameManager.instance.GetSelectedDeckCards();
+
+        if (selectedDeckCards != null)
         {
-            deck.ShuffleDeck();
+            _deck.Cards = new List<CardAsset>(selectedDeckCards);
+            _deck.ShuffleDeck();
         }
     }
 
@@ -115,17 +106,16 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
     }
     public void DrawACard(int n)
     {
-        if (deck.Cards.Count > 0)
+        if (_deck.Cards.Count > 0)
         {
             HandVisual handVisual = PArea.handVisual;  // 현재 플레이어의 HandVisual 참조
             if (hand.CardsInHand.Count < handVisual.GetMaxSlots())
             {
-                CardLogic newCard = new CardLogic(deck.Cards[0], this);
+                CardLogic newCard = new CardLogic(_deck.Cards[0], this);
                 hand.CardsInHand.Insert(0, newCard);
-                deck.Cards.RemoveAt(0);
-                new DrawACardCommand(hand.CardsInHand[0], this, fromDeck: true).AddToQueue();
+                _deck.Cards.RemoveAt(0);
+                new DrawACardCommand(hand.CardsInHand[0],this,fromDeck: true).AddToQueue();
                 _playerDeckVisual.UpdateDeckCount();
-
             }
         }
         else
@@ -165,7 +155,6 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                     target = creature;
                 }
             }
-
             PlayACardFromHand(card, target);
         }
         else
@@ -292,7 +281,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
 
             if (card.cardAsset.DiscardFromDeck > 0)
             {
-                deck.DiscardRandomCards(card.cardAsset.DiscardFromDeck);
+                _deck.DiscardRandomCards(card.cardAsset.DiscardFromDeck);
             }
             if (card.cardAsset.DrawFromDeck > 0)
             {
@@ -390,7 +379,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                 _enemyUIManager.ChangeAlphaForIncrement(magicIncrement, _enemyUIManager.magicImageParent, Magic, _currentEnemy.requiredMagic);
                 _enemyUIManager.ChangeAlphaForIncrement(shieldIncrement, _enemyUIManager.shieldImageParent, Shield, _currentEnemy.requiredShield);
             }
-            deck.ReturnRandomCardsFromDiscard(card.cardAsset.RandomRestoreDeck);
+            _deck.ReturnRandomCardsFromDiscard(card.cardAsset.RandomRestoreDeck);
             // 2초 후에 추가 공격을 수행하는 코루틴 시작 (조건 확인)
             if (card.cardAsset.AdditionalSwordAttack > 0 ||
                 card.cardAsset.AdditionalMagicAttack > 0 ||
@@ -405,22 +394,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         if (hand.CardsInHand.Count <= 4 && !isFillingHand)
         {
             StartCoroutine(FillHandCoroutine());
-            photonView.RPC("DeckStateUpdate", RpcTarget.All);
-
         }
-        photonView.RPC("DeckStateUpdate", RpcTarget.All);
-
-    }
-
-
-    /// <summary>
-    /// 내 덱상태를 다른유저들에게 알리는 용도
-    /// </summary>
-    [PunRPC]
-    public void DeckStateUpdate()
-    {
-        // _playerState.text = $"{hand.CardsInHand.Count}";
-        // _playerHandCardCount.text = $"{deck.Cards.Count}";
     }
 
     private IEnumerator PerformAdditionalAttack(CardAsset cardAsset)
@@ -468,14 +442,14 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
     private void VanishCard(CardLogic card)
     {
         hand.CardsInHand.Remove(card);
-        deck.VanishDeck.Add(card.cardAsset);
+        _deck.VanishDeck.Add(card.cardAsset);
         Debug.Log($"Card {card.cardAsset.name} vanished.");
     }
 
     private void DiscardCard(CardLogic card)
     {
         hand.CardsInHand.Remove(card);
-        deck.DiscardDeck.Add(card.cardAsset);
+        _deck.DiscardDeck.Add(card.cardAsset);
         Debug.Log($"Card {card.cardAsset.name} discarded.");
     }
     public void UseHeroPower()

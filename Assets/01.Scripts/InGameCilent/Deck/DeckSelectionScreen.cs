@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class DeckSelectionScreen : MonoBehaviour
 {
+
     public GameObject ScreenContent;
     public DeckIcon[] DeckIcons;
     public HeroInfoPanel HeroPanelDeckSelection;
@@ -52,10 +52,5 @@ public class DeckSelectionScreen : MonoBehaviour
     public void HideScreen()
     {
         ScreenContent.SetActive(false);
-    }
-
-    public void GoToPlay()
-    {
-        SceneManager.LoadScene("05.GamePlay Scene");
     }
 }
