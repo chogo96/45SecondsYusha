@@ -196,8 +196,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
     {
         while (!PhotonNetwork.IsConnectedAndReady || (PhotonNetwork.NetworkClientState != ClientState.ConnectedToMasterServer && PhotonNetwork.NetworkClientState != ClientState.JoinedLobby))
         {
-            Debug.Log($"Waiting for connection to Master server... IsConnectedAndReady: {PhotonNetwork.IsConnectedAndReady}, Networ" +
-                $"kClientState: {PhotonNetwork.NetworkClientState}");
+            Debug.Log($"Waiting for connection to Master server... IsConnectedAndReady: {PhotonNetwork.IsConnectedAndReady}, NetworkClientState: {PhotonNetwork.NetworkClientState}");
             yield return null; // 다음 프레임까지 대기
         }
 
