@@ -23,6 +23,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
     private GameObject _inRoomPanel;
     private Button _roomExit;
     private Button _roomStart;
+    private Button _selectDeck;
 
     // 랜덤 매칭 UI
     private GameObject _panelMatchmaking;
@@ -63,6 +64,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
 
         _roomExit = transform.Find("InRoom/Button - Exit").GetComponent<Button>();
         _roomStart = transform.Find("InRoom/Button - Start").GetComponent<Button>();
+        _selectDeck = transform.Find("InRoom/Button - DeckSelect").GetComponent<Button>();
 
         _newRoom = transform.Find("Buttons/Button - NewRoom").GetComponent<Button>();
         _reSearch = transform.Find("Buttons/Button - ReSearch").GetComponent<Button>();
@@ -84,6 +86,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         _newRoom.onClick.AddListener(OnClickNewRoomButton);
         _roomExit.onClick.AddListener(OnClickRoomExit);
         _roomStart.onClick.AddListener(OnClickRoomStart);
+        _selectDeck.onClick.AddListener(OnClickSelectDeck);
 
         _matchmaking.onClick.AddListener(OnClickMatchmake);
         _cancelMatchmaking.onClick.AddListener(OnClickCancelMatchmake);
@@ -469,6 +472,19 @@ public class RoomCreator : MonoBehaviourPunCallbacks
             isMatchmaking = true;
             _matchmaking.gameObject.SetActive(false);
             JoinRandomRoom();
+        }
+    }
+    private void OnClickSelectDeck()
+    {
+        // DeckSelectionUI의 인스턴스를 찾아서 ShowScreen 호출
+        DeckSelectionUI deckSelectionUI = FindObjectOfType<DeckSelectionUI>();
+        if (deckSelectionUI != null)
+        {
+            deckSelectionUI.ShowScreen();
+        }
+        else
+        {
+            Debug.LogError("DeckSelectionUI 인스턴스를 찾을 수 없습니다.");
         }
     }
 

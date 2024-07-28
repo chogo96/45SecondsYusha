@@ -71,7 +71,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
 
         // Deck1 오브젝트를 찾아서 Deck 스크립트를 참조합니다.
         _deck = GameObject.Find("Deck1").GetComponent<Deck>();
-
+        
         InitializePlayerDeck();
     }
 

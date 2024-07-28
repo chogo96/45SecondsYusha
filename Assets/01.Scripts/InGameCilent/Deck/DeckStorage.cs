@@ -12,7 +12,15 @@ public class DecksStorage : MonoBehaviour
     void Awake()
     {
         AllDecks = new List<DeckInfo>();
-        instance = this;
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     void Start()
@@ -106,6 +114,8 @@ public class DeckInfo
     public string DeckName;
     public CharacterAsset Character;
     public List<CardAsset> Cards;
+    public int AmountOfCardsInDeck = 30;
+
 
     public DeckInfo(List<CardAsset> cards, string deckName, CharacterAsset charAsset)
     {
@@ -116,7 +126,7 @@ public class DeckInfo
 
     public bool IsComplete()
     {
-        return (DeckBuildingScreen.instance.BuilderScript.AmountOfCardsInDeck == Cards.Count);
+        return (AmountOfCardsInDeck == Cards.Count);
     }
 
     public int NumberOfThisCardInDeck (CardAsset asset)

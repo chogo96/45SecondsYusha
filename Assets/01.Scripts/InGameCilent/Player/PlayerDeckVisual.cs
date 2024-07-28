@@ -8,7 +8,7 @@ public class PlayerDeckVisual : MonoBehaviour
     private Deck deck;
     private HandVisual handVisual;
 
-    private void Start()
+    private void Awake()
     {
         deck = FindObjectOfType<Deck>();
         handVisual = FindObjectOfType<HandVisual>(); // 손패를 시각화하는 컴포넌트를 찾습니다.
