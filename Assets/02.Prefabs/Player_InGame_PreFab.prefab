@@ -597,6 +597,7 @@ GameObject:
   - component: {fileID: 1371782393068297548}
   - component: {fileID: 4684571111801863881}
   - component: {fileID: 7771617851462118771}
+  - component: {fileID: -2987996418610727043}
   m_Layer: 5
   m_Name: Player_InGame_PreFab
   m_TagString: Player
@@ -671,8 +672,20 @@ MonoBehaviour:
   charAsset: {fileID: 11400000, guid: 4212422ae3113844da10b942807dd8f2, type: 2}
   PArea: {fileID: 0}
   usedHeroPowerThisGame: 0
-  deck: {fileID: 0}
+  _deck: {fileID: 0}
   hand: {fileID: 0}
+--- !u!114 &-2987996418610727043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7646088978091066834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 126494ae2a10a34499272ed97a6c9f5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8482953063430300213
 GameObject:
   m_ObjectHideFlags: 0
