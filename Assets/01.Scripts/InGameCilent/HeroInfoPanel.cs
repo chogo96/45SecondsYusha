@@ -43,6 +43,28 @@ public class HeroInfoPanel : MonoBehaviour
         }
     }
 
+    //public void SelectDeck(DeckIcon deck)
+    //{
+    //    if (deck == null || selectedDeck == deck || !deck.DeckInformation.IsComplete())
+    //    {
+    //        portrait.gameObject.SetActive(false);
+    //        selectedDeck = null;
+    //        if (PlayButton != null)
+    //            PlayButton.interactable = false;
+    //    }
+    //    else
+    //    {
+    //        portrait.charAsset = deck.DeckInformation.Character;
+    //        portrait.ApplyLookFromAsset();
+    //        portrait.gameObject.SetActive(true);
+    //        selectedDeck = deck;
+    //        // instantly load this information to our BattleStartInfo.
+    //        BattleStartInfo.SelectedDeck = selectedDeck.DeckInformation;
+
+    //        if (PlayButton != null)
+    //            PlayButton.interactable = true;
+    //    }
+    //}
     public void SelectDeck(DeckIcon deck)
     {
         if (deck == null || selectedDeck == deck || !deck.DeckInformation.IsComplete())
@@ -58,6 +80,10 @@ public class HeroInfoPanel : MonoBehaviour
             portrait.ApplyLookFromAsset();
             portrait.gameObject.SetActive(true);
             selectedDeck = deck;
+
+            // 선택된 덱을 GameManager에 설정
+            DeckGameManager.instance.SetSelectedDeck(deck.DeckInformation.Cards);
+
             // instantly load this information to our BattleStartInfo.
             BattleStartInfo.SelectedDeck = selectedDeck.DeckInformation;
 
@@ -65,7 +91,6 @@ public class HeroInfoPanel : MonoBehaviour
                 PlayButton.interactable = true;
         }
     }
-
     public void GoToDeckbuilding()
     {
         if (selectedPortrait == null)
