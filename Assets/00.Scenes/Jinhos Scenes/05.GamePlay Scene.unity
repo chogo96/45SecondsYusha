@@ -6020,6 +6020,7 @@ MonoBehaviour:
   spawnPoints: []
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 --- !u!1 &1564552560
 =======
 --- !u!1 &1545509217
@@ -6200,6 +6201,8 @@ CanvasRenderer:
   m_GameObject: {fileID: 1545509217}
 >>>>>>> main
   m_CullTransparentMesh: 1
+=======
+>>>>>>> parent of 40c8247 (게임 종료 시 판넬 제작)
 =======
 >>>>>>> parent of 40c8247 (게임 종료 시 판넬 제작)
 --- !u!1 &1564834567
@@ -9624,9 +9627,12 @@ SceneRoots:
   - {fileID: 212839542}
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   - {fileID: 237061512}
 =======
   - {fileID: 777444926}
 >>>>>>> main
+=======
+>>>>>>> parent of 40c8247 (게임 종료 시 판넬 제작)
 =======
 >>>>>>> parent of 40c8247 (게임 종료 시 판넬 제작)
