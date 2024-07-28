@@ -50,6 +50,8 @@ MonoBehaviour:
   - TimePlus
   - TimePlusMinus
   - UseSkillSignal
+  - GiveUpVote
+  - RegisterVote
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
