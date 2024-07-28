@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class BuffManager : MonoBehaviour
+public class BuffManager : MonoBehaviourPun
 {
     //출혈디버프
     public bool BleedDebuff = false;
@@ -16,6 +17,16 @@ public class BuffManager : MonoBehaviour
 
     private Deck _deck;
     private Coroutine _bleedCoroutine;
+
+
+    // 디버프 이미지
+    [SerializeField] private GameObject bleedDebuffImage;
+    [SerializeField] private GameObject blindDebuffImage;
+    [SerializeField] private GameObject confusionDebuffImage;
+
+
+
+
 
     private void Awake()
     {

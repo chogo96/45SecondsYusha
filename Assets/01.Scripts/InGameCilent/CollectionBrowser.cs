@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class CollectionBrowser : MonoBehaviour
 {
-    public Transform Content; // ScrollView의 Content GameObject
-    public GameObject CardPrefab; // 카드 Prefab
+
+    public Transform[] Slots;
+    //public GameObject SpellMenuPrefab;
+    public GameObject CreatureMenuPrefab;
 
     public GameObject OneCharacterTabs;
     public GameObject AllCharactersTabs;
@@ -16,13 +17,10 @@ public class CollectionBrowser : MonoBehaviour
     public RarityFilter RarityFilter;
 
     private CharacterAsset _character;
+
     public List<GameObject> CreatedCards = new List<GameObject>();
     FirebaseCardManager firebaseCardManager;
 
-    private void Awake()
-    {
-        firebaseCardManager = FindObjectOfType<FirebaseCardManager>();
-    }
     #region PROPERTIES
     private bool _showingCardsPlayerDoesNotOwn = false;
     public bool ShowingCardsPlayerDoesNotOwn
@@ -46,7 +44,7 @@ public class CollectionBrowser : MonoBehaviour
             UpdatePage();
         }
     }
-    
+
     private bool _includeAllRarities = true;
     public bool IncludeAllRarities
     {
@@ -118,6 +116,11 @@ public class CollectionBrowser : MonoBehaviour
     }
     #endregion
 
+    private void Awake()
+    {
+        firebaseCardManager = FindObjectOfType<FirebaseCardManager>();
+    }
+
     public void ShowCollectionForBrowsing()
     {
         KeywordInputFieldScript.Clear();
@@ -146,11 +149,12 @@ public class CollectionBrowser : MonoBehaviour
 
     public void ClearCreatedCards()
     {
-        foreach (Transform child in Content)
+        while (CreatedCards.Count > 0)
         {
-            Destroy(child.gameObject);
+            GameObject g = CreatedCards[0];
+            CreatedCards.RemoveAt(0);
+            Destroy(g);
         }
-        CreatedCards.Clear();
     }
 
     public void UpdateQuantitiesOnPage()
@@ -165,8 +169,6 @@ public class CollectionBrowser : MonoBehaviour
     public void UpdatePage()
     {
         ShowCards(_showingCardsPlayerDoesNotOwn, _pageIndex, _includeAllRarities, _includeAllCharacters, _rarity, _asset, _keyword, _includeTokenCards);
-        
-        firebaseCardManager.LoadCardNames(LoginManager.Email);
     }
 
     private void ShowCards(bool showingCardsPlayerDoesNotOwn = false, int pageIndex = 0, bool includeAllRarities = true, bool includeAllCharacters = true,
@@ -184,32 +186,48 @@ public class CollectionBrowser : MonoBehaviour
         List<CardAsset> CardsOnThisPage = PageSelection(showingCardsPlayerDoesNotOwn, pageIndex, includeAllRarities, includeAllCharacters, rarity,
             asset, keyword, includeTokenCards);
 
+        // 카드를 클리어
         ClearCreatedCards();
-
-        if (CardsOnThisPage.Count == 0)
+        
+        if (CardsOnThisPage.Count == 0)//예외처리
         {
             return;
         }
 
-        foreach (CardAsset cardAsset in CardsOnThisPage)
-        {
-            GameObject newCard = Instantiate(CardPrefab ,Content);
-            CreatedCards.Add(newCard);
 
-            OneCardManager manager = newCard.GetComponent<OneCardManager>();
-            manager.cardAsset = cardAsset;
-            manager.ReadCardFromAsset();
+        //for (int i = 0; i < CardsOnThisPage.Count; i++)
+        //{
+        //    GameObject newMenuCard;
 
-            AddCardToDeck addCardComponent = newCard.GetComponent<AddCardToDeck>();
-            addCardComponent.SetCardAsset(cardAsset);
-            addCardComponent.UpdateQuantity();
-        }
+        //    if (CardsOnThisPage[i].TypeOfCard == TypesOfCards.Attacks)
+        //    {
+        //        // 공격카드
+        //        newMenuCard = Instantiate(CreatureMenuPrefab, Slots[i].position, Quaternion.identity) as GameObject;
+        //    }
+        //    else
+        //    {
+        //        newMenuCard = Instantiate(CreatureMenuPrefab, Slots[i].position, Quaternion.identity) as GameObject;
+        //    }
+
+        //    newMenuCard.transform.SetParent(this.transform);
+
+        //    CreatedCards.Add(newMenuCard);
+
+        //    OneCardManager manager = newMenuCard.GetComponent<OneCardManager>();
+        //    manager.cardAsset = CardsOnThisPage[i];
+        //    manager.ReadCardFromAsset();
+
+        //    AddCardToDeck addCardComponent = newMenuCard.GetComponent<AddCardToDeck>();
+        //    addCardComponent.SetCardAsset(CardsOnThisPage[i]);
+        //    addCardComponent.UpdateQuantity();
+        //}
+        firebaseCardManager.LoadCardNames(LoginManager.Email);
     }
 
     public void Next()
     {
         if (PageSelection(_showingCardsPlayerDoesNotOwn, _pageIndex + 1, _includeAllRarities, _includeAllCharacters, _rarity,
-            _asset, _keyword, _includeTokenCards).Count == 0)
+            _asset, _keyword,_includeTokenCards).Count == 0)
             return;
 
         ShowCards(_showingCardsPlayerDoesNotOwn, _pageIndex + 1, _includeAllRarities, _includeAllCharacters, _rarity,
@@ -225,22 +243,31 @@ public class CollectionBrowser : MonoBehaviour
             _asset, _keyword, _includeTokenCards);
     }
 
+    // 페이지에 표시할 카드의 자산 목록을 반환합니다. 선택된 모든 조건(희귀도 등...)에 맞는 카드를 선택합니다.
     private List<CardAsset> PageSelection(bool showingCardsPlayerDoesNotOwn = false, int pageIndex = 0, bool includeAllRarities = true, bool includeAllCharacters = true,
         RarityOptions rarity = RarityOptions.Basic, CharacterAsset asset = null, string keyword = "", bool includeTokenCards = false)
     {
         List<CardAsset> returnList = new List<CardAsset>();
 
+        // 선택된 모든 조건을 만족하는 컬렉션에서 카드를 가져옵니다.
         List<CardAsset> cardsToChooseFrom = CardCollection.instance.GetCards(showingCardsPlayerDoesNotOwn, includeAllRarities, includeAllCharacters, rarity,
             asset, keyword, includeTokenCards);
 
-        if (cardsToChooseFrom.Count > pageIndex * 10)
+        // 페이지 인덱스에 카드를 표시할 수 있을 만큼 충분한 카드가 있는 경우
+        // 그렇지 않으면 빈 리스트가 반환됩니다.
+        if (cardsToChooseFrom.Count > pageIndex * Slots.Length)
         {
-            for (int i = 0; (i < cardsToChooseFrom.Count - pageIndex * 10 && i < 10); i++)
+            // 1) i < cardsToChooseFrom.Count - pageIndex * Slots.Length는 마지막 페이지에서 카드를 다 사용하지 않았는지 확인합니다
+            // (예를 들어, 페이지에 10개의 슬롯이 있지만 5개의 카드만 표시해야 하는 경우)
+            // 2) i < Slots.Length는 한 페이지에 표시할 카드의 한도를 채웠는지 확인합니다 (페이지를 다 채웠는지 확인)
+            for (int i = 0; (i < cardsToChooseFrom.Count - pageIndex * Slots.Length && i < Slots.Length); i++)
             {
-                returnList.Add(cardsToChooseFrom[pageIndex * 10 + i]);
+                returnList.Add(cardsToChooseFrom[pageIndex * Slots.Length + i]);
             }
         }
 
         return returnList;
     }
+
 }
+
