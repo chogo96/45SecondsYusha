@@ -73,6 +73,14 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
 
     void Start()
     {
+        //if (hand.CardsInHand.Count <= 4 && !isFillingHand)
+        //{
+        //    StartCoroutine(FillHandCoroutine());
+        //}
+    }
+
+    public override void OnJoinedRoom()
+    {
         if (hand.CardsInHand.Count <= 4 && !isFillingHand)
         {
             StartCoroutine(FillHandCoroutine());
@@ -115,8 +123,9 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                 CardLogic newCard = new CardLogic(deck.Cards[0], this);
                 hand.CardsInHand.Insert(0, newCard);
                 deck.Cards.RemoveAt(0);
-                new DrawACardCommand(hand.CardsInHand[0],this,fromDeck: true).AddToQueue();
+                new DrawACardCommand(hand.CardsInHand[0], this, fromDeck: true).AddToQueue();
                 _playerDeckVisual.UpdateDeckCount();
+
             }
         }
         else
@@ -156,6 +165,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                     target = creature;
                 }
             }
+
             PlayACardFromHand(card, target);
         }
         else
@@ -395,7 +405,22 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         if (hand.CardsInHand.Count <= 4 && !isFillingHand)
         {
             StartCoroutine(FillHandCoroutine());
+            photonView.RPC("DeckStateUpdate", RpcTarget.All);
+
         }
+        photonView.RPC("DeckStateUpdate", RpcTarget.All);
+
+    }
+
+
+    /// <summary>
+    /// 내 덱상태를 다른유저들에게 알리는 용도
+    /// </summary>
+    [PunRPC]
+    public void DeckStateUpdate()
+    {
+        // _playerState.text = $"{hand.CardsInHand.Count}";
+        // _playerHandCardCount.text = $"{deck.Cards.Count}";
     }
 
     private IEnumerator PerformAdditionalAttack(CardAsset cardAsset)
