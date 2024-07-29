@@ -9,8 +9,11 @@ public class GameOverManager : MonoBehaviour
     public GameObject winPanel;
     public GameObject losePanel;
     public float displayTime = 5.0f; // 패널이 보이는 시간
-    public Button returnToLobbyButton;
-
+    private Button returnToLobbyButton;
+    private void Awake()
+    {
+        returnToLobbyButton = GameObject.Find("Button - ReturnLobby").GetComponent<Button>();   
+    }
     void Start()
     {
         winPanel.SetActive(false);
@@ -38,6 +41,6 @@ public class GameOverManager : MonoBehaviour
 
     private void ReturnToLobby()
     {
-        SceneManager.LoadScene("LobbyScene"); // 로비 씬의 이름으로 변경
+        SceneManager.LoadScene("04.Lobby Scene"); // 로비 씬의 이름으로 변경
     }
 }
