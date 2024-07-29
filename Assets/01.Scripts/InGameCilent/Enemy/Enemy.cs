@@ -144,9 +144,13 @@ public class Enemy : MonoBehaviourPunCallbacks
     public static event EnemyDeath OnEnemyDeath;
     private PlayerScripts _playerScripts;
     private EnemyUIManager _enemyUIManager;
+    private PlayerSetManager playerSetManager;
 
 
-
+    private void Awake()
+    {
+        playerSetManager = FindObjectOfType<PlayerSetManager>();
+    }
 
 
     public void Initialize(EnemyData data, List<PlayerScripts> players, bool isFinalBoss = false)
@@ -208,7 +212,7 @@ public class Enemy : MonoBehaviourPunCallbacks
             int randomIndex = Random.Range(0, players.Count);
             players[randomIndex].ApplyBleedToPlayer();
             int playerID = players[randomIndex].PlayerID;
-            photonView.RPC("DeBuffImageOn", RpcTarget.All, playerID, "bleed");
+            playerSetManager.photonView.RPC("DeBuffImageOn", RpcTarget.All, playerID, "bleed");
         }
         else
         {
@@ -223,7 +227,7 @@ public class Enemy : MonoBehaviourPunCallbacks
             int randomIndex = Random.Range(0, players.Count);
             players[randomIndex].ApplyBlindToPlayer();
             int playerID = players[randomIndex].PlayerID;
-            photonView.RPC("DeBuffImageOn", RpcTarget.All, playerID, "blind");
+            playerSetManager.photonView.RPC("DeBuffImageOn", RpcTarget.All, playerID, "blind");
         }
         else
         {
@@ -238,7 +242,7 @@ public class Enemy : MonoBehaviourPunCallbacks
             int randomIndex = Random.Range(0, players.Count);
             players[randomIndex].ApplyConfusionToPlayer();
             int playerID = players[randomIndex].PlayerID;
-            photonView.RPC("DeBuffImageOn", RpcTarget.All, playerID, "confusion");
+            playerSetManager.photonView.RPC("DeBuffImageOn", RpcTarget.All, playerID, "confusion");
         }
         else
         {

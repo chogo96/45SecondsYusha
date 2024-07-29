@@ -1,8 +1,6 @@
 using Photon.Pun;
 using Photon.Realtime;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,12 +19,12 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
     private Image[] _handImage;
     private TMP_Text[] _handCountText;
 
-
-    // 플레이어 수에 맞게 배열 크기 설정 (1부터 사용하기 위해 +1)
-    private int playerCount = PhotonNetwork.PlayerList.Length + 1;
+    private int playerCount;
 
     private void Awake()
     {
+        playerCount = PhotonNetwork.PlayerList.Length + 1;
+
         _playerImage = new Image[playerCount];
         _bleedDebuffImage = new GameObject[playerCount];
         _blindDebuffImage = new GameObject[playerCount];
@@ -36,17 +34,25 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
         _handImage = new Image[playerCount];
         _handCountText = new TMP_Text[playerCount];
 
+        // GameManager의 AllPlayersSpawned 이벤트 구독
+        GameManager.AllPlayersSpawned += Reset;
     }
 
-    private void Start()
+    private void OnDestroy()
+    {
+        // 이벤트 구독 해제
+        GameManager.AllPlayersSpawned -= Reset;
+    }
+
+    private void Reset()
     {
         for (int i = 1; playerCount > i; i++)
         {
             _playerImage[i] = transform.Find($"Player_{i}/Player_Image").GetComponent<Image>();
 
-            _bleedDebuffImage[i] = transform.Find($"Player_{i}/BleedDebuffImage").GetComponent<GameObject>();
-            _blindDebuffImage[i] = transform.Find($"Player_{i}/BlindDebuffImage").GetComponent<GameObject>();
-            _confusionDebuffImage[i] = transform.Find($"Player_{i}/ConfusionDebuffImage").GetComponent<GameObject>();
+            _bleedDebuffImage[i] = transform.Find($"Player_{i}/BleedDebuffImage").gameObject;
+            _blindDebuffImage[i] = transform.Find($"Player_{i}/BlindDebuffImage").gameObject;
+            _confusionDebuffImage[i] = transform.Find($"Player_{i}/ConfusionDebuffImage").gameObject;
 
             _deckImage[i] = transform.Find($"Player_{i}/DeckImage").GetComponent<Image>();
             _deckCountText[i] = transform.Find($"Player_{i}/DeckImage/DeckCountText (TMP)").GetComponent<TMP_Text>();
@@ -56,11 +62,10 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
         }
     }
 
-
     [PunRPC]
-    public void DeBuffImageOn(int playerID,string deBuff)
+    public void DeBuffImageOn(int playerID, string deBuff)
     {
-        if(deBuff == "bleed")
+        if (deBuff == "bleed")
         {
             _bleedDebuffImage[playerID].SetActive(true);
         }
@@ -73,7 +78,6 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
             _confusionDebuffImage[playerID].SetActive(true);
         }
     }
-
 
     [PunRPC]
     public void DeBuffImageOff(int playerID, string deBuff)
@@ -91,5 +95,4 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
             _confusionDebuffImage[playerID].SetActive(false);
         }
     }
-
 }
