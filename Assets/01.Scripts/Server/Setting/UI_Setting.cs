@@ -128,9 +128,11 @@ public class UI_Setting : MonoBehaviourPunCallbacks
                 break;
             case 1:
                 // 취소 버튼 클릭 시 서버에 거절 투표를 알립니다.
-                photonView.RPC("RegisterVote", RpcTarget.MasterClient, false);
+                photonView.RPC("RegisterVote", RpcTarget.MasterClient, false); 
                 break;
         }
+        _yes.interactable = false;
+        _no.interactable = false;
     }
 
     /// <summary>

@@ -37,27 +37,19 @@ public class GameManager : MonoBehaviourPunCallbacks
         // Define local player positions relative to the local player's view
         localPlayerPositions = new Vector3[]
         {
-            new Vector3(-830, -359, 0),  // Local player (6 o'clock)
-            new Vector3(-843, 262, 0),   // Player 2 (9 o'clock)
-            new Vector3(364, 416, 0),    // Player 3 (12 o'clock)
-            new Vector3(734, 29, 0)      // Player 4 (3 o'clock)
+            new Vector3(-961, -536, 0),  // Local player (6 o'clock)
+            new Vector3(-961,16,0),   // Player 2 (9 o'clock)
+            new Vector3(91,218,0),    // Player 3 (12 o'clock)
+            new Vector3(597,-167,0)      // Player 4 (3 o'clock)
         };
 
         if (PhotonNetwork.IsConnectedAndReady)
         {
-            SpawnAllPlayers();
+            SpawnPlayer(PhotonNetwork.LocalPlayer);
         }
         else
         {
             Debug.LogError("PhotonNetwork is not connected and ready.");
-        }
-    }
-
-    private void SpawnAllPlayers()
-    {
-        foreach (Player player in PhotonNetwork.PlayerList)
-        {
-            SpawnPlayer(player);
         }
     }
 
