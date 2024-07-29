@@ -1,6 +1,7 @@
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
+using System;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
@@ -10,6 +11,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     GameObject canvasObject;
 
     private Vector3[] localPlayerPositions;
+
+    public static Action AllPlayersSpawned;
 
     private void Start()
     {
@@ -85,10 +88,21 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             // Debugging information
             Debug.Log("Player parent after setting: " + playerObject.transform.parent.name);
+
+            // 모든 플레이어가 스폰되었는지 확인하고 이벤트 호출
+            CheckAllPlayersSpawned();
         }
         else
         {
             Debug.LogError("Player instantiation failed.");
+        }
+    }
+
+    private void CheckAllPlayersSpawned()
+    {
+        if (PhotonNetwork.PlayerList.Length == PhotonNetwork.CurrentRoom.PlayerCount)
+        {
+            AllPlayersSpawned?.Invoke();
         }
     }
 }
