@@ -15,7 +15,7 @@ public class PlayerSetManager : MonoBehaviour
     private Image _handImage;
     private TMP_Text _handCountText;
 
-    private void Start()
+    private void Awake()
     {
         _playerImage = transform.Find("Player_Image").GetComponent<Image>();
         _bleedDebuffImage = transform.Find("BleedDebuffImage").GetComponent<Image>();
