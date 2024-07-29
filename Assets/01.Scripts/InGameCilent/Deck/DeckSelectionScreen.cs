@@ -54,8 +54,8 @@ public class DeckSelectionScreen : MonoBehaviour
     {
         ScreenContent.SetActive(false);
     }
-    public void GoToPlay()
-    {
-        SceneManager.LoadScene("05.GamePlay Scene");
-    }
+    //public void GoToPlay()
+    //{
+    //    SceneManager.LoadScene("05.GamePlay Scene");
+    //}
 }

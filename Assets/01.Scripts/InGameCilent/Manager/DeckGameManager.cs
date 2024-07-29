@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DeckGameManager : MonoBehaviour
 {
@@ -26,5 +27,9 @@ public class DeckGameManager : MonoBehaviour
     public List<CardAsset> GetSelectedDeckCards()
     {
         return selectedDeckCards;
+    }
+    public void GoToLobby()
+    {
+        SceneManager.LoadScene("04.Lobby Scene");
     }
 }

@@ -15,7 +15,7 @@ MonoBehaviour:
   Class: 1
   ClassName: "\uBC84\uD37C"
   HeroPowerName: "\uC720\uBB3C[\uD68C\uC911\uC2DC\uACC4]"
-  AvatarImage: {fileID: 0}
+  AvatarImage: {fileID: 1828811504, guid: 5b34ab02340731945a5000945fed345c, type: 3}
   HeroPowerIconImage: {fileID: 0}
   AvatarBGImage: {fileID: 0}
   HeroPowerBGImage: {fileID: 0}
