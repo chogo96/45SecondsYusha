@@ -126,9 +126,9 @@ public class BuffManager : MonoBehaviourPun
     private Coroutine _bleedCoroutine;
 
     // 디버프 이미지
-    [SerializeField] private GameObject bleedDebuffImage;
-    [SerializeField] private GameObject blindDebuffImage;
-    [SerializeField] private GameObject confusionDebuffImage;
+    //[SerializeField] private GameObject bleedDebuffImage;
+    //[SerializeField] private GameObject blindDebuffImage;
+    //[SerializeField] private GameObject confusionDebuffImage;
 
     private void Awake()
     {
@@ -142,26 +142,26 @@ public class BuffManager : MonoBehaviourPun
 
     private IEnumerator Initialize()
     {
-        yield return new WaitUntil(() => GameObject.Find("BleedDebuffImage") != null);
-        bleedDebuffImage = GameObject.Find("BleedDebuffImage");
-        if (bleedDebuffImage == null)
-        {
-            Debug.LogError("BleedDebuffImage를 찾을 수 없습니다.");
-        }
+        //yield return new WaitUntil(() => GameObject.Find("BleedDebuffImage") != null);
+        //bleedDebuffImage = GameObject.Find("BleedDebuffImage");
+        //if (bleedDebuffImage == null)
+        //{
+        //    Debug.LogError("BleedDebuffImage를 찾을 수 없습니다.");
+        //}
 
-        yield return new WaitUntil(() => GameObject.Find("BlindDebuffImage") != null);
-        blindDebuffImage = GameObject.Find("BlindDebuffImage");
-        if (blindDebuffImage == null)
-        {
-            Debug.LogError("BlindDebuffImage를 찾을 수 없습니다.");
-        }
+        //yield return new WaitUntil(() => GameObject.Find("BlindDebuffImage") != null);
+        //blindDebuffImage = GameObject.Find("BlindDebuffImage");
+        //if (blindDebuffImage == null)
+        //{
+        //    Debug.LogError("BlindDebuffImage를 찾을 수 없습니다.");
+        //}
 
-        yield return new WaitUntil(() => GameObject.Find("ConfusionDebuffImage") != null);
-        confusionDebuffImage = GameObject.Find("ConfusionDebuffImage");
-        if (confusionDebuffImage == null)
-        {
-            Debug.LogError("ConfusionDebuffImage를 찾을 수 없습니다.");
-        }
+        //yield return new WaitUntil(() => GameObject.Find("ConfusionDebuffImage") != null);
+        //confusionDebuffImage = GameObject.Find("ConfusionDebuffImage");
+        //if (confusionDebuffImage == null)
+        //{
+        //    Debug.LogError("ConfusionDebuffImage를 찾을 수 없습니다.");
+        //}
 
         yield return new WaitUntil(() => GameObject.Find("Deck1") != null);
         GameObject deckObject = GameObject.Find("Deck1");

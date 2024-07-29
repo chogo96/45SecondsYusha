@@ -567,7 +567,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
     void Awake()
     {
         Players = GameObject.FindObjectsOfType<PlayerScripts>();
-        PlayerID = IDFactory.GetUniqueID();
+        PlayerID = IDFactory.GetUniquePlayerID();
         _playerDeckVisual = FindObjectOfType<PlayerDeckVisual>();
         // EnemySpawner에 자신을 등록
         RegisterWithEnemySpawner();

@@ -125,11 +125,12 @@
 //    }
 
 //}
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviourPunCallbacks
 {
     public int requiredSword;
     public int requiredMagic;
@@ -143,6 +144,10 @@ public class Enemy : MonoBehaviour
     public static event EnemyDeath OnEnemyDeath;
     private PlayerScripts _playerScripts;
     private EnemyUIManager _enemyUIManager;
+
+
+
+
 
     public void Initialize(EnemyData data, List<PlayerScripts> players, bool isFinalBoss = false)
     {
@@ -202,6 +207,8 @@ public class Enemy : MonoBehaviour
         {
             int randomIndex = Random.Range(0, players.Count);
             players[randomIndex].ApplyBleedToPlayer();
+            int playerID = players[randomIndex].PlayerID;
+            photonView.RPC("DeBuffImageOn", RpcTarget.All, playerID, "bleed");
         }
         else
         {
@@ -215,6 +222,8 @@ public class Enemy : MonoBehaviour
         {
             int randomIndex = Random.Range(0, players.Count);
             players[randomIndex].ApplyBlindToPlayer();
+            int playerID = players[randomIndex].PlayerID;
+            photonView.RPC("DeBuffImageOn", RpcTarget.All, playerID, "blind");
         }
         else
         {
@@ -228,6 +237,8 @@ public class Enemy : MonoBehaviour
         {
             int randomIndex = Random.Range(0, players.Count);
             players[randomIndex].ApplyConfusionToPlayer();
+            int playerID = players[randomIndex].PlayerID;
+            photonView.RPC("DeBuffImageOn", RpcTarget.All, playerID, "confusion");
         }
         else
         {

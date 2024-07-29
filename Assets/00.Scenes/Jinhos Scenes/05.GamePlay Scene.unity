@@ -1525,6 +1525,8 @@ GameObject:
   - component: {fileID: 409588305}
   - component: {fileID: 409588304}
   - component: {fileID: 409588303}
+  - component: {fileID: 409588309}
+  - component: {fileID: 409588308}
   m_Layer: 5
   m_Name: Canvas - PlayerSpawn
   m_TagString: Untagged
@@ -1627,6 +1629,40 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &409588308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 409588302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 6
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &409588309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 409588302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca115a9f98a3b4b4f8ff284233dbfa00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &419747350
 GameObject:
   m_ObjectHideFlags: 0
@@ -3969,6 +4005,76 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1147875449}
   m_CullTransparentMesh: 1
+--- !u!1 &1179925954
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1179925957}
+  - component: {fileID: 1179925956}
+  - component: {fileID: 1179925955}
+  m_Layer: 0
+  m_Name: Enemy_Scripts
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1179925955
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1179925954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 2
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &1179925956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1179925954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f00d73c241b28c346904fd6d40c77b96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  requiredSword: 0
+  requiredMagic: 0
+  requiredShield: 0
+--- !u!4 &1179925957
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1179925954}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 481.91788, y: 281.3159, z: 409.79752}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1198837489
 GameObject:
   m_ObjectHideFlags: 0
@@ -4473,9 +4579,6 @@ MonoBehaviour:
   BlindDebuff: 0
   ConfusionDebuff: 0
   BleedInterval: 2
-  bleedDebuffImage: {fileID: 0}
-  blindDebuffImage: {fileID: 0}
-  confusionDebuffImage: {fileID: 0}
 --- !u!4 &1299687912
 Transform:
   m_ObjectHideFlags: 0
@@ -8704,6 +8807,7 @@ SceneRoots:
   - {fileID: 213094968}
   - {fileID: 532512198}
   - {fileID: 1923699459}
+  - {fileID: 1179925957}
   - {fileID: 1299687912}
   - {fileID: 2035660864}
   - {fileID: 427644838}

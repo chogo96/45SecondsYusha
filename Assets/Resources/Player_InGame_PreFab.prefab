@@ -473,7 +473,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8539741309152924211
 RectTransform:
   m_ObjectHideFlags: 0
@@ -682,7 +682,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1358245134405385445
 RectTransform:
   m_ObjectHideFlags: 0
@@ -757,7 +757,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4651219975520555903
 RectTransform:
   m_ObjectHideFlags: 0
@@ -999,7 +999,6 @@ GameObject:
   - component: {fileID: 4684571111801863881}
   - component: {fileID: -6961283133551894298}
   - component: {fileID: 7441035515764275795}
-  - component: {fileID: -4522477587638549838}
   m_Layer: 5
   m_Name: Player_InGame_PreFab
   m_TagString: Player
@@ -1086,24 +1085,12 @@ MonoBehaviour:
   Magic: 0
   Shield: 0
   RandomValue: 0
-  PlayerID: 0
+  PlayerID: 213
   charAsset: {fileID: 11400000, guid: 4212422ae3113844da10b942807dd8f2, type: 2}
   PArea: {fileID: 2571891346215937270}
   usedHeroPowerThisGame: 0
   _deck: {fileID: 8322949386943975010}
   hand: {fileID: 8442993951285010270}
---- !u!114 &-4522477587638549838
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7646088978091066834}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca115a9f98a3b4b4f8ff284233dbfa00, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &8136893931901886575
 GameObject:
   m_ObjectHideFlags: 0
