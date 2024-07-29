@@ -237,6 +237,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3917073980248675599}
   - component: {fileID: 2571891346215937270}
+  - component: {fileID: 7238721515706365546}
   m_Layer: 5
   m_Name: Player1PlayerArea
   m_TagString: Untagged
@@ -287,6 +288,19 @@ MonoBehaviour:
   HeroPower: {fileID: 0}
   PortraitPosition: {fileID: 0}
   InitialPortraitPosition: {fileID: 0}
+--- !u!114 &7238721515706365546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1798175538217826320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47cf5cf2cee755845a2b659f3ae78cf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UniqueID: 0
 --- !u!1 &2109442607182993918
 GameObject:
   m_ObjectHideFlags: 0
