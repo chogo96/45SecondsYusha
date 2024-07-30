@@ -59,6 +59,9 @@ MonoBehaviour:
   - DeBuffImageOff
   - DeBuffImageOn
   - RPC_SpawnNextEnemy
+  - RPC_SetPlayerPosition
+  - RPC_ReceiveSpawnOrder
+  - HandCardCount
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

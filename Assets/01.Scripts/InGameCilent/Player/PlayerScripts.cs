@@ -4,6 +4,8 @@ using Photon.Pun;
 using static UnityEngine.Rendering.DebugUI;
 using System.Collections;
 using System;
+using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 
 public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
 {
@@ -31,6 +33,13 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
 
     public static PlayerScripts[] Players;
     private BuffManager _buffManager;
+
+    private PlayerSetManager playerSetManager;
+    private int actorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
+
+
+
+
 
     public int ID
     {
@@ -65,6 +74,8 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
 
     void Awake()
     {
+        playerSetManager = FindObjectOfType<PlayerSetManager>();
+
         Players = GameObject.FindObjectsOfType<PlayerScripts>();
         PlayerID = IDFactory.GetUniquePlayerID();
         _playerDeckVisual = FindObjectOfType<PlayerDeckVisual>();
@@ -160,6 +171,8 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                 _deck.Cards.RemoveAt(0);
                 new DrawACardCommand(hand.CardsInHand[0], this, fromDeck: true).AddToQueue();
                 _playerDeckVisual.UpdateDeckCount();
+
+                playerSetManager.photonView.RPC("HandCardCount", RpcTarget.All, actorNumber, n, "Plus");
             }
         }
         else
@@ -337,6 +350,8 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             }
 
             photonView.RPC("RealTimeBossStatusCheck", RpcTarget.All, InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
+            playerSetManager.photonView.RPC("HandCardCount", RpcTarget.All, actorNumber, 1,"Minus");
+
 
             // 카드 처리 로직을 이곳에서 처리
             if (card.cardAsset.IsVanishCard)
@@ -423,6 +438,8 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         }
 
         photonView.RPC("RealTimeBossStatusCheck", RpcTarget.All, InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
+        
+        playerSetManager.photonView.RPC("HandCardCount", RpcTarget.All, actorNumber,1, "Minus");
     }
 
     private void VanishCard(CardLogic card)
