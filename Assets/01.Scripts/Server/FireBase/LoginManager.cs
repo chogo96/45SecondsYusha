@@ -17,6 +17,11 @@ public class LoginManager : MonoBehaviour
     private Button _register;
     private Button _cancel;
 
+    private Button _Test1;
+    private Button _Test2;
+    private Button _Test3;
+    private Button _Test4;
+
 
     private GameObject _registerPopUp;
     private bool isHide = true;
@@ -42,6 +47,16 @@ public class LoginManager : MonoBehaviour
         _register = transform.Find("Panel - Login/Button - Register").GetComponent<Button>();
         _cancel = transform.Find("Panel - Register/Button - Cancel").GetComponent<Button>();
 
+
+
+        _Test1 = transform.Find("Button - Test1").GetComponent<Button>();
+        _Test2 = transform.Find("Button - Test2").GetComponent<Button>();
+        _Test3 = transform.Find("Button - Test3").GetComponent<Button>();
+        _Test4 = transform.Find("Button - Test4").GetComponent<Button>();
+
+
+
+
         _registerPopUp = transform.Find("Panel - Register").gameObject;
 
         _errorMessage = transform.Find("Panel - Login/Text (TMP) - ErrorMessage").GetComponent<TMP_Text>();
@@ -57,7 +72,47 @@ public class LoginManager : MonoBehaviour
         _register.onClick.AddListener(OnClickRegisterButton);
         _cancel.onClick.AddListener(OnClickRegisterButton);
 
+
+        _Test1.onClick.AddListener(() => TestLogin(1));
+        _Test2.onClick.AddListener(() => TestLogin(2));
+        _Test3.onClick.AddListener(() => TestLogin(3));
+        _Test4.onClick.AddListener(() => TestLogin(4));
+
+
     }
+
+
+    public void TestLogin(int num)
+    {
+        switch (num)
+        {
+            case 1:
+                _id.text = "jinodumok@naver.com";
+                _pw.text = "jino1364";
+                Login();
+                break;
+            case 2:
+                _id.text = "1@1.1";
+                _pw.text = "jino1364";
+                Login();
+                break;
+            case 3:
+                _id.text = "a@a.kr";
+                _pw.text = "123456";
+                Login();
+                break;
+            case 4:
+                _id.text = "ab@ab.kr";
+                _pw.text = "abcdef";
+                Login();
+                break;
+            default:
+                break;
+        }
+    }
+
+
+
     private void OnDestroy()
     {
         // 이벤트 구독 해제

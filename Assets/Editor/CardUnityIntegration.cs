@@ -1,14 +1,15 @@
 using UnityEngine;
 using UnityEditor;
+
 static class CardUnityIntegration
 {
-    [MenuItem("Asset/Create/CardAsset")]
+    [MenuItem("Assets/Create/CardAsset")]
     public static void CreateCardScriptableObject() => ScriptableObjectUtility.CreateAsset<CardAsset>();
 
-    [MenuItem("Asset/Create/CharacterAsset")]
+    [MenuItem("Assets/Create/CharacterAsset")]
     public static void CreateCharacterScriptableObject() => ScriptableObjectUtility.CreateAsset<CharacterAsset>();
 
-    [MenuItem("Asset/Create/EnemyAsset")]
+    [MenuItem("Assets/Create/EnemyAsset")]
     public static void CreateEnemyScriptableObjects() => ScriptableObjectUtility.CreateAsset<EnemyData>();
 
     [MenuItem("Tools/Import Card Data From Google Sheets")]

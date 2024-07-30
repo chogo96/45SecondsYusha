@@ -209,10 +209,13 @@ public class Enemy : MonoBehaviourPunCallbacks
     {
         if (players != null && players.Count > 0)
         {
-            int randomIndex = Random.Range(0, players.Count);
-            players[randomIndex].ApplyBleedToPlayer();
-            int playerID = players[randomIndex].PlayerID;
-            playerSetManager.photonView.RPC("DeBuffImageOn", RpcTarget.All, playerID, "bleed");
+            if (PhotonNetwork.IsMasterClient)
+            {
+                int randomIndex = Random.Range(0, players.Count);
+                players[randomIndex].ApplyBleedToPlayer();
+                int playerID = players[randomIndex].PlayerID;
+                playerSetManager.photonView.RPC("DeBuffImageOn", RpcTarget.All, playerID, "bleed");
+            }
         }
         else
         {
@@ -224,10 +227,13 @@ public class Enemy : MonoBehaviourPunCallbacks
     {
         if (players != null && players.Count > 0)
         {
-            int randomIndex = Random.Range(0, players.Count);
-            players[randomIndex].ApplyBlindToPlayer();
-            int playerID = players[randomIndex].PlayerID;
-            playerSetManager.photonView.RPC("DeBuffImageOn", RpcTarget.All, playerID, "blind");
+            if (PhotonNetwork.IsMasterClient)
+            {
+                int randomIndex = Random.Range(0, players.Count);
+                players[randomIndex].ApplyBlindToPlayer();
+                int playerID = players[randomIndex].PlayerID;
+                playerSetManager.photonView.RPC("DeBuffImageOn", RpcTarget.All, playerID, "blind");
+            }
         }
         else
         {
@@ -239,10 +245,13 @@ public class Enemy : MonoBehaviourPunCallbacks
     {
         if (players != null && players.Count > 0)
         {
-            int randomIndex = Random.Range(0, players.Count);
-            players[randomIndex].ApplyConfusionToPlayer();
-            int playerID = players[randomIndex].PlayerID;
-            playerSetManager.photonView.RPC("DeBuffImageOn", RpcTarget.All, playerID, "confusion");
+            if (PhotonNetwork.IsMasterClient)
+            {
+                int randomIndex = Random.Range(0, players.Count);
+                players[randomIndex].ApplyConfusionToPlayer();
+                int playerID = players[randomIndex].PlayerID;
+                playerSetManager.photonView.RPC("DeBuffImageOn", RpcTarget.All, playerID, "confusion");
+            }
         }
         else
         {
