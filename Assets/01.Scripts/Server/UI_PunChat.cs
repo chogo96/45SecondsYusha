@@ -12,9 +12,9 @@ public class UI_PunChat : MonoBehaviour
 
     private void Awake()
     {
-        _chatInputField = transform.Find("PunChat/InputField (TMP)").GetComponent<TMP_InputField>();
-        _trContent = transform.Find("PunChat/Scroll View/Viewport/Content").transform;
-        _scrollRect = transform.Find("PunChat/Scroll View").GetComponent<ScrollRect>();
+        _chatInputField = transform.Find("Panel - BG/PunChat/InputField (TMP)").GetComponent<TMP_InputField>();
+        _trContent = transform.Find("Panel - BG/PunChat/Scroll View/Viewport/Content").transform;
+        _scrollRect = transform.Find("Panel - BG/PunChat/Scroll View").GetComponent<ScrollRect>();
 
         _punChatManager = FindObjectOfType<PunChatManager>();
     }

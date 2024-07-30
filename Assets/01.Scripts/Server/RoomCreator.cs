@@ -49,35 +49,35 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         // 버튼 찾기 및 배열에 추가
         for (int i = 0; i < _maxPlayer.Length; i++)
         {
-            string buttonName = $"RoomOption/MaxPlayer/MaxPlayer_Button/Button - {i + 1}";
+            string buttonName = $"Panel - BG/RoomOption/MaxPlayer/MaxPlayer_Button/Button - {i + 1}";
             _maxPlayer[i] = transform.Find(buttonName).GetComponent<Button>();
             int index = i;
             _maxPlayer[i].onClick.AddListener(() => OnClickButton(index));
         }
 
-        _createRoomButton = transform.Find("RoomOption/Button - RoomCreate").GetComponent<Button>();
-        _inputFieldRoomName = transform.Find("RoomOption/RoomName/InputField (TMP) - RoomName").GetComponent<TMP_InputField>();
-        _textRoomName = transform.Find("RoomOption/MaxPlayer/Text (TMP) - SelectPlayer").GetComponent<TMP_Text>();
+        _createRoomButton = transform.Find("Panel - BG/RoomOption/Button - RoomCreate").GetComponent<Button>();
+        _inputFieldRoomName = transform.Find("Panel - BG/RoomOption/RoomName/InputField (TMP) - RoomName").GetComponent<TMP_InputField>();
+        _textRoomName = transform.Find("Panel - BG/RoomOption/MaxPlayer/Text (TMP) - SelectPlayer").GetComponent<TMP_Text>();
 
-        _roomOptionPanel = transform.Find("RoomOption").gameObject;
-        _inRoomPanel = transform.Find("InRoom").gameObject;
+        _roomOptionPanel = transform.Find("Panel - BG/RoomOption").gameObject;
+        _inRoomPanel = transform.Find("Panel - BG/InRoom").gameObject;
 
-        _roomExit = transform.Find("InRoom/Button - Exit").GetComponent<Button>();
-        _roomStart = transform.Find("InRoom/Button - Start").GetComponent<Button>();
-        _selectDeck = transform.Find("InRoom/Button - DeckSelect").GetComponent<Button>();
+        _roomExit = transform.Find("Panel - BG/InRoom/Button - Exit").GetComponent<Button>();
+        _roomStart = transform.Find("Panel - BG/InRoom/Button - Start").GetComponent<Button>();
+        _selectDeck = transform.Find("Panel - BG/InRoom/Button - DeckSelect").GetComponent<Button>();
 
-        _newRoom = transform.Find("Buttons/Button - NewRoom").GetComponent<Button>();
-        _reSearch = transform.Find("Buttons/Button - ReSearch").GetComponent<Button>();
-        _matchmaking = transform.Find("Buttons/Button - Matchmaking").GetComponent<Button>();
+        _newRoom = transform.Find("Panel - BG/Buttons/Button - NewRoom").GetComponent<Button>();
+        _reSearch = transform.Find("Panel - BG/Buttons/Button - ReSearch").GetComponent<Button>();
+        _matchmaking = transform.Find("Panel - BG/Buttons/Button - Matchmaking").GetComponent<Button>();
 
-        _panelMatchmaking = transform.Find("Panel - Matchmaking").gameObject;
-        _cancelMatchmaking = transform.Find("Panel - Matchmaking/Button - MatchmakingCancel").GetComponent<Button>();
-        _matchmakingPlayer = transform.Find("Panel - Matchmaking/Text (TMP) -  Matching").GetComponent<TMP_Text>();
+        _panelMatchmaking = transform.Find("Panel - BG/Panel - Matchmaking").gameObject;
+        _cancelMatchmaking = transform.Find("Panel - BG/Panel - Matchmaking/Button - MatchmakingCancel").GetComponent<Button>();
+        _matchmakingPlayer = transform.Find("Panel - BG/Panel - Matchmaking/Text (TMP) -  Matching").GetComponent<TMP_Text>();
 
 
-        _matchmakingStart = transform.Find("InRoom/Button - MatchingStart").GetComponent<Button>();
+        _matchmakingStart = transform.Find("Panel - BG/InRoom/Button - MatchingStart").GetComponent<Button>();
 
-        _punChatPanel = transform.Find("PunChat").gameObject;
+        _punChatPanel = transform.Find("Panel - BG/PunChat").gameObject;
     }
 
     void Start()

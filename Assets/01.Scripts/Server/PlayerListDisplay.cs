@@ -14,7 +14,7 @@ public class PlayerListDisplay : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
-        playerListContent = transform.Find("InRoom/Panel - PlayerImageView");
+        playerListContent = transform.Find("Panel - BG/InRoom/Panel - PlayerImageView");
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)

@@ -15,7 +15,7 @@ public class RoomListDisplay : MonoBehaviourPunCallbacks
     private void Awake()
     {
         // 방 목록 콘텐츠를 찾습니다
-        roomListContent = transform.Find("RoomList/Scroll View - RoomList/Viewport/Content").gameObject;
+        roomListContent = transform.Find("Panel - BG/RoomList/Scroll View - RoomList/Viewport/Content").gameObject;
     }
 
     // 방 목록이 업데이트될 때 호출됩니다
