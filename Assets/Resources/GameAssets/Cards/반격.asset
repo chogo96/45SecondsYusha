@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0597bb8b2c363fc45bdaea7095ffe68b, type: 3}
   m_Name: "\uBC18\uACA9"
   m_EditorClassIdentifier: 
-  CharacterAsset: {fileID: 0}
+  CharacterAsset: {fileID: 11400000, guid: 836f93f73b27f194486a1be62a4c7d6e, type: 2}
   Description: "\uBC29\uD328\uB294 \uBC29\uC5B4\uC5D0 \uD0C1\uC6D4\uD558\uB2E4. \uD2B9\uD788
     \uC219\uB828\uB41C \uBC29\uD328 \uC0AC\uC6A9\uC790\uB294 \uBC29\uC5B4 \uD6C4\uC5D0
     \uC989\uAC01\uC801\uC73C\uB85C \uB2E4\uC74C \uB3D9\uC791\uC744 \uC774\uC5B4\uAC00\uB294
     \uB370 \uB6F0\uC5B4\uB09C \uB2A5\uB825\uC744 \uBC1C\uD718\uD55C\uB2E4."
   Tags: Tanker
   Rarity: 3
-  CardImage: {fileID: 0}
+  CardImage: {fileID: 21300000, guid: 536fed35c0fef8543939d6313a42093a, type: 3}
   TokenCard: 0
   LimitOfThisCardInDeck: 3
   IsVanishCard: 0

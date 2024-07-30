@@ -19,7 +19,7 @@ MonoBehaviour:
     \uCD5C\uD6C4\uC758 \uBC1C\uC545\uC740 \uD574\uBCFC \uB9CC\uD558\uC9C0 \uC54A\uC740\uAC00?"
   Tags: Attacker
   Rarity: 4
-  CardImage: {fileID: 0}
+  CardImage: {fileID: 21300000, guid: cb5e6722a0374a340a66d58a2851f44d, type: 3}
   TokenCard: 0
   LimitOfThisCardInDeck: 1
   IsVanishCard: 1

@@ -18,7 +18,7 @@ MonoBehaviour:
     \uC785\uC99D\uD55C\uB2E4."
   Tags: Attacker
   Rarity: 2
-  CardImage: {fileID: 0}
+  CardImage: {fileID: 21300000, guid: ce9ba6227002f504ca00f90b8fd4ab9b, type: 3}
   TokenCard: 0
   LimitOfThisCardInDeck: 3
   IsVanishCard: 0

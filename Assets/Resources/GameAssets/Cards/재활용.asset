@@ -23,7 +23,7 @@ MonoBehaviour:
     \uC788\uC74C\uC744 \uC99D\uBA85\uD558\uB294 \uB4EF\uD588\uB2E4."
   Tags: Buffer
   Rarity: 4
-  CardImage: {fileID: 0}
+  CardImage: {fileID: 21300000, guid: 5819034455a183a4298d3ed0528f085b, type: 3}
   TokenCard: 0
   LimitOfThisCardInDeck: 1
   IsVanishCard: 1

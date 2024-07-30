@@ -21,7 +21,7 @@ MonoBehaviour:
     \uB420 \uC218 \uC788\uB2E4."
   Tags: Healer
   Rarity: 4
-  CardImage: {fileID: 0}
+  CardImage: {fileID: 21300000, guid: a85e47477f3ebcc4ab5e927255de7333, type: 3}
   TokenCard: 0
   LimitOfThisCardInDeck: 1
   IsVanishCard: 1

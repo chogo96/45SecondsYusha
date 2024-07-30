@@ -21,7 +21,7 @@ MonoBehaviour:
     \uD63C\uB0A0 \uC218 \uC788\uC74C\uC5D0 \uAC10\uC0AC\uD574\uC57C \uD560 \uAC83\uC774\uB2E4."
   Tags: Buffer
   Rarity: 4
-  CardImage: {fileID: 0}
+  CardImage: {fileID: 21300000, guid: 5cca0fa1dad80a74fb5cdd71a564b28f, type: 3}
   TokenCard: 0
   LimitOfThisCardInDeck: 1
   IsVanishCard: 1

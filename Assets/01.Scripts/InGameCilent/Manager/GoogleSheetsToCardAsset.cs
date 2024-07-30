@@ -88,12 +88,16 @@ public class GoogleSheetsToCardAsset : MonoBehaviour
                     card.Description = GetValue(row, 23);
 
                     // 이미지 파일 이름을 가져와서 Resources 폴더에서 로드
-                    string imageName = GetValue(row, 13);
+                    string imageName = GetValue(row, 0);
                     card.CardImage = Resources.Load<Sprite>($"CardImages/{imageName}");
 
                     if (card.CardImage == null)
                     {
                         Debug.LogWarning($"Image not found: {imageName}");
+                    }
+                    else
+                    {
+                        Debug.Log($"Image loaded successfully: {imageName}");
                     }
                     // 캐릭터 에셋 로드
                     string characterType = GetValue(row, 1);
@@ -183,15 +187,15 @@ public class GoogleSheetsToCardAsset : MonoBehaviour
     {
         switch (characterType.ToLower())
         {
-            case "attacker":
-                return Resources.Load<CharacterAsset>("GameAssets/Character/AttackerClass");
-            case "buffer":
-                return Resources.Load<CharacterAsset>("GameAssets/Character/BufferClass");
-            case "healer":
-                return Resources.Load<CharacterAsset>("GameAssets/Character/HealerClass");
-            case "tanker":
-                return Resources.Load<CharacterAsset>("GameAssets/Character/TankerClass");
-            case "neutral":
+            case "Attacker":
+                return Resources.Load<CharacterAsset>("GameAssets/Characters/AttackerClass");
+            case "Buffer":
+                return Resources.Load<CharacterAsset>("GameAssets/Characters/BufferClass");
+            case "Healer":
+                return Resources.Load<CharacterAsset>("GameAssets/Characters/HealerClass");
+            case "Tanker":
+                return Resources.Load<CharacterAsset>("GameAssets/Characters/TankerClass");
+            case "Neutral":
                 return null;
             default:
                 Debug.Log($"Unknown character type:");

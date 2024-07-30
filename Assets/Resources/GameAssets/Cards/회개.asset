@@ -20,7 +20,7 @@ MonoBehaviour:
     \uACB0\uCF54 \uAC19\uC740 \uACB0\uB9D0\uC744 \uB9DE\uC774\uD558\uC9C0 \uC54A\uC73C\uB9AC\uB77C."
   Tags: Healer
   Rarity: 3
-  CardImage: {fileID: 0}
+  CardImage: {fileID: 21300000, guid: 5d347a6e97128324d891b96e5aaeec4e, type: 3}
   TokenCard: 0
   LimitOfThisCardInDeck: 3
   IsVanishCard: 0

@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0597bb8b2c363fc45bdaea7095ffe68b, type: 3}
   m_Name: "\uD758\uB9AC\uAE30"
   m_EditorClassIdentifier: 
-  CharacterAsset: {fileID: 0}
+  CharacterAsset: {fileID: 11400000, guid: 4212422ae3113844da10b942807dd8f2, type: 2}
   Description: "\uACF5\uACA9\uC758 \uD750\uB984\uC744 \uB0B4 \uAC83\uC73C\uB85C \uB9CC\uB4E4\uC5B4\uB77C!
     \n-\uAC80\uC220 \uAD50\uAD00-"
   Tags: Attacker
   Rarity: 3
-  CardImage: {fileID: 0}
+  CardImage: {fileID: 21300000, guid: a1091d0128a47fa4db33f9748f7b9b00, type: 3}
   TokenCard: 0
   LimitOfThisCardInDeck: 3
   IsVanishCard: 0

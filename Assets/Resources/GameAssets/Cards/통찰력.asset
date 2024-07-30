@@ -20,7 +20,7 @@ MonoBehaviour:
     \uB098\uB97C \uC4F0\uB7EC\uB728\uB9B4\uC9C0..."
   Tags: Healer
   Rarity: 2
-  CardImage: {fileID: 0}
+  CardImage: {fileID: 21300000, guid: e2ca5301b1a277d49abc588e3c2834cd, type: 3}
   TokenCard: 0
   LimitOfThisCardInDeck: 3
   IsVanishCard: 0

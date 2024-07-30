@@ -16,7 +16,7 @@ MonoBehaviour:
   Description: "\uC774 \uAF49 \uAE68\uBB3C\uC5B4\uB77C! -\uBB34\uBA85\uC758 \uC804\uC0AC-"
   Tags: Attacker
   Rarity: 3
-  CardImage: {fileID: 0}
+  CardImage: {fileID: 21300000, guid: 0de0441d101fada41bc40f11c579c2ca, type: 3}
   TokenCard: 0
   LimitOfThisCardInDeck: 3
   IsVanishCard: 0

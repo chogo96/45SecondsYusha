@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0597bb8b2c363fc45bdaea7095ffe68b, type: 3}
   m_Name: "\uC758\uC678\uC758 \uC77C\uACA9"
   m_EditorClassIdentifier: 
-  CharacterAsset: {fileID: 0}
+  CharacterAsset: {fileID: 11400000, guid: 836f93f73b27f194486a1be62a4c7d6e, type: 2}
   Description: "\uBB50\uC57C? \uB9C9\uAE30\uB9CC \uD588\uB294\uB370 \uC598\uB294
     \uC65C \uC4F0\uB7EC\uC838 \uC788\uC9C0?\n- \uBC29\uD328\uB97C \uCE58\uC6B0\uBA70
     Tanker\uAC00 -"
   Tags: Tanker
   Rarity: 2
-  CardImage: {fileID: 0}
+  CardImage: {fileID: 21300000, guid: bcb168f4f52feca4bb3ebbc6d6ec4257, type: 3}
   TokenCard: 0
   LimitOfThisCardInDeck: 3
   IsVanishCard: 0

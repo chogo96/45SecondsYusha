@@ -17,9 +17,9 @@ MonoBehaviour:
     \uCE58\uC720\uB97C \uBAA8\uB4E0 \uC774\uB4E4\uC5D0\uAC8C \uD3C9\uD654\uB97C "
   Tags: Healer
   Rarity: 1
-  CardImage: {fileID: 0}
+  CardImage: {fileID: 21300000, guid: 7bdfbb980049ea541a134eae4160c6f3, type: 3}
   TokenCard: 0
-  LimitOfThisCardInDeck: 3
+  LimitOfThisCardInDeck: 1
   IsVanishCard: 0
   TypeOfCard: 0
   SwordAttack: 0
