@@ -1,10 +1,11 @@
+using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EnemySpawner : MonoBehaviour
+public class EnemySpawner : MonoBehaviourPunCallbacks
 {
     public GameObject enemyPrefab; // 적 프리팹
     public GameObject shopPrefab; // 상점 프리팹
@@ -35,7 +36,13 @@ public class EnemySpawner : MonoBehaviour
 
         // 스폰 순서 생성 및 적 소환
         GenerateSpawnOrder();
-        SpawnNextEnemy();
+
+
+        // 마스터 클라이언트만 적을 스폰
+        if (PhotonNetwork.IsMasterClient)
+        {
+            SpawnNextEnemy();
+        }
     }
 
     void GenerateSpawnOrder()
@@ -67,24 +74,26 @@ public class EnemySpawner : MonoBehaviour
         spawnOrder.Add(finalBosses[Random.Range(0, finalBosses.Count)]);
     }
 
-    void SpawnNextEnemy()
+
+    [PunRPC]
+    void RPC_SpawnNextEnemy(int index)
     {
-        if (currentEnemyIndex < spawnOrder.Count)
+        if (index < spawnOrder.Count)
         {
-            if (spawnOrder[currentEnemyIndex] == null)
+            if (spawnOrder[index] == null)
             {
                 // 상점 소환
                 Instantiate(shopPrefab, canvasTransform);
             }
             else
             {
-                EnemyData enemyData = spawnOrder[currentEnemyIndex];
+                EnemyData enemyData = spawnOrder[index];
                 GameObject newEnemy = Instantiate(enemyPrefab, canvasTransform);
                 Image enemyImage = newEnemy.GetComponent<Image>();
                 enemyImage.sprite = enemyData.enemySprite;
 
                 Enemy enemy = newEnemy.GetComponent<Enemy>();
-                bool isFinalBoss = (currentEnemyIndex == spawnOrder.Count - 1);
+                bool isFinalBoss = (index == spawnOrder.Count - 1);
                 enemy.Initialize(enemyData, players, isFinalBoss);
 
                 // 적 데이터 삭제 (한 번 소환된 적은 다시 나오지 않음)
@@ -92,14 +101,55 @@ public class EnemySpawner : MonoBehaviour
                 midBosses.Remove(enemyData);
                 finalBosses.Remove(enemyData);
             }
-            currentEnemyIndex++;
+            currentEnemyIndex = index + 1;
         }
     }
+
+    void SpawnNextEnemy()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC("RPC_SpawnNextEnemy", RpcTarget.All, currentEnemyIndex);
+        }
+    }
+    #region 보스스폰 연동을 위한 주석처리(원본)
+    //void SpawnNextEnemy()
+    //{
+    //    if (currentEnemyIndex < spawnOrder.Count)
+    //    {
+    //        if (spawnOrder[currentEnemyIndex] == null)
+    //        {
+    //            // 상점 소환
+    //            Instantiate(shopPrefab, canvasTransform);
+    //        }
+    //        else
+    //        {
+    //            EnemyData enemyData = spawnOrder[currentEnemyIndex];
+    //            GameObject newEnemy = Instantiate(enemyPrefab, canvasTransform);
+    //            Image enemyImage = newEnemy.GetComponent<Image>();
+    //            enemyImage.sprite = enemyData.enemySprite;
+
+    //            Enemy enemy = newEnemy.GetComponent<Enemy>();
+    //            bool isFinalBoss = (currentEnemyIndex == spawnOrder.Count - 1);
+    //            enemy.Initialize(enemyData, players, isFinalBoss);
+
+    //            // 적 데이터 삭제 (한 번 소환된 적은 다시 나오지 않음)
+    //            normalEnemies.Remove(enemyData);
+    //            midBosses.Remove(enemyData);
+    //            finalBosses.Remove(enemyData);
+    //        }
+    //        currentEnemyIndex++;
+    //    }
+    //}
+    #endregion
 
     public void OnShopButtonPressed()
     {
         // 상점 버튼이 눌렸을 때 적을 처치한 것처럼 다음 적을 소환
-        SpawnNextEnemy();
+        if (PhotonNetwork.IsMasterClient)
+        {
+            SpawnNextEnemy();
+        }
     }
 
     void OnEnable()
@@ -114,7 +164,10 @@ public class EnemySpawner : MonoBehaviour
 
     private void HandleEnemyDeath()
     {
-        StartCoroutine(SpawnNextEnemyAfterDelay(1f));
+        if (PhotonNetwork.IsMasterClient)
+        {
+            StartCoroutine(SpawnNextEnemyAfterDelay(1f));
+        }
     }
 
     private IEnumerator SpawnNextEnemyAfterDelay(float delay)
