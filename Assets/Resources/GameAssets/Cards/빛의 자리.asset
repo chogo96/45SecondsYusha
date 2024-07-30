@@ -19,7 +19,7 @@ MonoBehaviour:
   Rarity: 1
   CardImage: {fileID: 0}
   TokenCard: 0
-  LimitOfThisCardInDeck: 1
+  LimitOfThisCardInDeck: 3
   IsVanishCard: 0
   TypeOfCard: 0
   SwordAttack: 0

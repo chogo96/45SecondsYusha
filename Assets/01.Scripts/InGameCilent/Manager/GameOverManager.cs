@@ -13,13 +13,14 @@ public class GameOverManager : MonoBehaviour
     private void Awake()
     {
         //Todo : 버튼 제작 후 주석 해제 해서 사용하세요
-        //returnToLobbyButton = GameObject.Find("Button - ReturnLobby").GetComponent<Button>();   
+        returnToLobbyButton = GameObject.Find("Button - ReturnLobby").GetComponent<Button>();   
     }
     void Start()
     {
         winPanel.SetActive(false);
         losePanel.SetActive(false);
         returnToLobbyButton.onClick.AddListener(ReturnToLobby);
+        returnToLobbyButton.gameObject.SetActive(false);
     }
 
     public void DisplayWin()
@@ -36,7 +37,7 @@ public class GameOverManager : MonoBehaviour
     {
         panel.SetActive(true);
         yield return new WaitForSeconds(displayTime);
-        panel.SetActive(false);
+        //panel.SetActive(false);
         returnToLobbyButton.gameObject.SetActive(true);
     }
 
