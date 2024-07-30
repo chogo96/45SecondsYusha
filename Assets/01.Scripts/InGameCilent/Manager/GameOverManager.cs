@@ -12,7 +12,8 @@ public class GameOverManager : MonoBehaviour
     private Button returnToLobbyButton;
     private void Awake()
     {
-        returnToLobbyButton = GameObject.Find("Button - ReturnLobby").GetComponent<Button>();   
+        //Todo : 버튼 제작 후 주석 해제 해서 사용하세요
+        //returnToLobbyButton = GameObject.Find("Button - ReturnLobby").GetComponent<Button>();   
     }
     void Start()
     {
