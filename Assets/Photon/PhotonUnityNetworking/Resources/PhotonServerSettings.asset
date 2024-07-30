@@ -58,6 +58,7 @@ MonoBehaviour:
   - DeBuffImageUpdate
   - DeBuffImageOff
   - DeBuffImageOn
+  - RPC_SpawnNextEnemy
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

@@ -25,7 +25,6 @@ public class FirebaseInit : MonoBehaviour
         OnFirebaseInitialized?.Invoke();
     }
 
-
     /// <summary>
     /// 파이어 베이스 초기화 함수
     /// </summary>
@@ -53,11 +52,12 @@ public class FirebaseInit : MonoBehaviour
                     Debug.Log("FirebaseInit: Using Default FirebaseApp instance.");
                 }
 
+                // 초기화 성공 시 Firebase 인스턴스 설정
                 auth = FirebaseAuth.GetAuth(app);
                 database = FirebaseDatabase.GetInstance(app);
                 firestore = FirebaseFirestore.DefaultInstance;
 
-                Debug.Log("FirebaseInit: FirebaseAuth and FirebaseDatabase instances initialized.");
+                Debug.Log("FirebaseInit: FirebaseAuth, FirebaseDatabase, and FirebaseFirestore instances initialized.");
             }
             else
             {
