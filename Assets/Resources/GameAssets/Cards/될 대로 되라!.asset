@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0597bb8b2c363fc45bdaea7095ffe68b, type: 3}
   m_Name: "\uB420 \uB300\uB85C \uB418\uB77C!"
   m_EditorClassIdentifier: 
-  CharacterAsset: {fileID: 0}
+  CharacterAsset: {fileID: 11400000, guid: b03203e781a197e4b897d3b43ec6f50a, type: 2}
   Description: "\"\uC73C\uC544\uC544\uC544! \uAC00\uAE4C\uC774 \uC624\uC9C0\uB9C8!\""
   Tags: Buffer
   Rarity: 0

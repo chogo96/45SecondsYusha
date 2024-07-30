@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0597bb8b2c363fc45bdaea7095ffe68b, type: 3}
   m_Name: "\uACC4\uC2DC"
   m_EditorClassIdentifier: 
-  CharacterAsset: {fileID: 0}
+  CharacterAsset: {fileID: 11400000, guid: 3025e02caa02887469ba7d1c738b5044, type: 2}
   Description: "\uC2E0\uC758 \uC740\uCD1D\uC744 \uC5EC\uB7EC\uBC88 \uBC14\uB77C\uB294
     \uAC83\uC740 \uACFC\uC695\uC774 \uC544\uB2C8\uB2E4.\n\uB2E4\uB9CC \uC4F0\uBA74
     \uC4F8\uC218\uB85D \uC2E0\uC740 \uBCC0\uB355\uC744 \uBD80\uB9AC\uAC8C \uB41C\uB2E4."

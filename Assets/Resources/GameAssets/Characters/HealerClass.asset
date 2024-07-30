@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: HealerClass
   m_EditorClassIdentifier: 
   Class: 2
-  ClassName: 
+  ClassName: "\uD790\uB7EC"
   HeroPowerName: 
-  AvatarImage: {fileID: -1224501049, guid: 5b34ab02340731945a5000945fed345c, type: 3}
+  AvatarImage: {fileID: 21300000, guid: c17f0fe598fc5674599e1fa82b986c1f, type: 3}
   HeroPowerIconImage: {fileID: 0}
   AvatarBGImage: {fileID: 0}
   HeroPowerBGImage: {fileID: 0}

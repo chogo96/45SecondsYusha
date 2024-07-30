@@ -35,7 +35,7 @@ public class DeckBuildingScreen : MonoBehaviour
         CollectionBrowser.OneCharacterTabs.gameObject.SetActive(false);
         Canvas.ForceUpdateCanvases();
 
-        CollectionBrowser.ShowCollectionForBrowsing();
+        //CollectionBrowser.ShowCollectionForBrowsing();
     }
 
     public void ShowScreenForDeckBuilding()

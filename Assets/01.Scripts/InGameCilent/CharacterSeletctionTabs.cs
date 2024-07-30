@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 public class CharacterSelectionTabs : MonoBehaviour
@@ -13,6 +12,12 @@ public class CharacterSelectionTabs : MonoBehaviour
 
     public void SelectTab(CharacterFilterTab tab, bool instant)
     {
+        if (tab == null || !Tabs.Contains(tab))
+        {
+            Debug.LogWarning("Invalid tab selected.");
+            return;
+        }
+
         int newIndex = Tabs.IndexOf(tab);
 
         if (newIndex == currentIndex)
@@ -20,21 +25,62 @@ public class CharacterSelectionTabs : MonoBehaviour
 
         currentIndex = newIndex;
 
-        // 다른 탭
+        // 다른 탭 비활성화
         foreach (CharacterFilterTab Tab in Tabs)
         {
             if (Tab != tab)
                 Tab.Deselect(instant);
         }
-        // 우리가 고른 탭을 선택합니다.
+
+        // 선택된 탭 활성화
         tab.Select(instant);
-        DeckBuildingScreen.instance.CollectionBrowser.Asset = tab.Asset;
-        DeckBuildingScreen.instance.CollectionBrowser.IncludeAllCharacters = tab.showAllCharacters;
+
+        if (DeckBuildingScreen.instance != null)
+        {
+            if (DeckBuildingScreen.instance.CollectionBrowser != null)
+            {
+                DeckBuildingScreen.instance.CollectionBrowser.Asset = tab.Asset;
+                DeckBuildingScreen.instance.CollectionBrowser.IncludeAllCharacters = tab.showAllCharacters;
+
+                FirebaseCardManager firebaseCardManager = FindObjectOfType<FirebaseCardManager>();
+                if (firebaseCardManager != null)
+                {
+                    firebaseCardManager.SetSelectedCharacter(tab.Asset);
+                }
+                else
+                {
+                    Debug.LogWarning("FirebaseCardManager instance is null.");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("CollectionBrowser instance is null.");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("DeckBuildingScreen instance is null.");
+        }
     }
 
     public void SetClassOnClassTab(CharacterAsset asset)
     {
+        if (ClassTab == null || asset == null)
+        {
+            Debug.LogWarning("ClassTab or asset is null.");
+            return;
+        }
+
         ClassTab.Asset = asset;
-        ClassTab.GetComponentInChildren<TMP_Text>().text = asset.name;
+        TMP_Text textComponent = ClassTab.GetComponentInChildren<TMP_Text>();
+
+        if (textComponent != null)
+        {
+            textComponent.text = asset.name;
+        }
+        else
+        {
+            Debug.LogWarning("TMP_Text component is not found in ClassTab.");
+        }
     }
 }

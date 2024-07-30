@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0597bb8b2c363fc45bdaea7095ffe68b, type: 3}
   m_Name: "\uBD95\uB300"
   m_EditorClassIdentifier: 
-  CharacterAsset: {fileID: 0}
+  CharacterAsset: {fileID: 11400000, guid: b03203e781a197e4b897d3b43ec6f50a, type: 2}
   Description: "\uCD9C\uD608 \uC2DC \uAC15\uD558\uAC8C \uC555\uBC15\uD558\uACE0 \uBB36\uC744
     \uAC83!\r\n-\uCD08\uC9DC \uC5F0\uAE08\uC220\uC0AC\uC758 \uBA54\uBAA8-"
   Tags: Buffer

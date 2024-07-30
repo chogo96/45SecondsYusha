@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: TankerClass
   m_EditorClassIdentifier: 
   Class: 3
-  ClassName: 
+  ClassName: "\uD0F1\uCEE4"
   HeroPowerName: 
-  AvatarImage: {fileID: 231509218, guid: 5b34ab02340731945a5000945fed345c, type: 3}
+  AvatarImage: {fileID: 21300000, guid: 5108852650ef2914594268b95cd7f37c, type: 3}
   HeroPowerIconImage: {fileID: 0}
   AvatarBGImage: {fileID: 0}
   HeroPowerBGImage: {fileID: 0}

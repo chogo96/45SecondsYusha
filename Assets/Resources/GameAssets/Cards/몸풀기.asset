@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0597bb8b2c363fc45bdaea7095ffe68b, type: 3}
   m_Name: "\uBAB8\uD480\uAE30"
   m_EditorClassIdentifier: 
-  CharacterAsset: {fileID: 0}
+  CharacterAsset: {fileID: 11400000, guid: 4212422ae3113844da10b942807dd8f2, type: 2}
   Description: "\uC774 \uAF49 \uAE68\uBB3C\uC5B4\uB77C! -\uBB34\uBA85\uC758 \uC804\uC0AC-"
   Tags: Attacker
   Rarity: 3

@@ -23,6 +23,7 @@ public class CollectionBrowser : MonoBehaviour
     {
         firebaseCardManager = FindObjectOfType<FirebaseCardManager>();
     }
+
     #region PROPERTIES
     private bool _showingCardsPlayerDoesNotOwn = false;
     public bool ShowingCardsPlayerDoesNotOwn
@@ -46,7 +47,7 @@ public class CollectionBrowser : MonoBehaviour
             UpdatePage();
         }
     }
-    
+
     private bool _includeAllRarities = true;
     public bool IncludeAllRarities
     {
@@ -118,6 +119,24 @@ public class CollectionBrowser : MonoBehaviour
     }
     #endregion
 
+    public void SetLoadedCards(List<CardAsset> cards, Dictionary<CardAsset, int> cardCounts)
+    {
+        ClearCreatedCards();
+        foreach (CardAsset cardAsset in cards)
+        {
+            //GameObject newCard = Instantiate(CardPrefab, Content);
+            //CreatedCards.Add(newCard);
+
+            //OneCardManager manager = newCard.GetComponent<OneCardManager>();
+            //manager.cardAsset = cardAsset;
+            //manager.ReadCardFromAsset();
+
+            //AddCardToDeck addCardComponent = newCard.GetComponent<AddCardToDeck>();
+            //addCardComponent.SetCardAsset(cardAsset);
+            //addCardComponent.UpdateQuantity();
+        }
+    }
+
     public void ShowCollectionForBrowsing()
     {
         KeywordInputFieldScript.Clear();
@@ -164,8 +183,8 @@ public class CollectionBrowser : MonoBehaviour
 
     public void UpdatePage()
     {
-        ShowCards(_showingCardsPlayerDoesNotOwn, _pageIndex, _includeAllRarities, _includeAllCharacters, _rarity, _asset, _keyword, _includeTokenCards);
-        
+        //ShowCards(_showingCardsPlayerDoesNotOwn, _pageIndex, _includeAllRarities, _includeAllCharacters, _rarity, _asset, _keyword, _includeTokenCards);
+
         firebaseCardManager.LoadCardNames(LoginManager.Email);
     }
 
@@ -193,7 +212,7 @@ public class CollectionBrowser : MonoBehaviour
 
         foreach (CardAsset cardAsset in CardsOnThisPage)
         {
-            GameObject newCard = Instantiate(CardPrefab ,Content);
+            GameObject newCard = Instantiate(CardPrefab, Content);
             CreatedCards.Add(newCard);
 
             OneCardManager manager = newCard.GetComponent<OneCardManager>();

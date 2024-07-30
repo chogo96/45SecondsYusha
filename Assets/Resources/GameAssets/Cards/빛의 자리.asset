@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0597bb8b2c363fc45bdaea7095ffe68b, type: 3}
   m_Name: "\uBE5B\uC758 \uC790\uB9AC"
   m_EditorClassIdentifier: 
-  CharacterAsset: {fileID: 0}
+  CharacterAsset: {fileID: 11400000, guid: 3025e02caa02887469ba7d1c738b5044, type: 2}
   Description: "\uC801\uC5D0\uAC8C\uB294 \uC815\uD654\uB97C \uC544\uAD70\uC5D0\uAC8C\uB294
     \uCE58\uC720\uB97C \uBAA8\uB4E0 \uC774\uB4E4\uC5D0\uAC8C \uD3C9\uD654\uB97C "
   Tags: Healer
