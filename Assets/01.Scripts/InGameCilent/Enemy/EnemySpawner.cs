@@ -195,7 +195,6 @@
 //}
 using Newtonsoft.Json;
 using Photon.Pun;
-using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -235,7 +234,13 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
         {
             // 마스터 클라이언트가 스폰 순서 생성 및 JSON 형식으로 직렬화
             GenerateSpawnOrder();
-            spawnOrderJson = JsonConvert.SerializeObject(spawnOrder);
+
+            JsonSerializerSettings settings = new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+
+            spawnOrderJson = JsonConvert.SerializeObject(spawnOrder, settings);
             Debug.Log("Spawn order generated and serialized: " + spawnOrderJson);
 
             // 다른 클라이언트에게 스폰 순서 전송
@@ -300,7 +305,7 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
                 EnemyData enemyData = spawnOrder[index];
                 newEntity = PhotonNetwork.Instantiate(enemyPrefab.name, Vector3.zero, Quaternion.identity);
                 Image enemyImage = newEntity.GetComponent<Image>();
-                if (enemyImage != null)
+                if (enemyImage != null && enemyData.enemySprite != null)
                 {
                     enemyImage.sprite = enemyData.enemySprite;
                 }
