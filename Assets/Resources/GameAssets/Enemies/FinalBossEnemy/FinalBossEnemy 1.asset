@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: FinalBossEnemy 1
   m_EditorClassIdentifier: 
   enemySprite: {fileID: 21300000, guid: eae4ba9c63113b147b60c940dc47cf10, type: 3}
+  EnemyName: FinalBossEnemy 1
   RequiredSwordAttack: 3
   RequiredMagicAttack: 3
   RequiredShieldAttack: 3

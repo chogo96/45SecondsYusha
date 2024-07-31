@@ -210,13 +210,29 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
     public List<EnemyData> finalBosses; // 최종 보스 데이터 리스트
     public List<PlayerScripts> players; // 플레이어 리스트
 
-    private List<EnemyData> spawnOrder; // 스폰 순서를 담는 리스트
+    public List<string> spawnOrder; // 스폰 순서를 담는 리스트
     private int currentEnemyIndex = 0;
     private string spawnOrderJson;
 
     void Start()
     {
+        LoadEnemyData();
         StartCoroutine(WaitForPlayersAndSpawnEnemies());
+    }
+
+    private void LoadEnemyData()
+    {
+        normalEnemies = new List<EnemyData>(Resources.LoadAll<EnemyData>("GameAssets/Enemies/NormalEnemy"));
+        midBosses = new List<EnemyData>(Resources.LoadAll<EnemyData>("GameAssets/Enemies/MinibossEnemy"));
+        finalBosses = new List<EnemyData>(Resources.LoadAll<EnemyData>("GameAssets/Enemies/FinalBossEnemy"));
+
+        Debug.Log("Normal Enemies Count: " + normalEnemies.Count);
+        Debug.Log("Mid Bosses Count: " + midBosses.Count);
+        Debug.Log("Final Bosses Count: " + finalBosses.Count);
+
+        if (normalEnemies.Count == 0) Debug.LogError("Normal enemies list is empty.");
+        if (midBosses.Count == 0) Debug.LogError("Mid bosses list is empty.");
+        if (finalBosses.Count == 0) Debug.LogError("Final bosses list is empty.");
     }
 
     private IEnumerator WaitForPlayersAndSpawnEnemies()
@@ -237,7 +253,12 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
 
             JsonSerializerSettings settings = new JsonSerializerSettings
             {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                Error = (sender, args) =>
+                {
+                    Debug.LogError($"Serialization error: {args.ErrorContext.Error.Message}");
+                    args.ErrorContext.Handled = true;
+                }
             };
 
             spawnOrderJson = JsonConvert.SerializeObject(spawnOrder, settings);
@@ -258,28 +279,53 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
     void RPC_SetSpawnOrder(string json)
     {
         Debug.Log("Received spawn order JSON: " + json);
-        spawnOrder = JsonConvert.DeserializeObject<List<EnemyData>>(json);
+        spawnOrder = JsonConvert.DeserializeObject<List<string>>(json);
         Debug.Log("Spawn order deserialized, count: " + spawnOrder.Count);
     }
 
     void GenerateSpawnOrder()
     {
-        spawnOrder = new List<EnemyData>();
+        spawnOrder = new List<string>();
         for (int i = 0; i < 3; i++)
         {
-            List<EnemyData> currentCycleEnemies = new List<EnemyData>();
+            List<string> currentCycleEnemies = new List<string>();
 
             for (int j = 0; j < 9; j++) // 9명의 적 추가
             {
-                currentCycleEnemies.Add(normalEnemies[Random.Range(0, normalEnemies.Count)]);
+                if (normalEnemies.Count > 0)
+                {
+                    var enemyData = normalEnemies[Random.Range(0, normalEnemies.Count)];
+                    currentCycleEnemies.Add(enemyData.EnemyName);
+                }
+                else
+                {
+                    Debug.LogError("normalEnemies 리스트가 비어있습니다.");
+                }
             }
 
             spawnOrder.AddRange(currentCycleEnemies);
-            spawnOrder.Add(null); // 상점 추가
-            spawnOrder.Add(midBosses[Random.Range(0, midBosses.Count)]); // 중간 보스 추가
+            spawnOrder.Add("Shop"); // 상점 추가
+
+            if (midBosses.Count > 0)
+            {
+                var midBoss = midBosses[Random.Range(0, midBosses.Count)];
+                spawnOrder.Add(midBoss.EnemyName); // 중간 보스 추가
+            }
+            else
+            {
+                Debug.LogError("midBosses 리스트가 비어있습니다.");
+            }
         }
 
-        spawnOrder.Add(finalBosses[Random.Range(0, finalBosses.Count)]); // 최종 보스 추가
+        if (finalBosses.Count > 0)
+        {
+            var finalBoss = finalBosses[Random.Range(0, finalBosses.Count)];
+            spawnOrder.Add(finalBoss.EnemyName); // 최종 보스 추가
+        }
+        else
+        {
+            Debug.LogError("finalBosses 리스트가 비어있습니다.");
+        }
     }
 
     [PunRPC]
@@ -295,14 +341,28 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
         {
             GameObject newEntity;
 
-            if (spawnOrder[index] == null)
+            if (spawnOrder[index] == "Shop")
             {
                 // 상점 소환
                 newEntity = PhotonNetwork.Instantiate(shopPrefab.name, Vector3.zero, Quaternion.identity);
             }
             else
             {
-                EnemyData enemyData = spawnOrder[index];
+                var enemyData = Resources.Load<EnemyData>($"GameAssets/Enemies/NormalEnemy/{spawnOrder[index]}");
+                if (enemyData == null)
+                {
+                    enemyData = Resources.Load<EnemyData>($"GameAssets/Enemies/MinibossEnemy/{spawnOrder[index]}");
+                }
+                if (enemyData == null)
+                {
+                    enemyData = Resources.Load<EnemyData>($"GameAssets/Enemies/FinalBossEnemy/{spawnOrder[index]}");
+                }
+                if (enemyData == null)
+                {
+                    Debug.LogError($"EnemyData with name {spawnOrder[index]} could not be found in Resources.");
+                    return;
+                }
+
                 newEntity = PhotonNetwork.Instantiate(enemyPrefab.name, Vector3.zero, Quaternion.identity);
                 Image enemyImage = newEntity.GetComponent<Image>();
                 if (enemyImage != null && enemyData.enemySprite != null)

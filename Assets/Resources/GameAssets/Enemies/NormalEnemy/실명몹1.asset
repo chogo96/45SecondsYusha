@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: "\uC2E4\uBA85\uBAB91"
   m_EditorClassIdentifier: 
   enemySprite: {fileID: 21300000, guid: 380682b08d27c2f4a88f6027ce0d7872, type: 3}
+  EnemyName: "\uC2E4\uBA85\uBAB91"
   RequiredSwordAttack: 3
   RequiredMagicAttack: 2
   RequiredShieldAttack: 3

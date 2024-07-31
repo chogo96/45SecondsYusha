@@ -3542,21 +3542,9 @@ MonoBehaviour:
   shopPrefab: {fileID: 5838901569437610503, guid: 3c9061beeca243345b59056fe3a13e41,
     type: 3}
   canvasTransform: {fileID: 1429192502}
-  normalEnemies:
-  - {fileID: 11400000, guid: ecda038759c46f44ab10f2b1c5477c96, type: 2}
-  - {fileID: 11400000, guid: 7cdf7c9cf03d2cf44b1f83ff2f6a3952, type: 2}
-  - {fileID: 11400000, guid: 950595fabee22a945b15c0498263ba44, type: 2}
-  midBosses:
-  - {fileID: 11400000, guid: 051811764737eb2439bc6ba695b11148, type: 2}
-  - {fileID: 11400000, guid: acea7a8e07fe1eb41bfd76c1ec8a5ed9, type: 2}
-  - {fileID: 11400000, guid: 8bceff0bc68e91143b6184c4b5de19ff, type: 2}
-  - {fileID: 11400000, guid: 1b5619e6589387a4a8236e8dcd98f1ea, type: 2}
-  - {fileID: 11400000, guid: 7e6f961ad5715fd4dbe3392989366643, type: 2}
-  - {fileID: 11400000, guid: 619c2a6ec8dc2774e8c704d420591740, type: 2}
-  finalBosses:
-  - {fileID: 11400000, guid: 17d27dff805340341884b4febd91757b, type: 2}
-  - {fileID: 11400000, guid: 6509ddaa8d54e7a47a4dd2b4f360ffa0, type: 2}
-  - {fileID: 11400000, guid: 0f8a4cfd59f190a409465c051e591a51, type: 2}
+  normalEnemies: []
+  midBosses: []
+  finalBosses: []
   players: []
 --- !u!4 &951311656
 Transform:
