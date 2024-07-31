@@ -1549,7 +1549,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1778767707442352, guid: 54591eb2360a08b46982bfab7e1438f0,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 54591eb2360a08b46982bfab7e1438f0, type: 3}
 --- !u!4 &188239575 stripped
 Transform:
@@ -4442,7 +4446,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &640372269
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6173,7 +6177,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.00018059967}
+  m_AnchoredPosition: {x: 0, y: 0.00081408}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &897640883
@@ -7119,7 +7123,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1778767707442352, guid: 54591eb2360a08b46982bfab7e1438f0,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 54591eb2360a08b46982bfab7e1438f0, type: 3}
 --- !u!4 &953092173 stripped
 Transform:
@@ -8116,7 +8124,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1778767707442352, guid: 54591eb2360a08b46982bfab7e1438f0,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 54591eb2360a08b46982bfab7e1438f0, type: 3}
 --- !u!4 &1058944661 stripped
 Transform:
@@ -8862,7 +8874,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1152271640
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9857,7 +9869,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1778767707442352, guid: 54591eb2360a08b46982bfab7e1438f0,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 54591eb2360a08b46982bfab7e1438f0, type: 3}
 --- !u!4 &1291141814 stripped
 Transform:
@@ -11039,7 +11055,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1778767707442352, guid: 54591eb2360a08b46982bfab7e1438f0,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 54591eb2360a08b46982bfab7e1438f0, type: 3}
 --- !u!4 &1438513981 stripped
 Transform:
@@ -14484,7 +14504,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1925593276
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14670,7 +14690,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2057381082}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.9999962
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -14841,7 +14861,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1778767707442352, guid: 54591eb2360a08b46982bfab7e1438f0,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 54591eb2360a08b46982bfab7e1438f0, type: 3}
 --- !u!4 &1982542680 stripped
 Transform:
@@ -14933,7 +14957,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -142.39996, y: 109.51}
+  m_AnchoredPosition: {x: -142.40002, y: 109.51}
   m_SizeDelta: {x: 603.1, y: 450.82}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &2002078884
@@ -15917,7 +15941,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -165, y: -12.299988}
+  m_AnchoredPosition: {x: -164.99988, y: -12.300049}
   m_SizeDelta: {x: -880, y: -350}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2117468891
