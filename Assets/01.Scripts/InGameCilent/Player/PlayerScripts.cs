@@ -1,11 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Photon.Pun;
-using static UnityEngine.Rendering.DebugUI;
 using System.Collections;
 using System;
-using System.Runtime.CompilerServices;
-using Unity.VisualScripting;
+using static UnityEngine.Rendering.DebugUI;
 
 public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
 {
@@ -37,9 +35,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
     private PlayerSetManager playerSetManager;
     private int actorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
 
-
-
-
+    private bool isDrawingCard = false;
 
     public int ID
     {
@@ -161,30 +157,55 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
 
     public void DrawACard(int n)
     {
-        if (_deck.Cards.Count > 0)
+        if (isDrawingCard)
         {
-            HandVisual handVisual = PArea.handVisual;  // 현재 플레이어의 HandVisual 참조
-            if (hand.CardsInHand.Count < handVisual.GetMaxSlots())
-            {
-                CardLogic newCard = new CardLogic(_deck.Cards[0], this);
-                hand.CardsInHand.Insert(0, newCard);
-                _deck.Cards.RemoveAt(0);
-                new DrawACardCommand(hand.CardsInHand[0], this, fromDeck: true).AddToQueue();
-                _playerDeckVisual.UpdateDeckCount();
+            return; // 이미 카드 드로우 중이면 새로운 드로우 요청을 무시합니다.
+        }
 
-                playerSetManager.photonView.RPC("HandCardCount", RpcTarget.All, actorNumber, n, "Plus");
+        StartCoroutine(DrawCardsCoroutine(n));
+    }
+
+    private IEnumerator DrawCardsCoroutine(int n)
+    {
+        isDrawingCard = true;
+        HandVisual handVisual = PArea.handVisual;  // 현재 플레이어의 HandVisual 참조
+
+        for (int i = 0; i < n; i++)
+        {
+            if (hand.CardsInHand.Count < handVisual.GetMaxSlots() && hand.CardsInHand.Count < 5)
+            {
+                if (_deck.Cards.Count > 0)
+                {
+                    CardLogic newCard = new CardLogic(_deck.Cards[0], this);
+                    hand.CardsInHand.Insert(0, newCard);
+                    _deck.Cards.RemoveAt(0);
+                    new DrawACardCommand(hand.CardsInHand[0], this, fromDeck: true).AddToQueue();
+                    _playerDeckVisual.UpdateDeckCount();
+
+                    playerSetManager.photonView.RPC("HandCardCount", RpcTarget.All, actorNumber, 1, "Plus");
+
+                    // 바로 정렬 수행
+                    handVisual.PlaceCardsOnNewSlots();
+
+                    yield return new WaitForSeconds(0.1f); // 카드 드로우 사이에 짧은 대기 시간을 추가하여 동시에 많은 카드 드로우를 방지합니다.
+                }
+                else
+                {
+                    // 덱을 다 썼을 때 탈진 효과 넣는 곳
+                    break;
+                }
             }
         }
-        else
-        {
-            // 덱을 다 썼을 때 탈진 효과 넣는 곳
-        }
+
+        isDrawingCard = false;
     }
+
+
 
     public void GetACardNotFromDeck(CardAsset cardAsset)
     {
         HandVisual handVisual = PArea.handVisual;  // 현재 플레이어의 HandVisual 참조
-        if (hand.CardsInHand.Count < handVisual.GetMaxSlots())
+        if (hand.CardsInHand.Count < handVisual.GetMaxSlots() && hand.CardsInHand.Count < 5)
         {
             CardLogic newCard = new CardLogic(cardAsset, this);
             newCard.owner = this;
@@ -350,7 +371,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             }
 
             photonView.RPC("RealTimeBossStatusCheck", RpcTarget.All, InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
-            playerSetManager.photonView.RPC("HandCardCount", RpcTarget.All, actorNumber, 1,"Minus");
+            playerSetManager.photonView.RPC("HandCardCount", RpcTarget.All, actorNumber, 1, "Minus");
 
 
             // 카드 처리 로직을 이곳에서 처리
@@ -438,8 +459,8 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         }
 
         photonView.RPC("RealTimeBossStatusCheck", RpcTarget.All, InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
-        
-        playerSetManager.photonView.RPC("HandCardCount", RpcTarget.All, actorNumber,1, "Minus");
+
+        playerSetManager.photonView.RPC("HandCardCount", RpcTarget.All, actorNumber, 1, "Minus");
     }
 
     private void VanishCard(CardLogic card)

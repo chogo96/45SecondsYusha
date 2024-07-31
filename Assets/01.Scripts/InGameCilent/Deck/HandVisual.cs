@@ -30,12 +30,11 @@ public class HandVisual : MonoBehaviour
     public List<GameObject> CardsInHand = new List<GameObject>();
     private bool isFillingHand = false; // 손패를 채우는 중인지 확인하는 변수
 
+
     public void AddCard(GameObject card)
     {
         CardsInHand.Insert(0, card);
         card.transform.SetParent(this.transform);
-        PlaceCardsOnNewSlots();
-        UpdatePlacementOfSlots();
 
         // 드래그 기능을 카드에 추가합니다.
         card.AddComponent<Draggable>();
@@ -47,26 +46,31 @@ public class HandVisual : MonoBehaviour
         {
             StartCoroutine(FillHandCoroutine());
         }
+
+        // 카드 배치 즉시 수행
+        PlaceCardsOnNewSlots();
     }
 
     public void RemoveCard(GameObject card)
     {
         CardsInHand.Remove(card);
-        PlaceCardsOnNewSlots();
-        UpdatePlacementOfSlots();
 
         // 손패의 카드 개수가 4장 이하일 때 코루틴을 시작합니다.
         if (CardsInHand.Count <= 4 && !isFillingHand)
         {
             StartCoroutine(FillHandCoroutine());
         }
+
+        // 카드 배치를 애니메이션 완료 후 수행합니다.
+        Sequence s = DOTween.Sequence();
+        s.AppendInterval(0.3f); // 애니메이션 대기 시간
+        s.OnComplete(() => PlaceCardsOnNewSlots());
     }
 
     public void RemoveCardAtIndex(int index)
     {
         CardsInHand.RemoveAt(index);
         PlaceCardsOnNewSlots();
-        UpdatePlacementOfSlots();
 
         // 손패의 카드 개수가 4장 이하일 때 코루틴을 시작합니다.
         if (CardsInHand.Count <= 4 && !isFillingHand)
@@ -79,21 +83,6 @@ public class HandVisual : MonoBehaviour
     {
         return CardsInHand[index];
     }
-    void UpdatePlacementOfSlots()
-    {
-        float posX;
-        if (CardsInHand.Count > 0)
-            posX = (GetLeftTransform().localPosition.x + GetRightTransform().localPosition.x) / 2f;
-        else
-            posX = 0f;
-
-        Transform slotsTransform = this.transform.Find("Slots");
-        if (slotsTransform != null)
-        {
-            slotsTransform.DOLocalMoveX(posX, 0.3f);
-        }
-    }
-
     public void PlaceCardsOnNewSlots()
     {
         var originCardPRSs = RoundAlignment(GetLeftTransform(), GetRightTransform(), CardsInHand.Count, 0.5f, Vector3.one * 1.9f);
@@ -177,7 +166,6 @@ public class HandVisual : MonoBehaviour
 
         return card;
     }
-
     public void GivePlayerACard(CardAsset c, int UniqueID, bool fast = false, bool fromDeck = true)
     {
         GameObject card;
@@ -217,6 +205,7 @@ public class HandVisual : MonoBehaviour
             Debug.LogError("Tag name is null or empty!");
         }
 
+        // 카드 위치 설정 및 애니메이션 실행
         AddCard(card);
 
         WhereIsTheCardOrCreature w = card.GetComponent<WhereIsTheCardOrCreature>();
@@ -227,28 +216,18 @@ public class HandVisual : MonoBehaviour
         IDHolder id = card.AddComponent<IDHolder>();
         id.UniqueID = UniqueID;
 
-        Sequence s = DOTween.Sequence();
-        if (!fast)
-        {
-            s.Append(card.transform.DOMove(DrawPreviewSpot.position, GlobalSettings.instance.CardTransitionTime));
-            if (TakeCardsOpenly)
-                s.Insert(0f, card.transform.DOLocalRotate(Vector3.zero, GlobalSettings.instance.CardTransitionTime));
-            else
-                s.Insert(0f, card.transform.DOLocalRotate(new Vector3(0f, -179f, 0f), GlobalSettings.instance.CardTransitionTime));
-            s.AppendInterval(GlobalSettings.instance.CardPreviewTime);
-            s.Append(card.transform.DOLocalMove(GetLeftTransform().localPosition, GlobalSettings.instance.CardTransitionTime));
-        }
-        else
-        {
-            s.Append(card.transform.DOLocalMove(GetLeftTransform().localPosition, GlobalSettings.instance.CardTransitionTimeFast));
-            if (TakeCardsOpenly)
-                s.Insert(0f, card.transform.DOLocalRotate(Vector3.zero, GlobalSettings.instance.CardTransitionTimeFast));
-            else
-                s.Insert(0f, card.transform.DOLocalRotate(new Vector3(0f, -179f, 0f), GlobalSettings.instance.CardTransitionTimeFast));
-        }
+        // 새로 추가된 카드의 목표 위치
+        Vector3 targetPosition = GetCardPositionAtIndex(0);
+        card.transform.position = targetPosition;  // 위치를 바로 설정
+        card.transform.rotation = Quaternion.identity;  // 회전을 바로 설정
 
-        s.OnComplete(() => ChangeLastCardStatusToInHand(card, w));
+        // 바로 정렬 수행
+        PlaceCardsOnNewSlots();
+
+        // 카드 상태 변경
+        ChangeLastCardStatusToInHand(card, w);
     }
+
 
     void ChangeLastCardStatusToInHand(GameObject card, WhereIsTheCardOrCreature w)
     {
