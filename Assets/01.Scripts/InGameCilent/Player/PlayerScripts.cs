@@ -74,7 +74,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
     void Awake()
     {
         playerSetManager = FindObjectOfType<PlayerSetManager>();
-
+        _enemyUIManager = FindObjectOfType<EnemyUIManager>();
         Players = GameObject.FindObjectsOfType<PlayerScripts>();
         PlayerID = IDFactory.GetUniquePlayerID();
         _playerDeckVisual = FindObjectOfType<PlayerDeckVisual>();
@@ -417,6 +417,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             // 조건 확인 및 알파값 변경
             if (_enemyUIManager != null)
             {
+                Debug.Log("ㅇㅇ 적 ui매니저 있음");
                 int swordIncrement = InGameManager.instance.Sword - _previousSword;
                 int magicIncrement = InGameManager.instance.Magic - _previousMagic;
                 int shieldIncrement = InGameManager.instance.Shield - _previousShield;
