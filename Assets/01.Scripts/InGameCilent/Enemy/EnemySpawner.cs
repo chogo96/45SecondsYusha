@@ -78,6 +78,49 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
     {
         if (index < spawnOrder.Count)
         {
+            GameObject newEntity;
+
+            if (spawnOrder[index] == null)
+            {
+                // 상점 소환
+                newEntity = PhotonNetwork.Instantiate(shopPrefab.name, Vector3.zero, Quaternion.identity);
+            }
+            else
+            {
+                EnemyData enemyData = spawnOrder[index];
+                newEntity = PhotonNetwork.Instantiate(enemyPrefab.name, Vector3.zero, Quaternion.identity);
+                Image enemyImage = newEntity.GetComponent<Image>();
+                if (enemyImage != null)
+                {
+                    enemyImage.sprite = enemyData.enemySprite;
+                }
+
+                Enemy enemy = newEntity.GetComponent<Enemy>();
+                if (enemy != null)
+                {
+                    bool isFinalBoss = (index == spawnOrder.Count - 1);
+                    enemy.Initialize(enemyData, players, isFinalBoss);
+
+                    // 적 데이터 삭제 (한 번 소환된 적은 다시 나오지 않음)
+                    normalEnemies.Remove(enemyData);
+                    midBosses.Remove(enemyData);
+                    finalBosses.Remove(enemyData);
+                }
+            }
+
+            // newEntity의 부모를 canvasTransform으로 설정
+            newEntity.transform.SetParent(canvasTransform, false);
+
+            currentEnemyIndex = index + 1;
+        }
+    }
+
+    /*
+    [PunRPC]
+    void RPC_SpawnNextEnemy(int index)
+    {
+        if (index < spawnOrder.Count)
+        {
             if (spawnOrder[index] == null)
             {
                 // 상점 소환
@@ -108,7 +151,7 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
             currentEnemyIndex = index + 1;
         }
     }
-
+    */
     void SpawnNextEnemy()
     {
         if (PhotonNetwork.IsMasterClient)
@@ -147,7 +190,10 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
     private IEnumerator SpawnNextEnemyAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        SpawnNextEnemy();
+        if (PhotonNetwork.IsMasterClient)
+        {
+            SpawnNextEnemy();
+        }
     }
 
     internal void RegisterPlayer(PlayerScripts player)
