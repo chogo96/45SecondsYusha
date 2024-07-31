@@ -25,9 +25,11 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
 
     private int _playerCount;
 
-    private int _baseHandCards = 5;
-    private int _baseDeckCards = 25;
+    private int _baseHandCards;
+    private int _baseDeckCards = 26;
     private int actorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
+
+    private GameObject[] playerHandArea;
 
     private void Awake()
     {
@@ -42,8 +44,11 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
         _deckCountText = new TMP_Text[_playerCount];
         _handImage = new Image[_playerCount];
         _handCountText = new TMP_Text[_playerCount];
+        playerHandArea = new GameObject[_playerCount];
 
-        
+
+
+
 
         // GameManager의 AllPlayersSpawned 이벤트 구독
         GameManager.AllPlayersSpawned += Reset;
@@ -75,6 +80,7 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
             _handCountText[i] = playerTransform.Find("HandImage/HandCountText (TMP)")?.GetComponent<TMP_Text>();
             _deckCountText[i] = playerTransform.Find("DeckImage/DeckCountText (TMP)")?.GetComponent<TMP_Text>();
 
+            playerHandArea[i] = playerTransform.Find($"HandArea")?.gameObject;
 
             _handImage[i] = playerTransform.Find("HandImage")?.GetComponent<Image>(); 
             _deckImage[i] = playerTransform.Find("DeckImage")?.GetComponent<Image>();
@@ -83,6 +89,9 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
 
         _playerImage[actorNumber].sprite = playerScripts.charAsset.AvatarImage;
 
+
+
+        HandCardCount(actorNumber, "Minus");
     }
 
 
@@ -94,17 +103,42 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
     /// <param name="cardNum">사용한카드 수 or 뽑는 카드 수</param>
     /// <param name="plusMinus">Minus = 카드사용 / Plus = 카드드로우</param>
     [PunRPC]
-    public void HandCardCount(int playerNumber, int cardNum, string plusMinus)
+    public void HandCardCount(int playerNumber,string plusMinus)
     {
+        int GetCardCount(GameObject handArea)
+        {
+            int count = 0;
+            foreach (Transform child in handArea.transform)
+            {
+                if (child.name.StartsWith("InGameCard(Clone)"))
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+        _baseHandCards = GetCardCount(playerHandArea[playerNumber]);
+
+
+        int GetListCount(List<CardAsset> list)
+        {
+            return list.Count;
+        }
+        _baseDeckCards = GetListCount( playerScripts._deck.Cards);
+
         // 손패 몇장있는지 숫자 보여주면서
         switch (plusMinus)
         {
             case "Minus":
-                _handCountText[playerNumber].text = $"{_baseHandCards - cardNum}";
+                _handCountText[playerNumber].text = $"{_baseHandCards}";
                 break;
             case "Plus":
-                _handCountText[playerNumber].text = $"{_baseHandCards + cardNum}";
-                _deckCountText[actorNumber].text = $"{_baseDeckCards - cardNum}";
+                _handCountText[playerNumber].text = $"{_baseHandCards}";
+                _deckCountText[actorNumber].text = $"{_baseDeckCards}";
+                if(_baseDeckCards <= 0)
+                {
+                    _deckCountText[actorNumber].text = $"0";
+                }
                 break;
             default:
                 break;
