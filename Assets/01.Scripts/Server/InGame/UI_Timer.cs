@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using Photon.Pun;
 
-public class UI_Timer : MonoBehaviour
+public class UI_Timer : MonoBehaviourPunCallbacks
 {
     private TMP_Text _timerText; // UI 에 표시될 Text.
     private float _time = 45f; // 시간.

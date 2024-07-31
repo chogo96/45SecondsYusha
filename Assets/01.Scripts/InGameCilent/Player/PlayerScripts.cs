@@ -4,6 +4,7 @@ using Photon.Pun;
 using System.Collections;
 using System;
 using static UnityEngine.Rendering.DebugUI;
+using UnityEditor.Experimental.GraphView;
 
 public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
 {
@@ -36,6 +37,8 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
     private int actorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
 
     private bool isDrawingCard = false;
+
+    private GameObject _playerTransform;
 
     public int ID
     {
@@ -107,6 +110,8 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             Debug.LogError("Deck1 오브젝트를 찾을 수 없습니다.");
         }
 
+        _playerTransform = gameObject;
+
         InitializePlayerDeck();
     }
 
@@ -129,6 +134,31 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         {
             StartCoroutine(FillHandCoroutine());
         }
+
+        #region 직업 스크립트를 AddComponent 하는곳
+        if (charAsset.ClassName == "Attacker")// Attacker, Buffer, Healer, Tanker
+        {
+            // AttackerSkills attackerSkills = _playerTransform.AddComponent<AttackerSkills>();
+            BufferSkills bufferSkills = _playerTransform.AddComponent<BufferSkills>();
+
+        }
+        else if (charAsset.ClassName == "Buffer")
+        {
+            BufferSkills bufferSkills = _playerTransform.AddComponent<BufferSkills>();
+        }
+        else if (charAsset.ClassName == "Healer")
+        {
+            // HealerSkills healerSkills = _playerTransform.AddComponent<HealerSkills>();
+            BufferSkills bufferSkills = _playerTransform.AddComponent<BufferSkills>();
+
+        }
+        else //Tanker
+        {
+            // TankerSkills tankerSkills = _playerTransform.AddComponent<TankerSkills>();
+            BufferSkills bufferSkills = _playerTransform.AddComponent<BufferSkills>();
+
+        }
+        #endregion
     }
 
     void Update()

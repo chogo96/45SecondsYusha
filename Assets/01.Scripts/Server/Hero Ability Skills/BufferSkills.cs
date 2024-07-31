@@ -7,10 +7,12 @@ using Photon.Realtime;
 public class BufferSkills : MonoBehaviourPunCallbacks, SkillsInterface
 {
     SkillsManager skillsManager;
+    UI_Timer uI_Timer;
 
     private void Awake()
     {
         skillsManager = FindObjectOfType<SkillsManager>();
+        uI_Timer = FindObjectOfType<UI_Timer>();
     }
     private void Start()
     {
@@ -25,7 +27,7 @@ public class BufferSkills : MonoBehaviourPunCallbacks, SkillsInterface
     public void UseSkill()
     {
         photonView.RPC("UseSkillSignal", RpcTarget.All);
-        photonView.RPC("TimePlusMinus", RpcTarget.All, 45); //능력 구현 완료
+        uI_Timer.photonView.RPC("TimePlusMinus", RpcTarget.All, 45f); //능력 구현 완료
         // 능력구현 + 내화면에 보여줄 애니메이션 or 이팩트 구현
     }
 
