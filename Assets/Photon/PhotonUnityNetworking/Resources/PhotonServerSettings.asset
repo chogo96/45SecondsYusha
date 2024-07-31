@@ -66,6 +66,7 @@ MonoBehaviour:
   - OnAddTimeOrCardButton
   - ReceiveSpawnOrder
   - Datatransfer
+  - RPC_SetSpawnOrder
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
