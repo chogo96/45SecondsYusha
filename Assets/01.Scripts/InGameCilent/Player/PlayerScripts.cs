@@ -192,6 +192,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             return; // 이미 카드 드로우 중이면 새로운 드로우 요청을 무시합니다.
         }
 
+        playerSetManager.photonView.RPC("HandCardCount", RpcTarget.All, actorNumber, "Plus");
         StartCoroutine(DrawCardsCoroutine(n));
     }
 
@@ -212,7 +213,6 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                     new DrawACardCommand(hand.CardsInHand[0], this, fromDeck: true).AddToQueue();
                     _playerDeckVisual.UpdateDeckCount();
 
-                    playerSetManager.photonView.RPC("HandCardCount", RpcTarget.All, actorNumber, 1, "Plus");
 
                     // 바로 정렬 수행
                     handVisual.PlaceCardsOnNewSlots();
@@ -285,6 +285,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
 
     public void PlayACardFromHand(CardLogic card, ICharacter target)
     {
+        playerSetManager.photonView.RPC("HandCardCount", RpcTarget.All, actorNumber, "Minus");
         if (BuffManager.instance.BlindDebuff)
         {
             if (UnityEngine.Random.Range(0, 2) == 0)
@@ -400,8 +401,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                 }
             }
 
-            photonView.RPC("RealTimeBossStatusCheck", RpcTarget.All, InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
-            playerSetManager.photonView.RPC("HandCardCount", RpcTarget.All, actorNumber, 1, "Minus");
+            
 
 
             // 카드 처리 로직을 이곳에서 처리
@@ -431,6 +431,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                 _enemyUIManager.ChangeAlphaForIncrement(shieldIncrement, _enemyUIManager.shieldImageParent, Shield, _currentEnemy.requiredShield);
             }
 
+            photonView.RPC("RealTimeBossStatusCheck", RpcTarget.All, InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
             _deck.ReturnRandomCardsFromDiscard(card.cardAsset.RandomRestoreDeck);
 
             // 2초 후에 추가 공격을 수행하는 코루틴 시작 (조건 확인)
@@ -440,12 +441,14 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                 card.cardAsset.AdditionalRandomAttack > 0)
             {
                 StartCoroutine(PerformAdditionalAttack(card.cardAsset));
+                photonView.RPC("RealTimeBossStatusCheck", RpcTarget.All, InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
             }
         }
 
         // 손패의 카드 개수가 4장 이하일 때 덱에서 카드를 채우는 로직 추가
         if (hand.CardsInHand.Count <= 4 && !isFillingHand)
         {
+            playerSetManager.photonView.RPC("HandCardCount", RpcTarget.All, actorNumber, "Plus");
             StartCoroutine(FillHandCoroutine());
         }
     }
@@ -489,9 +492,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             }
         }
 
-        photonView.RPC("RealTimeBossStatusCheck", RpcTarget.All, InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
-
-        playerSetManager.photonView.RPC("HandCardCount", RpcTarget.All, actorNumber, 1, "Minus");
+        
     }
 
     private void VanishCard(CardLogic card)

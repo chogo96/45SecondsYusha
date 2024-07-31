@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Photon.Pun;
 
 public class Deck : MonoBehaviour
 {
@@ -7,8 +8,14 @@ public class Deck : MonoBehaviour
     public List<CardAsset> DiscardDeck = new List<CardAsset>(); // »ç¿ë, ¹ö·ÁÁø µ¦
     public List<CardAsset> VanishDeck = new List<CardAsset>(); // ¼Ò¸êÇÑ Ä«µå µ¦
     private BuffManager _buffManager;
+
+    private int actorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
+    PlayerSetManager playerSetManager;
+
+
     private void Start()
     {
+        playerSetManager = FindObjectOfType<PlayerSetManager>();
         // µ¦À» ¼¯½À´Ï´Ù.
         ShuffleDeck();
         _buffManager = GetComponent<BuffManager>();
@@ -46,6 +53,7 @@ public class Deck : MonoBehaviour
         if (_buffManager.BleedDebuff && _buffManager != null && Cards.Count > 0)
         {
             _buffManager.ApplyBleedEffect();
+            playerSetManager.photonView.RPC("HandCardCount", RpcTarget.All, actorNumber,"Minus");
         }
     }
 
