@@ -17,16 +17,13 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
     private GameObject[] _blindDebuffImage;
     private GameObject[] _confusionDebuffImage;
 
-    private Image[] _deckImage;
     private TMP_Text[] _deckCountText;
-
-    private Image[] _handImage;
     private TMP_Text[] _handCountText;
 
     private int _playerCount;
 
-    private int _baseHandCards;
-    private int _baseDeckCards = 26;
+    private int[] _baseHandCards;
+    private int[] _baseDeckCards;
     private int actorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
 
     private GameObject[] playerHandArea;
@@ -40,11 +37,12 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
         _bleedDebuffImage = new GameObject[_playerCount];
         _blindDebuffImage = new GameObject[_playerCount];
         _confusionDebuffImage = new GameObject[_playerCount];
-        _deckImage = new Image[_playerCount];
         _deckCountText = new TMP_Text[_playerCount];
-        _handImage = new Image[_playerCount];
         _handCountText = new TMP_Text[_playerCount];
         playerHandArea = new GameObject[_playerCount];
+
+        _baseHandCards = new int[_playerCount];
+        _baseDeckCards = new int[_playerCount];
 
 
 
@@ -74,6 +72,9 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
             }
 
             _playerImage[i] = playerTransform.Find("Player_Image")?.GetComponent<Image>();
+            _playerImage[i].sprite = playerScripts.charAsset.AvatarImage;
+
+
             _bleedDebuffImage[i] = playerTransform.Find("BleedDebuffImage")?.gameObject;
             _blindDebuffImage[i] = playerTransform.Find("BlindDebuffImage")?.gameObject;
             _confusionDebuffImage[i] = playerTransform.Find("ConfusionDebuffImage")?.gameObject;
@@ -81,13 +82,8 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
             _deckCountText[i] = playerTransform.Find("DeckImage/DeckCountText (TMP)")?.GetComponent<TMP_Text>();
 
             playerHandArea[i] = playerTransform.Find($"HandArea")?.gameObject;
-
-            _handImage[i] = playerTransform.Find("HandImage")?.GetComponent<Image>(); 
-            _deckImage[i] = playerTransform.Find("DeckImage")?.GetComponent<Image>();
-
         }
 
-        _playerImage[actorNumber].sprite = playerScripts.charAsset.AvatarImage;
 
 
 
@@ -117,27 +113,27 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
             }
             return count;
         }
-        _baseHandCards = GetCardCount(playerHandArea[playerNumber]);
+        _baseHandCards[playerNumber] = GetCardCount(playerHandArea[playerNumber]);
 
 
         int GetListCount(List<CardAsset> list)
         {
             return list.Count;
         }
-        _baseDeckCards = GetListCount( playerScripts._deck.Cards);
+        _baseDeckCards[playerNumber] = GetListCount( playerScripts._deck.Cards);
 
         // 손패 몇장있는지 숫자 보여주면서
         switch (plusMinus)
         {
             case "Minus":
-                _handCountText[playerNumber].text = $"{_baseHandCards}";
+                _handCountText[playerNumber].text = $"{_baseHandCards[playerNumber]}";
                 break;
             case "Plus":
-                _handCountText[playerNumber].text = $"{_baseHandCards}";
-                _deckCountText[actorNumber].text = $"{_baseDeckCards}";
-                if(_baseDeckCards <= 0)
+                _handCountText[playerNumber].text = $"{_baseHandCards[playerNumber]}";
+                _deckCountText[playerNumber].text = $"{_baseDeckCards[playerNumber]}";
+                if(_baseDeckCards[playerNumber] <= 0)
                 {
-                    _deckCountText[actorNumber].text = $"0";
+                    _deckCountText[playerNumber].text = $"0";
                 }
                 break;
             default:

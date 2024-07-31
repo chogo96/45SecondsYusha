@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
@@ -17,10 +18,13 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
 
     private List<EnemyData> spawnOrder; // 스폰 순서를 담는 리스트
     private int currentEnemyIndex = 0;
+    private string spawnOrderJson;
+
 
     void Start()
     {
         StartCoroutine(WaitForPlayersAndSpawnEnemies());
+        
     }
 
     private IEnumerator WaitForPlayersAndSpawnEnemies()
@@ -34,20 +38,17 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
         // 추가적인 초기화 확인을 위해 잠시 대기
         yield return new WaitForSeconds(1f);
 
-        // 스폰 순서 생성 및 적 소환
+        // 마스터 클라이언트가 스폰 순서 생성 및 순서리스트 를 Json 형식으로 다른클라이언트 에게 전송
         GenerateSpawnOrder();
 
-        // 마스터 클라이언트만 적을 스폰
-        if (PhotonNetwork.IsMasterClient)
-        {
-            SpawnNextEnemy();
-        }
+        photonView.RPC("RPC_SpawnNextEnemy", RpcTarget.All, currentEnemyIndex);
+
     }
+
 
     void GenerateSpawnOrder()
     {
         spawnOrder = new List<EnemyData>();
-
         for (int i = 0; i < 3; i++)
         {
             List<EnemyData> currentCycleEnemies = new List<EnemyData>();
@@ -71,6 +72,7 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
 
         // 랜덤 최종 보스 추가
         spawnOrder.Add(finalBosses[Random.Range(0, finalBosses.Count)]);
+
     }
 
     [PunRPC]
@@ -152,21 +154,11 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
         }
     }
     */
-    void SpawnNextEnemy()
-    {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            photonView.RPC("RPC_SpawnNextEnemy", RpcTarget.All, currentEnemyIndex);
-        }
-    }
 
     public void OnShopButtonPressed()
     {
         // 상점 버튼이 눌렸을 때 적을 처치한 것처럼 다음 적을 소환
-        if (PhotonNetwork.IsMasterClient)
-        {
-            SpawnNextEnemy();
-        }
+        photonView.RPC("RPC_SpawnNextEnemy", RpcTarget.All, currentEnemyIndex);
     }
 
     void OnEnable()
@@ -190,10 +182,7 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
     private IEnumerator SpawnNextEnemyAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        if (PhotonNetwork.IsMasterClient)
-        {
-            SpawnNextEnemy();
-        }
+        photonView.RPC("RPC_SpawnNextEnemy", RpcTarget.All, currentEnemyIndex);
     }
 
     internal void RegisterPlayer(PlayerScripts player)

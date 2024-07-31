@@ -64,6 +64,8 @@ MonoBehaviour:
   - HandCardCount
   - OnAddTimeButton
   - OnAddTimeOrCardButton
+  - ReceiveSpawnOrder
+  - Datatransfer
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

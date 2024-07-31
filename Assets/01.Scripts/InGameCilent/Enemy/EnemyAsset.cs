@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
 
+
 public class EnemyData : ScriptableObject
 {
     [PreviewSprite]
