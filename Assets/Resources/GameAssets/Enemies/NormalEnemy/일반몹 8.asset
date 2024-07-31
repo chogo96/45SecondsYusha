@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf70ea5f95cd4964d80f93019b4fd8b1, type: 3}
   m_Name: "\uC77C\uBC18\uBAB9 8"
   m_EditorClassIdentifier: 
-  enemySprite: {fileID: 819179342, guid: 5b34ab02340731945a5000945fed345c, type: 3}
+  enemySprite: {fileID: 21300000, guid: aa38bedeec918524c9d0a8aab3eba27b, type: 3}
   RequiredSwordAttack: 3
   RequiredMagicAttack: 0
   RequiredShieldAttack: 0
