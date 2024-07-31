@@ -29,6 +29,8 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
     private PlayerDeckVisual _playerDeckVisual;
     private EnemyUIManager _enemyUIManager;
     private bool isFillingHand = false;
+    //카드 플레이 딜레이 주기위한 것
+    private bool isPlayingCard = false;
 
     public static PlayerScripts[] Players;
     private BuffManager _buffManager;
@@ -265,7 +267,8 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                     target = creature;
                 }
             }
-            PlayACardFromHand(card, target);
+            //PlayACardFromHand(card, target);
+            StartCoroutine(PlayACardWithDelay(card, target)); // 코루틴 시작
         }
         else
         {
@@ -282,176 +285,18 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         // 현재 적의 생존 조건 확인
         _currentEnemy?.CheckDeathCondition(InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
     }
-
-    //public void PlayACardFromHand(CardLogic card, ICharacter target)
-    //{
-    //    if (BuffManager.instance.BlindDebuff)
-    //    {
-    //        if (UnityEngine.Random.Range(0, 2) == 0)
-    //        {
-    //            Debug.Log("카드가 실명 효과로 버려졌습니다!! ^^");
-
-    //            // 카드 처리 로직을 이곳에서 처리
-    //            if (card.cardAsset.IsVanishCard)
-    //            {
-    //                VanishCard(card);
-    //            }
-    //            else
-    //            {
-    //                DiscardCard(card);
-    //            }
-    //            return;
-    //        }
-    //    }
-
-    //    if (card != null && card.cardAsset != null)
-    //    {
-    //        _previousSword = InGameManager.instance.Sword;
-    //        _previousMagic = InGameManager.instance.Magic;
-    //        _previousShield = InGameManager.instance.Shield;
-
-    //        // 카드의 SwordAttack, MagicAttack, ShieldAttack 값을 플레이어에게 반영
-    //        InGameManager.instance.Sword += card.cardAsset.SwordAttack;
-    //        InGameManager.instance.Magic += card.cardAsset.MagicAttack;
-    //        InGameManager.instance.Shield += card.cardAsset.ShieldAttack;
-    //        InGameManager.instance.RandomValue = card.cardAsset.RandomAttack;
-
-    //        // 공격력 값을 배열에 저장
-    //        int[] attackValues = { card.cardAsset.SwordAttack, card.cardAsset.MagicAttack, card.cardAsset.ShieldAttack };
-    //        System.Random random = new System.Random();
-    //        int index = random.Next(attackValues.Length);
-    //        int randomAttackValue = attackValues[index];
-
-    //        // 무작위로 선택된 공격력 값을 플레이어에게 반영
-    //        switch (index)
-    //        {
-    //            case 0:
-    //                InGameManager.instance.Sword += randomAttackValue;
-    //                break;
-    //            case 1:
-    //                InGameManager.instance.Magic += randomAttackValue;
-    //                break;
-    //            case 2:
-    //                InGameManager.instance.Shield += randomAttackValue;
-    //                break;
-    //        }
-
-    //        void RemoveDebuff(string debuff)
-    //        {
-    //            switch (debuff)
-    //            {
-    //                case "실명":
-    //                    BuffManager.instance.RemoveBlindEffect();
-    //                    break;
-    //                case "출혈":
-    //                    BuffManager.instance.RemoveBleedEffect();
-    //                    break;
-    //                case "혼란":
-    //                    BuffManager.instance.RemoveConfusionEffect();
-    //                    break;
-    //                case "랜덤":
-    //                    RemoveRandomDebuff();
-    //                    break;
-    //                case "모든":
-    //                    RemoveAllDebuffs();
-    //                    break;
-    //                case "모든버프":
-    //                    RemoveAllDebuffs();
-    //                    break;
-    //            }
-    //        }
-
-    //        void RemoveRandomDebuff()
-    //        {
-    //            int randomDebuffIndex = UnityEngine.Random.Range(0, 3);
-    //            switch (randomDebuffIndex)
-    //            {
-    //                case 0:
-    //                    BuffManager.instance.RemoveBlindEffect();
-    //                    break;
-    //                case 1:
-    //                    BuffManager.instance.RemoveBleedEffect();
-    //                    break;
-    //                case 2:
-    //                    BuffManager.instance.RemoveConfusionEffect();
-    //                    break;
-    //            }
-    //        }
-
-    //        void RemoveAllDebuffs()
-    //        {
-    //            BuffManager.instance.RemoveBlindEffect();
-    //            BuffManager.instance.RemoveBleedEffect();
-    //            BuffManager.instance.RemoveConfusionEffect();
-    //        }
-
-    //        // 디버프 제거 함수 호출
-    //        RemoveDebuff(card.cardAsset.RemoveDebuff);
-
-    //        if (card.cardAsset.DiscardFromDeck > 0)
-    //        {
-    //            _deck.DiscardRandomCards(card.cardAsset.DiscardFromDeck);
-    //        }
-    //        if (card.cardAsset.DrawFromDeck > 0)
-    //        {
-    //            for (int i = 0; i < card.cardAsset.DrawFromDeck; i++)
-    //            {
-    //                DrawACard(1);
-    //            }
-    //        }
-
-    //        photonView.RPC("RealTimeBossStatusCheck", RpcTarget.All, InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
-    //        playerSetManager.photonView.RPC("HandCardCount", RpcTarget.All, actorNumber, 1, "Minus");
-
-
-    //        // 카드 처리 로직을 이곳에서 처리
-    //        if (card.cardAsset.IsVanishCard)
-    //        {
-    //            VanishCard(card);
-    //        }
-    //        else
-    //        {
-    //            DiscardCard(card);
-    //        }
-
-    //        // 조건 확인 및 알파값 변경
-    //        if (_enemyUIManager != null)
-    //        {
-    //            Debug.Log("ㅇㅇ 적 ui매니저 있음");
-    //            int swordIncrement = InGameManager.instance.Sword - _previousSword;
-    //            int magicIncrement = InGameManager.instance.Magic - _previousMagic;
-    //            int shieldIncrement = InGameManager.instance.Shield - _previousShield;
-
-    //            Debug.Log($"Sword Increment: {swordIncrement}");
-    //            Debug.Log($"Magic Increment: {magicIncrement}");
-    //            Debug.Log($"Shield Increment: {shieldIncrement}");
-
-    //            _enemyUIManager.ChangeAlphaForIncrement(swordIncrement, _enemyUIManager.swordImageParent, Sword, _currentEnemy.requiredSword);
-    //            _enemyUIManager.ChangeAlphaForIncrement(magicIncrement, _enemyUIManager.magicImageParent, Magic, _currentEnemy.requiredMagic);
-    //            _enemyUIManager.ChangeAlphaForIncrement(shieldIncrement, _enemyUIManager.shieldImageParent, Shield, _currentEnemy.requiredShield);
-    //        }
-
-    //        _deck.ReturnRandomCardsFromDiscard(card.cardAsset.RandomRestoreDeck);
-
-    //        // 2초 후에 추가 공격을 수행하는 코루틴 시작 (조건 확인)
-    //        if (card.cardAsset.AdditionalSwordAttack > 0 ||
-    //            card.cardAsset.AdditionalMagicAttack > 0 ||
-    //            card.cardAsset.AdditionalShieldAttack > 0 ||
-    //            card.cardAsset.AdditionalRandomAttack > 0)
-    //        {
-    //            StartCoroutine(PerformAdditionalAttack(card.cardAsset));
-    //        }
-    //    }
-
-    //    // 손패의 카드 개수가 4장 이하일 때 덱에서 카드를 채우는 로직 추가
-    //    if (hand.CardsInHand.Count <= 4 && !isFillingHand)
-    //    {
-    //        StartCoroutine(FillHandCoroutine());
-    //    }
-    //}
-    public void PlayACardFromHand(CardLogic card, ICharacter target)
+    private IEnumerator PlayACardWithDelay(CardLogic card, ICharacter target)
     {
+        // 카드가 플레이 중이면 대기
+        while (isPlayingCard)
+        {
+            yield return null;
+        }
+
+        isPlayingCard = true; // 카드 플레이 시작
+
         playerSetManager.photonView.RPC("HandCardCount", RpcTarget.All, actorNumber, "Minus");
+
         if (BuffManager.instance.BlindDebuff)
         {
             if (UnityEngine.Random.Range(0, 2) == 0)
@@ -467,7 +312,9 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                 {
                     DiscardCard(card);
                 }
-                return;
+
+                isPlayingCard = false; // 카드 플레이 종료
+                yield break;
             }
         }
 
@@ -571,9 +418,6 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                 }
             }
 
-            
-
-
             // 카드 처리 로직을 이곳에서 처리
             if (card.cardAsset.IsVanishCard)
             {
@@ -621,6 +465,9 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             playerSetManager.photonView.RPC("HandCardCount", RpcTarget.All, actorNumber, "Plus");
             StartCoroutine(FillHandCoroutine());
         }
+
+        yield return new WaitForSeconds(0.5f); // 딜레이 추가
+        isPlayingCard = false; // 카드 플레이 종료
     }
     private IEnumerator PerformAdditionalAttack(CardAsset cardAsset)
     {
