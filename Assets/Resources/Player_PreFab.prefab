@@ -1093,6 +1093,9 @@ MonoBehaviour:
   usedHeroPowerThisGame: 0
   _deck: {fileID: 8322949386943975010}
   hand: {fileID: 8442993951285010270}
+  _swordPoint: 0
+  _magicPoint: 0
+  _shieldPoint: 0
 --- !u!82 &6966195465294581271
 AudioSource:
   m_ObjectHideFlags: 0
