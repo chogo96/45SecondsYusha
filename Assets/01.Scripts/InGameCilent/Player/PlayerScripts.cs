@@ -31,6 +31,9 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
     //카드 플레이 딜레이 주기위한 것
     private bool isPlayingCard = false;
 
+    //적이 살아있는지 여부 체크
+    private bool isEnemyAlive = true;
+
     public static PlayerScripts[] Players;
     private BuffManager _buffManager;
 
@@ -62,7 +65,16 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
     public void SetCurrentEnemy(Enemy enemy)
     {
         _currentEnemy = enemy;
-        Debug.Log($"SetCurrentEnemy: {_currentEnemy}");
+        isEnemyAlive = _currentEnemy != null;
+
+        if (_currentEnemy != null)
+        {
+            Debug.Log($"SetCurrentEnemy: {_currentEnemy}");
+        }
+        else
+        {
+            Debug.Log("SetCurrentEnemy: null");
+        }
     }
 
     public void ResetValues()
@@ -136,12 +148,15 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             StartCoroutine(FillHandCoroutine());
         }
 
+        // 적이 죽었을 때 호출되는 이벤트 핸들러 등록
+        Enemy.OnEnemyDeath += OnEnemyDeath;
+        Enemy.OnEnemySpawned += OnNewEnemySpawned;
+
         #region 직업 스크립트를 AddComponent 하는곳
         if (charAsset.ClassName == "Attacker")// Attacker, Buffer, Healer, Tanker
         {
             // AttackerSkills attackerSkills = _playerTransform.AddComponent<AttackerSkills>();
             BufferSkills bufferSkills = _playerTransform.AddComponent<BufferSkills>();
-
         }
         else if (charAsset.ClassName == "Buffer")
         {
@@ -151,46 +166,54 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         {
             // HealerSkills healerSkills = _playerTransform.AddComponent<HealerSkills>();
             BufferSkills bufferSkills = _playerTransform.AddComponent<BufferSkills>();
-
         }
         else //Tanker
         {
             // TankerSkills tankerSkills = _playerTransform.AddComponent<TankerSkills>();
             BufferSkills bufferSkills = _playerTransform.AddComponent<BufferSkills>();
-
         }
         #endregion
     }
 
-    void Update()
+    void OnDestroy()
     {
+        // 이벤트 핸들러 등록 해제
+        Enemy.OnEnemyDeath -= OnEnemyDeath;
+        Enemy.OnEnemySpawned -= OnNewEnemySpawned;
     }
 
-    private void InitializePlayerDeck()
+    void OnEnemyDeath()
     {
-        List<CardAsset> selectedDeckCards = DeckGameManager.instance.GetSelectedDeckCards();
-
-        if (selectedDeckCards != null)
-        {
-            _deck.Cards = new List<CardAsset>(selectedDeckCards);
-            _deck.ShuffleDeck();
-        }
+        isEnemyAlive = false; // 적이 죽으면 플래그를 false로 설정
     }
 
-    private IEnumerator DrawInitialCards()
+    void OnNewEnemySpawned(Enemy newEnemy)
     {
-        for (int i = 0; i < 5; i++)
+        SetCurrentEnemy(newEnemy);
+        isEnemyAlive = true; // 새로운 적이 생성되면 플래그를 true로 설정
+    }
+
+    [PunRPC]
+    public void RealTimeBossStatusCheck(int sword, int magic, int shield)
+    {
+        if (_currentEnemy == null)
         {
-            DrawACard(1);
-            yield return new WaitForSeconds(0.5f);
+            Debug.LogWarning("현재 적이 null 상태입니다. RealTimeBossStatusCheck 호출을 무시합니다.");
+            return;
         }
+
+        Debug.Log($"Sword: {InGameManager.instance.Sword}, Magic: {InGameManager.instance.Magic}, Shield: {InGameManager.instance.Shield}");
+        Debug.Log($"CurrentEnemy: {_currentEnemy}");
+
+        // 현재 적의 생존 조건 확인
+        _currentEnemy?.CheckDeathCondition(InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
     }
 
     public void DrawACard(int n)
     {
-        if (isDrawingCard)
+        if (isDrawingCard || !isEnemyAlive) // 적이 죽었거나 새로운 적이 생성되기 전이면 카드 드로우를 일시 중지
         {
-            return; // 이미 카드 드로우 중이면 새로운 드로우 요청을 무시합니다.
+            return;
         }
 
         playerSetManager.photonView.RPC("HandCardCount", RpcTarget.All, actorNumber, "Plus");
@@ -214,7 +237,6 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                     new DrawACardCommand(hand.CardsInHand[0], this, fromDeck: true).AddToQueue();
                     _playerDeckVisual.UpdateDeckCount();
 
-
                     // 바로 정렬 수행
                     handVisual.PlaceCardsOnNewSlots();
 
@@ -231,7 +253,16 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         isDrawingCard = false;
     }
 
+    private void InitializePlayerDeck()
+    {
+        List<CardAsset> selectedDeckCards = DeckGameManager.instance.GetSelectedDeckCards();
 
+        if (selectedDeckCards != null)
+        {
+            _deck.Cards = new List<CardAsset>(selectedDeckCards);
+            _deck.ShuffleDeck();
+        }
+    }
 
     public void GetACardNotFromDeck(CardAsset cardAsset)
     {
@@ -275,19 +306,10 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         }
     }
 
-    [PunRPC]
-    public void RealTimeBossStatusCheck(int sword, int magic, int shield)
-    {
-        Debug.Log($"Sword: {InGameManager.instance.Sword}, Magic: {InGameManager.instance.Magic}, Shield: {InGameManager.instance.Shield}");
-        Debug.Log($"CurrentEnemy: {_currentEnemy}");
-
-        // 현재 적의 생존 조건 확인
-        _currentEnemy?.CheckDeathCondition(InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
-    }
     private IEnumerator PlayACardWithDelay(CardLogic card, ICharacter target)
     {
-        // 카드가 플레이 중이면 대기
-        while (isPlayingCard)
+        // 적이 죽었을 때 카드 플레이를 일시 중지
+        while (isPlayingCard || !isEnemyAlive)
         {
             yield return null;
         }
@@ -448,7 +470,11 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                 _enemyUIManager.ChangeAlphaForIncrement(shieldIncrement, _enemyUIManager.shieldImageParent, Shield, _currentEnemy.requiredShield);
             }
 
-            photonView.RPC("RealTimeBossStatusCheck", RpcTarget.All, InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
+            // 적 객체가 null이 아닌 경우에만 RealTimeBossStatusCheck 호출
+            if (_currentEnemy != null)
+            {
+                photonView.RPC("RealTimeBossStatusCheck", RpcTarget.All, InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
+            }
             _deck.ReturnRandomCardsFromDiscard(card.cardAsset.RandomRestoreDeck);
 
             // 2초 후에 추가 공격을 수행하는 코루틴 시작 (조건 확인)
@@ -458,7 +484,12 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                 card.cardAsset.AdditionalRandomAttack > 0)
             {
                 StartCoroutine(PerformAdditionalAttack(card.cardAsset));
-                photonView.RPC("RealTimeBossStatusCheck", RpcTarget.All, InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
+
+                // 적 객체가 null이 아닌 경우에만 RealTimeBossStatusCheck 호출
+                if (_currentEnemy != null)
+                {
+                    photonView.RPC("RealTimeBossStatusCheck", RpcTarget.All, InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
+                }
             }
         }
 
@@ -472,6 +503,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         yield return new WaitForSeconds(0.5f); // 딜레이 추가
         isPlayingCard = false; // 카드 플레이 종료
     }
+
     private IEnumerator PerformAdditionalAttack(CardAsset cardAsset)
     {
         // 2초 대기
@@ -510,8 +542,6 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                 InGameManager.instance.Shield += additionalRandomAttackValue;
             }
         }
-
-
     }
 
     private void VanishCard(CardLogic card)

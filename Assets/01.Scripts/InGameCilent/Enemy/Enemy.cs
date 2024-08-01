@@ -1,7 +1,7 @@
-using Photon.Pun;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using Photon.Pun;
 
 public class Enemy : MonoBehaviourPunCallbacks
 {
@@ -15,16 +15,19 @@ public class Enemy : MonoBehaviourPunCallbacks
 
     public delegate void EnemyDeath();
     public static event EnemyDeath OnEnemyDeath;
+    public delegate void EnemySpawned(Enemy newEnemy);
+    public static event EnemySpawned OnEnemySpawned;
+
     private PlayerScripts _playerScripts;
     private EnemyUIManager _enemyUIManager;
     private PlayerSetManager playerSetManager;
-
+    private GameOverManager _gameOverManager;
 
     private void Awake()
     {
         playerSetManager = FindObjectOfType<PlayerSetManager>();
+        _gameOverManager = FindObjectOfType<GameOverManager>();
     }
-
 
     public void Initialize(EnemyData data, List<PlayerScripts> players, bool isFinalBoss = false)
     {
@@ -76,6 +79,9 @@ public class Enemy : MonoBehaviourPunCallbacks
         {
             _enemyUIManager.UpdateUI(requiredSword, requiredMagic, requiredShield);
         }
+
+        // 새로운 적이 생성되었음을 알림
+        OnEnemySpawned?.Invoke(this);
     }
 
     private void ApplyRandomBleedDebuffToPlayer(List<PlayerScripts> players)
@@ -142,8 +148,16 @@ public class Enemy : MonoBehaviourPunCallbacks
         if (IsFinalBoss)
         {
             Debug.Log("승리!");
+            _gameOverManager.DisplayWin();
         }
         Debug.Log("사망!");
+
+        // 플레이어의 _currentEnemy 참조를 해제
+        if (_playerScripts != null)
+        {
+            _playerScripts.SetCurrentEnemy(null);
+        }
+
         OnEnemyDeath?.Invoke();
         Destroy(gameObject);
     }
