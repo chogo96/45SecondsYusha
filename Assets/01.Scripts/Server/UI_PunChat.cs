@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -44,6 +45,7 @@ public class UI_PunChat : MonoBehaviour
         }
     }
 
+
     private void OnEndEdit(string input)
     {
         if (Input.GetKeyDown(KeyCode.Return)) // 엔터 키 확인
@@ -59,5 +61,11 @@ public class UI_PunChat : MonoBehaviour
         messageText.text = $"{sender}: {message}";
         Canvas.ForceUpdateCanvases();
         _scrollRect.verticalNormalizedPosition = 0f; // 자동 스크롤
+        StartCoroutine(RemoveChatMessageAfterDelay(newMessage, 5f));
+    }
+    private IEnumerator RemoveChatMessageAfterDelay(GameObject chatMessageObject, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Destroy(chatMessageObject);
     }
 }

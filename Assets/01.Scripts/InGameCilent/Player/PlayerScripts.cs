@@ -439,6 +439,10 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                 Debug.Log($"Magic Increment: {magicIncrement}");
                 Debug.Log($"Shield Increment: {shieldIncrement}");
 
+                Debug.Log($"_enemyUIManager.swordImageParent: {_enemyUIManager.swordImageParent}");
+                Debug.Log($"Sword: {Sword}");
+                Debug.Log($"_currentEnemy.requiredSword: {_currentEnemy.requiredSword}");
+
                 _enemyUIManager.ChangeAlphaForIncrement(swordIncrement, _enemyUIManager.swordImageParent, Sword, _currentEnemy.requiredSword);
                 _enemyUIManager.ChangeAlphaForIncrement(magicIncrement, _enemyUIManager.magicImageParent, Magic, _currentEnemy.requiredMagic);
                 _enemyUIManager.ChangeAlphaForIncrement(shieldIncrement, _enemyUIManager.shieldImageParent, Shield, _currentEnemy.requiredShield);

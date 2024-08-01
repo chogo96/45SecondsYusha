@@ -5,9 +5,11 @@ using System;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
+    public GameObject otherPlayerPrefab;
     public GameObject playerPrefab;
     private Transform canvasTransform;
-    private Vector3[] localPlayerPositions;
+    private Vector3 localPlayerPosition = new Vector3(-961, -536, 0);
+    private Vector3[] otherPlayerPositions;
 
     public static Action AllPlayersSpawned;
 
@@ -25,10 +27,8 @@ public class GameManager : MonoBehaviourPunCallbacks
             Debug.Log("Canvas - PlayerSpawn found in Start: " + canvasTransform.name);
         }
 
-        // Define local player positions relative to the local player's view
-        localPlayerPositions = new Vector3[]
+        otherPlayerPositions = new Vector3[]
         {
-            new Vector3(-961, -536, 0),  // Local player (6 o'clock)
             new Vector3(-961, 16, 0),    // Player 2 (9 o'clock)
             new Vector3(91, 218, 0),     // Player 3 (12 o'clock)
             new Vector3(597, -167, 0)    // Player 4 (3 o'clock)
@@ -49,37 +49,54 @@ public class GameManager : MonoBehaviourPunCallbacks
         foreach (Player player in PhotonNetwork.PlayerList)
         {
             int playerIndex = player.ActorNumber - 1;
-            Vector3 spawnPosition = localPlayerPositions[playerIndex % localPlayerPositions.Length];
+            Vector3 spawnPosition;
 
-            // Instantiate the player
-            GameObject playerObject = PhotonNetwork.Instantiate(playerPrefab.name, spawnPosition, Quaternion.identity);
-            if (playerObject != null)
+            if (player.IsLocal)
             {
-                // Set a custom name to the player object
-                playerObject.name = "Player_" + player.ActorNumber;
-
-                // Set the player as a child of the Canvas - PlayerSpawn object
-                playerObject.transform.SetParent(canvasTransform, false);
-                playerObject.transform.localPosition = spawnPosition;
-
-                // Assign PlayerScripts to GlobalSettings
-                PlayerScripts playerScripts = playerObject.GetComponent<PlayerScripts>();
-                if (player.IsLocal)
-                {
-                    GlobalSettings.instance.AssignLowPlayer(playerScripts);
-                }
-
-                // Debugging information
-                Debug.Log("Player parent after setting: " + playerObject.transform.parent.name);
+                spawnPosition = localPlayerPosition;
+                // Instantiate the local player
+                GameObject playerObject = PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.identity);
+                SetupPlayerObject(playerObject, player, spawnPosition);
             }
             else
             {
-                Debug.LogError("Player instantiation failed.");
+                spawnPosition = otherPlayerPositions[playerIndex % otherPlayerPositions.Length];
+                // Instantiate other players
+                GameObject playerObject = PhotonNetwork.Instantiate(otherPlayerPrefab.name, Vector3.zero, Quaternion.identity);
+                SetupPlayerObject(playerObject, player, spawnPosition);
             }
         }
 
         // Check if all players have spawned and invoke event
         CheckAllPlayersSpawned();
+    }
+
+    private void SetupPlayerObject(GameObject playerObject, Player player, Vector3 spawnPosition)
+    {
+        if (playerObject != null)
+        {
+            // Set a custom name to the player object
+            playerObject.name = "Player_" + player.ActorNumber;
+
+            // Set the player as a child of the Canvas - PlayerSpawn object
+            playerObject.transform.SetParent(canvasTransform, false);
+            playerObject.transform.localPosition = spawnPosition;
+
+            // Assign PlayerScripts to GlobalSettings
+            PlayerScripts playerScripts = playerObject.GetComponent<PlayerScripts>();
+            if (player.IsLocal)
+            {
+                GlobalSettings.instance.AssignLowPlayer(playerScripts);
+            }
+
+            // Debugging information
+            Debug.Log("Player parent after setting: " + playerObject.transform.parent.name);
+            Debug.Log("Player local position after setting: " + playerObject.transform.localPosition);
+        }
+        else
+        {
+            Debug.LogError("Player instantiation failed.");
+        }
     }
 
     private void CheckAllPlayersSpawned()

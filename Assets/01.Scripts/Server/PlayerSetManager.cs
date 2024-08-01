@@ -10,6 +10,7 @@ using UnityEngine.UI;
 public class PlayerSetManager : MonoBehaviourPunCallbacks
 {
     PlayerScripts playerScripts;
+    Hand hand;
 
     private Image[] _playerImage;
 
@@ -24,9 +25,10 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
 
     private int[] _baseHandCards;
     private int[] _baseDeckCards;
-    private int actorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
+    private int _actorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
 
-    private GameObject[] playerHandArea;
+    private GameObject[] _playerHandArea;
+
 
     private void Awake()
     {
@@ -39,12 +41,10 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
         _confusionDebuffImage = new GameObject[_playerCount];
         _deckCountText = new TMP_Text[_playerCount];
         _handCountText = new TMP_Text[_playerCount];
-        playerHandArea = new GameObject[_playerCount];
+        _playerHandArea = new GameObject[_playerCount];
 
         _baseHandCards = new int[_playerCount];
         _baseDeckCards = new int[_playerCount];
-
-
 
 
 
@@ -61,6 +61,7 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
     private void Reset()
     {
         playerScripts = GetComponentInChildren<PlayerScripts>();
+        hand = GetComponentInChildren<Hand>();
 
         for (int i = 1; i < _playerCount; i++)
         {
@@ -72,7 +73,6 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
             }
 
             _playerImage[i] = playerTransform.Find("Player_Image")?.GetComponent<Image>();
-            _playerImage[i].sprite = playerScripts.charAsset.AvatarImage;
 
 
             _bleedDebuffImage[i] = playerTransform.Find("BleedDebuffImage")?.gameObject;
@@ -81,13 +81,14 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
             _handCountText[i] = playerTransform.Find("HandImage/HandCountText (TMP)")?.GetComponent<TMP_Text>();
             _deckCountText[i] = playerTransform.Find("DeckImage/DeckCountText (TMP)")?.GetComponent<TMP_Text>();
 
-            playerHandArea[i] = playerTransform.Find($"HandArea")?.gameObject;
+            _playerHandArea[i] = playerTransform.Find($"HandArea")?.gameObject;
+
         }
 
 
 
-
-        HandCardCount(actorNumber, "Minus");
+        _playerImage[_actorNumber].sprite = playerScripts.charAsset.AvatarImage;
+        HandCardCount(_actorNumber, "Minus");
     }
 
 
@@ -101,20 +102,13 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void HandCardCount(int playerNumber,string plusMinus)
     {
-        int GetCardCount(GameObject handArea)
+        int GetListCardCount(List<CardLogic> list)
         {
-            int count = 0;
-            foreach (Transform child in handArea.transform)
-            {
-                if (child.name.StartsWith("InGameCard(Clone)"))
-                {
-                    count++;
-                }
-            }
-            return count;
+            return list.Count;
         }
-        _baseHandCards[playerNumber] = GetCardCount(playerHandArea[playerNumber]);
+        // _baseHandCards[playerNumber] = GetCardCount(_playerHandArea[playerNumber]);
 
+        _baseHandCards[playerNumber] = GetListCardCount(hand.CardsInHand);
 
         int GetListCount(List<CardAsset> list)
         {

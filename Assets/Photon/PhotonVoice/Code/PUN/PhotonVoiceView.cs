@@ -130,7 +130,7 @@ namespace Photon.Voice.PUN
             else
             {
                 recorder.UserData = this.photonView.ViewID;
-                punVoiceClient.AddRecorder(recorder);
+                // punVoiceClient.AddRecorder(recorder);
             }
             this.RecorderInUse = recorder;
         }

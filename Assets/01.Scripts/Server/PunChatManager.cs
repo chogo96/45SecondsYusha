@@ -4,9 +4,10 @@ using ExitGames.Client.Photon;
 using UnityEngine;
 using System;
 
-public class PunChatManager : MonoBehaviour, IChatClientListener
+public class PunChatManager : MonoBehaviourPunCallbacks, IChatClientListener
 {
     private ChatClient chatClient;
+    private string currentChannel; // 현재 방의 채널 이름
 
     public event Action<string, string> OnMessageReceived;
 
@@ -32,11 +33,11 @@ public class PunChatManager : MonoBehaviour, IChatClientListener
         }
     }
 
-    public void OnConnected()
-    {
-        Debug.Log("Connected to Photon Chat");
-        chatClient.Subscribe(new string[] { "global" });
-    }
+    //public void OnConnected()
+    //{
+    //    Debug.Log("Connected to Photon Chat");
+    //    JoinRoomChannel();
+    //}
 
     public void OnDisconnected()
     {
@@ -86,7 +87,8 @@ public class PunChatManager : MonoBehaviour, IChatClientListener
     {
         if (chatClient != null && chatClient.CanChat)
         {
-            chatClient.PublishMessage("global", message);
+            currentChannel = PhotonNetwork.CurrentRoom.Name;
+            chatClient.PublishMessage(currentChannel, message);
         }
     }
 
@@ -98,5 +100,19 @@ public class PunChatManager : MonoBehaviour, IChatClientListener
     public void OnUserUnsubscribed(string channel, string user)
     {
         throw new NotImplementedException();
+    }
+
+    public override void OnJoinedRoom()
+    {
+        currentChannel = PhotonNetwork.CurrentRoom.Name;
+        chatClient.Subscribe(new string[] { currentChannel });
+    }
+
+    public override void OnLeftRoom()
+    {
+        if (chatClient != null && !string.IsNullOrEmpty(currentChannel))
+        {
+            chatClient.Unsubscribe(new string[] { currentChannel });
+        }
     }
 }

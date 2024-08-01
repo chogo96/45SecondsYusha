@@ -43,6 +43,10 @@ public class RoomCreator : MonoBehaviourPunCallbacks
     // PunChat 기능추가
     private GameObject _punChatPanel;
 
+    // 메인로비 버튼 추가
+    private Button _mainLobby;
+
+
     private void Awake()
     {
         _maxPlayer = new Button[4];
@@ -69,6 +73,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         _newRoom = transform.Find("Panel - BG/Buttons/Button - NewRoom").GetComponent<Button>();
         _reSearch = transform.Find("Panel - BG/Buttons/Button - ReSearch").GetComponent<Button>();
         _matchmaking = transform.Find("Panel - BG/Buttons/Button - Matchmaking").GetComponent<Button>();
+        _mainLobby = transform.Find("Panel - BG/Buttons/Button - MainLobby").GetComponent<Button>();
 
         _panelMatchmaking = transform.Find("Panel - BG/Panel - Matchmaking").gameObject;
         _cancelMatchmaking = transform.Find("Panel - BG/Panel - Matchmaking/Button - MatchmakingCancel").GetComponent<Button>();
@@ -89,6 +94,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         _selectDeck.onClick.AddListener(OnClickSelectDeck);
 
         _matchmaking.onClick.AddListener(OnClickMatchmake);
+        _mainLobby.onClick.AddListener(OnClickMainLobby);
         _cancelMatchmaking.onClick.AddListener(OnClickCancelMatchmake);
 
 
@@ -106,6 +112,19 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         PhotonNetwork.AutomaticallySyncScene = true;
 
         _punChatPanel.SetActive(false);
+
+        if (PhotonNetwork.InRoom)
+        {
+            // 방에 입장한 플레이어 수에 따라 닉네임 설정
+            _inRoomPanel.SetActive(true);
+            int playerNumber = PhotonNetwork.CurrentRoom.PlayerCount;
+            playerListDisplay.UpdatePlayerList(); // 방에 입장한 후 플레이어 목록 갱신
+            _punChatPanel.SetActive(true);
+        }
+        else
+        {
+            Debug.LogWarning("로비 씬에 있지만 현재 방에 들어가 있지 않습니다.");
+        }
     }
 
     // 랜덤 매칭 작업 시작
@@ -495,5 +514,11 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         PhotonNetwork.CurrentRoom.IsOpen = false;
         PhotonNetwork.CurrentRoom.IsVisible = false;
         PhotonNetwork.LoadLevel("05.GamePlay Scene");
+    }
+
+    private void OnClickMainLobby()
+    {
+        PhotonNetwork.LoadLevel("MainScene");
+
     }
 }

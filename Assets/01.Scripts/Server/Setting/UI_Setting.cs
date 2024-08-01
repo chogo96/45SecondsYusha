@@ -106,7 +106,13 @@ public class UI_Setting : MonoBehaviourPunCallbacks
             _noGiveUpVotes++;
         }
 
-        photonView.RPC("UpdateVoteResults", RpcTarget.All, _giveUpVotes, _noGiveUpVotes, _votesCount);
+        _votingResults.text = $"Agree: {_giveUpVotes} | Opposite: {_noGiveUpVotes}";
+
+        if (_votesCount == _totalPlayers)
+        {
+            CheckVoteResult();
+        }
+        //photonView.RPC("UpdateVoteResults", RpcTarget.All, _giveUpVotes, _noGiveUpVotes, _votesCount);
     }
 
     [PunRPC]
@@ -115,13 +121,6 @@ public class UI_Setting : MonoBehaviourPunCallbacks
         _giveUpVotes = giveUpVotes;
         _noGiveUpVotes = noGiveUpVotes;
         _votesCount = votesCount;
-
-        _votingResults.text = $"Agree: {_giveUpVotes} | Opposite: {_noGiveUpVotes}";
-
-        if (_votesCount == _totalPlayers)
-        {
-            CheckVoteResult();
-        }
     }
 
     private void CheckVoteResult()
@@ -133,11 +132,20 @@ public class UI_Setting : MonoBehaviourPunCallbacks
             // 항복 시 DisplayLose 호출
             if (gameOverManager != null)
             {
-                gameOverManager.DisplayLose();
+                // gameOverManager.DisplayLose();
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    PhotonNetwork.LoadLevel("04.Lobby Scene");
+                }
             }
             else
             {
-                Debug.LogError("GameOverManager not found.");
+                // Debug.LogError("GameOverManager not found.");
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    PhotonNetwork.LoadLevel("04.Lobby Scene");
+                }
+
             }
         }
         else
