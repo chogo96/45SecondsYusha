@@ -507,7 +507,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             }
         }
 
-        
+
     }
 
     private void VanishCard(CardLogic card)
