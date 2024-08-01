@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -36,13 +37,13 @@ public class GameOverManager : MonoBehaviour
     private IEnumerator ShowPanel(GameObject panel)
     {
         panel.SetActive(true);
-        yield return new WaitForSeconds(displayTime);
-        //panel.SetActive(false);
         returnToLobbyButton.gameObject.SetActive(true);
+        yield return new WaitForSeconds(displayTime);
     }
 
     private void ReturnToLobby()
     {
+        PhotonNetwork.LeaveRoom();
         SceneManager.LoadScene("04.Lobby Scene"); // 로비 씬의 이름으로 변경
     }
 }

@@ -67,6 +67,9 @@ MonoBehaviour:
   - ReceiveSpawnOrder
   - Datatransfer
   - RPC_SetSpawnOrder
+  - UpdateVoteResults
+  - ExecuteVotingResult
+  - ReturnRandomCardsFromDiscard
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
