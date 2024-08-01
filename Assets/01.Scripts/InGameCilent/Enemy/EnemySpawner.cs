@@ -1,6 +1,5 @@
 //using Newtonsoft.Json;
 //using Photon.Pun;
-//using Photon.Realtime;
 //using System.Collections;
 //using System.Collections.Generic;
 //using UnityEngine;
@@ -16,15 +15,29 @@
 //    public List<EnemyData> finalBosses; // 최종 보스 데이터 리스트
 //    public List<PlayerScripts> players; // 플레이어 리스트
 
-//    private List<EnemyData> spawnOrder; // 스폰 순서를 담는 리스트
+//    public List<string> spawnOrder; // 스폰 순서를 담는 리스트
 //    private int currentEnemyIndex = 0;
 //    private string spawnOrderJson;
 
-
 //    void Start()
 //    {
+//        LoadEnemyData();
 //        StartCoroutine(WaitForPlayersAndSpawnEnemies());
+//    }
 
+//    private void LoadEnemyData()
+//    {
+//        normalEnemies = new List<EnemyData>(Resources.LoadAll<EnemyData>("GameAssets/Enemies/NormalEnemy"));
+//        midBosses = new List<EnemyData>(Resources.LoadAll<EnemyData>("GameAssets/Enemies/MinibossEnemy"));
+//        finalBosses = new List<EnemyData>(Resources.LoadAll<EnemyData>("GameAssets/Enemies/FinalBossEnemy"));
+
+//        Debug.Log("Normal Enemies Count: " + normalEnemies.Count);
+//        Debug.Log("Mid Bosses Count: " + midBosses.Count);
+//        Debug.Log("Final Bosses Count: " + finalBosses.Count);
+
+//        if (normalEnemies.Count == 0) Debug.LogError("Normal enemies list is empty.");
+//        if (midBosses.Count == 0) Debug.LogError("Mid bosses list is empty.");
+//        if (finalBosses.Count == 0) Debug.LogError("Final bosses list is empty.");
 //    }
 
 //    private IEnumerator WaitForPlayersAndSpawnEnemies()
@@ -38,61 +51,126 @@
 //        // 추가적인 초기화 확인을 위해 잠시 대기
 //        yield return new WaitForSeconds(1f);
 
-//        // 마스터 클라이언트가 스폰 순서 생성 및 순서리스트 를 Json 형식으로 다른클라이언트 에게 전송
-//        GenerateSpawnOrder();
+//        if (PhotonNetwork.IsMasterClient)
+//        {
+//            // 마스터 클라이언트가 스폰 순서 생성 및 JSON 형식으로 직렬화
+//            GenerateSpawnOrder();
 
+//            JsonSerializerSettings settings = new JsonSerializerSettings
+//            {
+//                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+//                Error = (sender, args) =>
+//                {
+//                    Debug.LogError($"Serialization error: {args.ErrorContext.Error.Message}");
+//                    args.ErrorContext.Handled = true;
+//                }
+//            };
+
+//            spawnOrderJson = JsonConvert.SerializeObject(spawnOrder, settings);
+//            Debug.Log("Spawn order generated and serialized: " + spawnOrderJson);
+
+//            // 다른 클라이언트에게 스폰 순서 전송
+//            photonView.RPC("RPC_SetSpawnOrder", RpcTarget.Others, spawnOrderJson);
+//        }
+
+//        // 스폰 순서가 설정될 때까지 대기
+//        yield return new WaitUntil(() => spawnOrder != null);
+
+//        // 첫 번째 적 소환
 //        photonView.RPC("RPC_SpawnNextEnemy", RpcTarget.All, currentEnemyIndex);
-
 //    }
 
+//    [PunRPC]
+//    void RPC_SetSpawnOrder(string json)
+//    {
+//        Debug.Log("Received spawn order JSON: " + json);
+//        spawnOrder = JsonConvert.DeserializeObject<List<string>>(json);
+//        Debug.Log("Spawn order deserialized, count: " + spawnOrder.Count);
+//    }
 
 //    void GenerateSpawnOrder()
 //    {
-//        spawnOrder = new List<EnemyData>();
+//        spawnOrder = new List<string>();
 //        for (int i = 0; i < 3; i++)
 //        {
-//            List<EnemyData> currentCycleEnemies = new List<EnemyData>();
+//            List<string> currentCycleEnemies = new List<string>();
 
-//            // 10개의 적 소환 (중간에 무작위로 한 번 상점을 추가)
-//            for (int j = 0; j < 10; j++)
+//            for (int j = 0; j < 9; j++) // 9명의 적 추가
 //            {
-//                currentCycleEnemies.Add(normalEnemies[Random.Range(0, normalEnemies.Count)]);
+//                if (normalEnemies.Count > 0)
+//                {
+//                    var enemyData = normalEnemies[Random.Range(0, normalEnemies.Count)];
+//                    currentCycleEnemies.Add(enemyData.EnemyName);
+//                }
+//                else
+//                {
+//                    Debug.LogError("normalEnemies 리스트가 비어있습니다.");
+//                }
 //            }
 
-//            // 중간에 무작위로 한 번 상점 추가
-//            int randomIndex = Random.Range(0, 10);
-//            currentCycleEnemies[randomIndex] = null; // null을 사용하여 상점을 표시
-
-//            // 현재 사이클의 적을 스폰 순서에 추가
 //            spawnOrder.AddRange(currentCycleEnemies);
+//            spawnOrder.Add("Shop"); // 상점 추가
 
-//            // 랜덤 중간 보스 추가
-//            spawnOrder.Add(midBosses[Random.Range(0, midBosses.Count)]);
+//            if (midBosses.Count > 0)
+//            {
+//                var midBoss = midBosses[Random.Range(0, midBosses.Count)];
+//                spawnOrder.Add(midBoss.EnemyName); // 중간 보스 추가
+//            }
+//            else
+//            {
+//                Debug.LogError("midBosses 리스트가 비어있습니다.");
+//            }
 //        }
 
-//        // 랜덤 최종 보스 추가
-//        spawnOrder.Add(finalBosses[Random.Range(0, finalBosses.Count)]);
-
+//        if (finalBosses.Count > 0)
+//        {
+//            var finalBoss = finalBosses[Random.Range(0, finalBosses.Count)];
+//            spawnOrder.Add(finalBoss.EnemyName); // 최종 보스 추가
+//        }
+//        else
+//        {
+//            Debug.LogError("finalBosses 리스트가 비어있습니다.");
+//        }
 //    }
 
 //    [PunRPC]
 //    void RPC_SpawnNextEnemy(int index)
 //    {
+//        if (spawnOrder == null)
+//        {
+//            Debug.LogError("Spawn order is null!");
+//            return;
+//        }
+
 //        if (index < spawnOrder.Count)
 //        {
 //            GameObject newEntity;
 
-//            if (spawnOrder[index] == null)
+//            if (spawnOrder[index] == "Shop")
 //            {
 //                // 상점 소환
 //                newEntity = PhotonNetwork.Instantiate(shopPrefab.name, Vector3.zero, Quaternion.identity);
 //            }
 //            else
 //            {
-//                EnemyData enemyData = spawnOrder[index];
+//                var enemyData = Resources.Load<EnemyData>($"GameAssets/Enemies/NormalEnemy/{spawnOrder[index]}");
+//                if (enemyData == null)
+//                {
+//                    enemyData = Resources.Load<EnemyData>($"GameAssets/Enemies/MinibossEnemy/{spawnOrder[index]}");
+//                }
+//                if (enemyData == null)
+//                {
+//                    enemyData = Resources.Load<EnemyData>($"GameAssets/Enemies/FinalBossEnemy/{spawnOrder[index]}");
+//                }
+//                if (enemyData == null)
+//                {
+//                    Debug.LogError($"EnemyData with name {spawnOrder[index]} could not be found in Resources.");
+//                    return;
+//                }
+
 //                newEntity = PhotonNetwork.Instantiate(enemyPrefab.name, Vector3.zero, Quaternion.identity);
 //                Image enemyImage = newEntity.GetComponent<Image>();
-//                if (enemyImage != null)
+//                if (enemyImage != null && enemyData.enemySprite != null)
 //                {
 //                    enemyImage.sprite = enemyData.enemySprite;
 //                }
@@ -102,11 +180,6 @@
 //                {
 //                    bool isFinalBoss = (index == spawnOrder.Count - 1);
 //                    enemy.Initialize(enemyData, players, isFinalBoss);
-
-//                    // 적 데이터 삭제 (한 번 소환된 적은 다시 나오지 않음)
-//                    normalEnemies.Remove(enemyData);
-//                    midBosses.Remove(enemyData);
-//                    finalBosses.Remove(enemyData);
 //                }
 //            }
 
@@ -115,45 +188,11 @@
 
 //            currentEnemyIndex = index + 1;
 //        }
-//    }
-
-//    /*
-//    [PunRPC]
-//    void RPC_SpawnNextEnemy(int index)
-//    {
-//        if (index < spawnOrder.Count)
+//        else
 //        {
-//            if (spawnOrder[index] == null)
-//            {
-//                // 상점 소환
-//                Instantiate(shopPrefab, canvasTransform);
-//            }
-//            else
-//            {
-//                EnemyData enemyData = spawnOrder[index];
-//                GameObject newEnemy = Instantiate(enemyPrefab, canvasTransform);
-//                Image enemyImage = newEnemy.GetComponent<Image>();
-//                if (enemyImage != null)
-//                {
-//                    enemyImage.sprite = enemyData.enemySprite;
-//                }
-
-//                Enemy enemy = newEnemy.GetComponent<Enemy>();
-//                if (enemy != null)
-//                {
-//                    bool isFinalBoss = (index == spawnOrder.Count - 1);
-//                    enemy.Initialize(enemyData, players, isFinalBoss);
-
-//                    // 적 데이터 삭제 (한 번 소환된 적은 다시 나오지 않음)
-//                    normalEnemies.Remove(enemyData);
-//                    midBosses.Remove(enemyData);
-//                    finalBosses.Remove(enemyData);
-//                }
-//            }
-//            currentEnemyIndex = index + 1;
+//            Debug.LogError("Index out of range: " + index);
 //        }
 //    }
-//    */
 
 //    public void OnShopButtonPressed()
 //    {
@@ -193,6 +232,7 @@
 //        }
 //    }
 //}
+
 using Newtonsoft.Json;
 using Photon.Pun;
 using System.Collections;
@@ -269,7 +309,9 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
         }
 
         // 스폰 순서가 설정될 때까지 대기
-        yield return new WaitUntil(() => spawnOrder != null);
+        yield return new WaitUntil(() => spawnOrder != null && spawnOrder.Count > 0);
+
+        Debug.Log("Spawning first enemy: " + spawnOrder[0]);
 
         // 첫 번째 적 소환
         photonView.RPC("RPC_SpawnNextEnemy", RpcTarget.All, currentEnemyIndex);
@@ -280,7 +322,15 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
     {
         Debug.Log("Received spawn order JSON: " + json);
         spawnOrder = JsonConvert.DeserializeObject<List<string>>(json);
-        Debug.Log("Spawn order deserialized, count: " + spawnOrder.Count);
+
+        if (spawnOrder == null || spawnOrder.Count == 0)
+        {
+            Debug.LogError("Deserialized spawn order is null or empty!");
+        }
+        else
+        {
+            Debug.Log("Spawn order deserialized, count: " + spawnOrder.Count);
+        }
     }
 
     void GenerateSpawnOrder()
@@ -331,9 +381,9 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_SpawnNextEnemy(int index)
     {
-        if (spawnOrder == null)
+        if (spawnOrder == null || spawnOrder.Count == 0)
         {
-            Debug.LogError("Spawn order is null!");
+            Debug.LogError("Spawn order is null or empty!");
             return;
         }
 
