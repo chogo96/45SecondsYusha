@@ -7,10 +7,11 @@ public class UI_Timer : MonoBehaviourPunCallbacks
     private TMP_Text _timerText; // UI 에 표시될 Text.
     private float _time = 45f; // 시간.
     private float _maxTime = 45f; // 최대시간.
-
+    GameOverManager _gameOverManager;
     private void Awake()
     {
         _timerText = transform.Find("Text (TMP) - Timer").GetComponent<TMP_Text>();
+        _gameOverManager = FindObjectOfType<GameOverManager>();
     }
 
     private void Update()
@@ -26,6 +27,14 @@ public class UI_Timer : MonoBehaviourPunCallbacks
         _timerText.text = $"Time = {_time:F2}";
         _time -= Time.deltaTime;
         _time = Mathf.Max(0, _time); // 시간이 음수가 되지 않도록 보정.
+        //시간 초가 지나간다면 패배 판넬 켬
+        //if (_gameOverManager != null)
+        //{
+        //    if (_time == 0f)
+        //    {
+        //        _gameOverManager.DisplayLose();
+        //    }
+        //}
     }
 
 
