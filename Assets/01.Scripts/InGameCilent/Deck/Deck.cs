@@ -76,7 +76,10 @@ public class Deck : MonoBehaviour
             DiscardDeck.Add(card);
         }
     }
-    // discarddeck 중 랜덤한 카드를 n장 덱으로 되돌리는 메소드
+    /// <summary>
+    /// discarddeck 중 랜덤한 카드를 n장 덱으로 되돌리는 메소드
+    /// </summary>
+    /// <param name="n"></param>
     public void ReturnRandomCardsFromDiscard(int n)
     {
         for (int i = 0; i < n; i++)

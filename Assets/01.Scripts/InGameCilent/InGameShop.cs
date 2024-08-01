@@ -22,7 +22,7 @@ public class InGameShop : MonoBehaviourPunCallbacks
     private void Awake()
     {
         _plusTime = transform.Find("AddTimeButton").GetComponent<Button>();
-        _timeText = transform.Find("AddCardButton/Text (TMP)").GetComponent<TMP_Text>();
+        _timeText = transform.Find("AddTimeButton/Text (TMP)").GetComponent<TMP_Text>();
 
         _plusCard = transform.Find("AddCardButton").GetComponent<Button>();
         _cardText = transform.Find("AddCardButton/Text (TMP)").GetComponent<TMP_Text>();
@@ -87,22 +87,24 @@ public class InGameShop : MonoBehaviourPunCallbacks
 
         if (_isAllVoting && PhotonNetwork.IsMasterClient)
         {
-            ExecuteVotingResult();
+            photonView.RPC("ExecuteVotingResult", RpcTarget.All, _plusCardCount, _plusTimeCount);
         }
     }
 
-    private void ExecuteVotingResult()
+    [PunRPC]
+    private void ExecuteVotingResult(int plusCardVotes, int plusTimeVotes)
     {
-        if (_plusCardCount > _plusTimeCount)
+        if (plusCardVotes > plusTimeVotes)
         {
             // 카드추가 투표가 더 많거나
             Debug.Log("카드가 더해짐");
+            AddRandomCardToDeck();
             if (_enemySpawner != null)
             {
                 _enemySpawner.OnShopButtonPressed();
             }
         }
-        else if (_plusCardCount < _plusTimeCount)
+        else if (plusCardVotes < plusTimeVotes)
         {
             // 시간추가 투표가 더 많거나
             Debug.Log("시간이 더해짐");
@@ -125,6 +127,7 @@ public class InGameShop : MonoBehaviourPunCallbacks
             else
             {
                 Debug.Log("카드가 더해짐");
+                AddRandomCardToDeck();
                 if (_enemySpawner != null)
                 {
                     _enemySpawner.OnShopButtonPressed();
@@ -134,5 +137,19 @@ public class InGameShop : MonoBehaviourPunCallbacks
 
         _isAllVoting = false;
         Destroy(gameObject); // 상점 UI 제거
+    }
+
+    private void AddRandomCardToDeck()
+    {
+        //덱이 안뽑힌다? 이거 참조를 바꿔야함!!!!!!!!!!!
+        Deck playerDeck = FindObjectOfType<Deck>();
+        if (playerDeck != null)
+        {
+            playerDeck.ReturnRandomCardsFromDiscard(10);
+        }
+        else
+        {
+            Debug.LogError("Player deck not found.");
+        }
     }
 }
