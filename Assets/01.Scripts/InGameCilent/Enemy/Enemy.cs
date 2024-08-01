@@ -169,6 +169,9 @@ public class Enemy : MonoBehaviourPunCallbacks
             (requiredMagic == 0 || magic >= requiredMagic) &&
             (requiredShield == 0 || shield >= requiredShield))
         {
+            _playerScripts._swordPoint = 0;
+            _playerScripts._shieldPoint = 0;
+            _playerScripts._magicPoint = 0;
             Die();
         }
     }

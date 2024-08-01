@@ -44,6 +44,11 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
 
     private GameObject _playerTransform;
 
+    // 서버에서 사용할 int값임
+    public int _swordPoint;
+    public int _magicPoint;
+    public int _shieldPoint;
+
     public int ID
     {
         get { return PlayerID; }
@@ -91,6 +96,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         Players = GameObject.FindObjectsOfType<PlayerScripts>();
         PlayerID = IDFactory.GetUniquePlayerID();
         _playerDeckVisual = FindObjectOfType<PlayerDeckVisual>();
+
         // EnemySpawner에 자신을 등록
         RegisterWithEnemySpawner();
         // BuffManager 초기화
@@ -201,12 +207,23 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             Debug.LogWarning("현재 적이 null 상태입니다. RealTimeBossStatusCheck 호출을 무시합니다.");
             return;
         }
+        _swordPoint += sword;
+        _magicPoint += magic;
+        _shieldPoint += shield;
+
+        int swordIncrement = _swordPoint - _previousSword;
+        int magicIncrement = _magicPoint - _previousMagic;
+        int shieldIncrement = _shieldPoint - _previousShield;
+
+        _enemyUIManager.ChangeAlphaForIncrement(swordIncrement, _enemyUIManager.swordImageParent, Sword, _currentEnemy.requiredSword);
+        _enemyUIManager.ChangeAlphaForIncrement(magicIncrement, _enemyUIManager.magicImageParent, Magic, _currentEnemy.requiredMagic);
+        _enemyUIManager.ChangeAlphaForIncrement(shieldIncrement, _enemyUIManager.shieldImageParent, Shield, _currentEnemy.requiredShield);
 
         Debug.Log($"Sword: {InGameManager.instance.Sword}, Magic: {InGameManager.instance.Magic}, Shield: {InGameManager.instance.Shield}");
         Debug.Log($"CurrentEnemy: {_currentEnemy}");
 
         // 현재 적의 생존 조건 확인
-        _currentEnemy?.CheckDeathCondition(InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
+        _currentEnemy?.CheckDeathCondition(_swordPoint, _magicPoint, _shieldPoint);
     }
 
     public void DrawACard(int n)
@@ -222,6 +239,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
 
     private IEnumerator DrawCardsCoroutine(int n)
     {
+        photonView.RPC("RealTimeBossStatusCheck", RpcTarget.All, InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
         isDrawingCard = true;
         HandVisual handVisual = PArea.handVisual;  // 현재 플레이어의 HandVisual 참조
 
@@ -251,6 +269,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         }
 
         isDrawingCard = false;
+
     }
 
     private void InitializePlayerDeck()
@@ -465,9 +484,9 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                 Debug.Log($"Sword: {Sword}");
                 Debug.Log($"_currentEnemy.requiredSword: {_currentEnemy.requiredSword}");
 
-                _enemyUIManager.ChangeAlphaForIncrement(swordIncrement, _enemyUIManager.swordImageParent, Sword, _currentEnemy.requiredSword);
-                _enemyUIManager.ChangeAlphaForIncrement(magicIncrement, _enemyUIManager.magicImageParent, Magic, _currentEnemy.requiredMagic);
-                _enemyUIManager.ChangeAlphaForIncrement(shieldIncrement, _enemyUIManager.shieldImageParent, Shield, _currentEnemy.requiredShield);
+                // _enemyUIManager.ChangeAlphaForIncrement(swordIncrement, _enemyUIManager.swordImageParent, Sword, _currentEnemy.requiredSword);
+                // _enemyUIManager.ChangeAlphaForIncrement(magicIncrement, _enemyUIManager.magicImageParent, Magic, _currentEnemy.requiredMagic);
+                // _enemyUIManager.ChangeAlphaForIncrement(shieldIncrement, _enemyUIManager.shieldImageParent, Shield, _currentEnemy.requiredShield);
             }
 
             // 적 객체가 null이 아닌 경우에만 RealTimeBossStatusCheck 호출
