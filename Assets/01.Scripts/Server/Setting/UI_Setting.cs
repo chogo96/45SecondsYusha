@@ -103,7 +103,7 @@ public class UI_Setting : MonoBehaviourPunCallbacks
             default:
                 break;
         }
-        photonView.RPC("RegisterVote", RpcTarget.MasterClient, _giveUpVotes, _noGiveUpVotes);
+        photonView.RPC("RegisterVote", RpcTarget.All, _giveUpVotes, _noGiveUpVotes);
     }
 
     [PunRPC]

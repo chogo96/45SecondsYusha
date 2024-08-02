@@ -84,6 +84,8 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
             _playerHandArea[i] = playerTransform.Find($"HandArea")?.gameObject;
             _playerImage[i].sprite = playerScripts.charAsset.AvatarImage;
 
+            _playerImage[i].sprite = playerScripts.charAsset.AvatarImage;
+
         }
 
 

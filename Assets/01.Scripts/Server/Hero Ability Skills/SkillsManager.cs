@@ -26,6 +26,7 @@ public class SkillsManager : MonoBehaviour
 
     public void UseCurrentSkill()
     {
+        _heroSkillButton.interactable = false;
         _currentSkill?.UseSkill();
         _heroSkillButton.interactable = false;
     }
