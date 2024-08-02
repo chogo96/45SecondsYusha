@@ -17,7 +17,6 @@ public class CardCollection : MonoBehaviour
     public static CardCollection instance;
     private void Awake()
     {
-
         instance = this;
         _allCardArray = Resources.LoadAll<CardAsset>("");
         foreach (CardAsset cardAsset in _allCardArray)
@@ -27,7 +26,6 @@ public class CardCollection : MonoBehaviour
                 AllCardsDictionary.Add(cardAsset.name, cardAsset);
             }
         }
-
         LoadQuantityOfCardsFromPlayerPrefs();
     }
     /// <summary>

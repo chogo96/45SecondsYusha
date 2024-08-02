@@ -1088,7 +1088,7 @@ MonoBehaviour:
   Shield: 0
   RandomValue: 0
   PlayerID: 213
-  charAsset: {fileID: 11400000, guid: 4212422ae3113844da10b942807dd8f2, type: 2}
+  charAsset: {fileID: 0}
   PArea: {fileID: 2571891346215937270}
   usedHeroPowerThisGame: 0
   _deck: {fileID: 8322949386943975010}

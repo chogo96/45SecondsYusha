@@ -6,7 +6,8 @@ using UnityEngine.SceneManagement;
 public class DeckGameManager : MonoBehaviour
 {
     public static DeckGameManager instance { get; private set; }
-    private List<CardAsset> selectedDeckCards;
+    public List<CardAsset> selectedDeckCards;
+    public DeckInfo selectedDeckInfo;
     private void Awake()
     {
         if (instance == null)
@@ -27,6 +28,14 @@ public class DeckGameManager : MonoBehaviour
     public List<CardAsset> GetSelectedDeckCards()
     {
         return selectedDeckCards;
+    }
+    public void SetSelectedDeckInfo(DeckInfo deckInfo)
+    {
+        selectedDeckInfo = deckInfo;
+    }
+    public DeckInfo GetSelectedDeckInfo()
+    {
+        return selectedDeckInfo;
     }
     public void GoToLobby()
     {

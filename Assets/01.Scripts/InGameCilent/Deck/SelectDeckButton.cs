@@ -6,7 +6,7 @@ public class SelectDeckButton : MonoBehaviour
 {
     public Image AvatarImage;
     public TMP_Text NameText;
-    private DeckInfo deckInfo;
+    public DeckInfo deckInfo;
 
     public void SetDeckInfo(DeckInfo info)
     {
@@ -36,5 +36,6 @@ public class SelectDeckButton : MonoBehaviour
 
         DeckGameManager.instance.SetSelectedDeck(deckInfo.Cards);
         // 필요한 경우 추가 작업 수행
+        DeckGameManager.instance.SetSelectedDeckInfo(deckInfo);
     }
 }
