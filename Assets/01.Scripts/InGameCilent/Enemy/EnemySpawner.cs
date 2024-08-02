@@ -61,14 +61,13 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
 
             // 다른 클라이언트에게 스폰 순서 전송
             photonView.RPC("RPC_SetSpawnOrder", RpcTarget.Others, spawnOrderJson);
+            // 스폰 순서가 설정될 때까지 대기
+
+            yield return new WaitUntil(() => spawnOrder != null && spawnOrder.Count > 0);
+            // 첫 번째 적 소환
+
+            photonView.RPC("RPC_SpawnNextEnemy", RpcTarget.All, currentEnemyIndex);
         }
-
-        // 스폰 순서가 설정될 때까지 대기
-        yield return new WaitUntil(() => spawnOrder != null && spawnOrder.Count > 0);
-
-
-        // 첫 번째 적 소환
-        photonView.RPC("RPC_SpawnNextEnemy", RpcTarget.All, currentEnemyIndex);
     }
 
     [PunRPC]

@@ -189,6 +189,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         _magicPoint += magic;
         _shieldPoint += shield;
 
+
         InGameManager.instance.Sword = _swordPoint;
         InGameManager.instance.Magic = _magicPoint;
         InGameManager.instance.Shield = _shieldPoint;
@@ -221,7 +222,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
     // Coroutine to handle drawing cards
     private IEnumerator DrawCardsCoroutine(int n)
     {
-        photonView.RPC("RealTimeBossStatusCheck", RpcTarget.All, InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
+        // photonView.RPC("RealTimeBossStatusCheck", RpcTarget.All, InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
         isDrawingCard = true;
         HandVisual handVisual = PArea.handVisual;  // Reference to current player's HandVisual
 
@@ -465,19 +466,19 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             _deck.ReturnRandomCardsFromDiscard(card.cardAsset.RandomRestoreDeck);
 
             // Start coroutine for additional attack after 2 seconds (check conditions)
-            if (card.cardAsset.AdditionalSwordAttack > 0 ||
-                card.cardAsset.AdditionalMagicAttack > 0 ||
-                card.cardAsset.AdditionalShieldAttack > 0 ||
-                card.cardAsset.AdditionalRandomAttack > 0)
-            {
-                StartCoroutine(PerformAdditionalAttack(card.cardAsset));
+            //if (card.cardAsset.AdditionalSwordAttack > 0 ||
+            //    card.cardAsset.AdditionalMagicAttack > 0 ||
+            //    card.cardAsset.AdditionalShieldAttack > 0 ||
+            //    card.cardAsset.AdditionalRandomAttack > 0)
+            //{
+            //    StartCoroutine(PerformAdditionalAttack(card.cardAsset));
 
-                // Call RealTimeBossStatusCheck if enemy object is not null
-                if (_currentEnemy != null)
-                {
-                    photonView.RPC("RealTimeBossStatusCheck", RpcTarget.All, InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
-                }
-            }
+            //    // Call RealTimeBossStatusCheck if enemy object is not null
+            //    if (_currentEnemy != null)
+            //    {
+            //        photonView.RPC("RealTimeBossStatusCheck", RpcTarget.All, InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
+            //    }
+            //}
         }
 
         // Add logic to fill deck with cards if card count is 4 or less
