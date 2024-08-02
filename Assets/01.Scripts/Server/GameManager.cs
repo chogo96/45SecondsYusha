@@ -106,4 +106,14 @@ public class GameManager : MonoBehaviourPunCallbacks
             AllPlayersSpawned?.Invoke();
         }
     }
+
+
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            // 마스터 클라이언트가 아니면
+            PhotonNetwork.LoadLevel("04.Lobby Scene");
+        }
+    }
 }
