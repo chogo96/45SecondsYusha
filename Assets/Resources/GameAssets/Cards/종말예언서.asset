@@ -27,10 +27,10 @@ MonoBehaviour:
   IsVanishCard: 1
   TypeOfCard: 0
   SwordAttack: 0
-  MagicAttack: 0
-  ShieldAttack: 0
+  MagicAttack: 1
+  ShieldAttack: 3
   RandomAttack: 0
-  RandomRestoreDeck: 0
+  RandomRestoreDeck: 3
   AdditionalSwordAttack: 0
   AdditionalMagicAttack: 0
   AdditionalShieldAttack: 0
