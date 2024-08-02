@@ -176,6 +176,8 @@ public class Enemy : MonoBehaviourPunCallbacks
         }
     }
 
+
+
     private IEnumerator HandleSpecialEffect(SpecialEffect effect)
     {
         while (true)
