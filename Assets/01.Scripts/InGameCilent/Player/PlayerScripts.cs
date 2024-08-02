@@ -154,10 +154,13 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             StartCoroutine(FillHandCoroutine());
         }
 
-        // 적이 죽었을 때 호출되는 이벤트 핸들러 등록
+        //// 적이 죽었을 때 호출되는 이벤트 핸들러 등록
+        //Enemy.OnEnemyDeath += OnEnemyDeath;
+        //Enemy.OnEnemySpawned += OnNewEnemySpawned;
+        Enemy.OnEnemyDeath -= OnEnemyDeath;  // 중복 등록 방지
         Enemy.OnEnemyDeath += OnEnemyDeath;
+        Enemy.OnEnemySpawned -= OnNewEnemySpawned;  // 중복 등록 방지
         Enemy.OnEnemySpawned += OnNewEnemySpawned;
-
         #region 직업 스크립트를 AddComponent 하는곳
         if (charAsset.ClassName == "Attacker")// Attacker, Buffer, Healer, Tanker
         {
@@ -301,8 +304,39 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         }
     }
 
+    //public void PlayACardFromHand(int CardUniqueID, int TargetUniqueID)
+    //{
+    //    if (CardLogic.CardsCreatedThisGame.TryGetValue(CardUniqueID, out CardLogic card))
+    //    {
+    //        ICharacter target = null;
+
+    //        if (TargetUniqueID >= 0)
+    //        {
+    //            if (TargetUniqueID == ID)
+    //            {
+    //                target = this;
+    //            }
+    //            else if (TargetUniqueID == otherPlayer.ID)
+    //            {
+    //                target = otherPlayer;
+    //            }
+    //            else if (CreatureLogic.CreaturesCreatedThisGame.TryGetValue(TargetUniqueID, out CreatureLogic creature))
+    //            {
+    //                target = creature;
+    //            }
+    //        }
+    //        //PlayACardFromHand(card, target);
+    //        StartCoroutine(PlayACardWithDelay(card, target)); // 코루틴 시작
+    //    }
+    //    else
+    //    {
+    //        Debug.LogError("Card not found");
+    //    }
+    //}
     public void PlayACardFromHand(int CardUniqueID, int TargetUniqueID)
     {
+        Debug.Log($"PlayACardFromHand called with CardUniqueID: {CardUniqueID}, TargetUniqueID: {TargetUniqueID}");
+
         if (CardLogic.CardsCreatedThisGame.TryGetValue(CardUniqueID, out CardLogic card))
         {
             ICharacter target = null;
@@ -330,8 +364,11 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             Debug.LogError("Card not found");
         }
     }
+
     private IEnumerator PlayACardWithDelay(CardLogic card, ICharacter target)
     {
+        Debug.Log($"PlayACardWithDelay called for card: {card.cardAsset.name}");
+
         // 적이 죽었을 때 카드 플레이를 일시 중지
         while (isPlayingCard || !isEnemyAlive)
         {
@@ -369,35 +406,35 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             _previousMagic = InGameManager.instance.Magic;
             _previousShield = InGameManager.instance.Shield;
 
-            // SwordAttack, MagicAttack, ShieldAttack, RandomAttack 값을 플레이어에게 반영
+            //// SwordAttack, MagicAttack, ShieldAttack, RandomAttack 값을 플레이어에게 반영
             Debug.Log($"Before: Sword={InGameManager.instance.Sword}, Magic={InGameManager.instance.Magic}, Shield={InGameManager.instance.Shield}");
             InGameManager.instance.Sword += card.cardAsset.SwordAttack;
             InGameManager.instance.Magic += card.cardAsset.MagicAttack;
             InGameManager.instance.Shield += card.cardAsset.ShieldAttack;
             Debug.Log($"After Attack: Sword={InGameManager.instance.Sword}, Magic={InGameManager.instance.Magic}, Shield={InGameManager.instance.Shield}");
 
-            // 공격력 값을 배열에 저장
-            int[] attackValues = { card.cardAsset.SwordAttack, card.cardAsset.MagicAttack, card.cardAsset.ShieldAttack };
-            System.Random random = new System.Random();
-            int index = random.Next(attackValues.Length);
-            int randomAttackValue = attackValues[index];
+            //// 공격력 값을 배열에 저장
+            //int[] attackValues = { card.cardAsset.SwordAttack, card.cardAsset.MagicAttack, card.cardAsset.ShieldAttack };
+            //System.Random random = new System.Random();
+            //int index = random.Next(attackValues.Length);
+            //int randomAttackValue = attackValues[index];
 
-            // 무작위로 선택된 공격력 값을 플레이어에게 반영
-            switch (index)
-            {
-                case 0:
-                    Debug.Log("Random Sword Attack Added");
-                    InGameManager.instance.Sword += randomAttackValue;
-                    break;
-                case 1:
-                    Debug.Log("Random Magic Attack Added");
-                    InGameManager.instance.Magic += randomAttackValue;
-                    break;
-                case 2:
-                    Debug.Log("Random Shield Attack Added");
-                    InGameManager.instance.Shield += randomAttackValue;
-                    break;
-            }
+            //// 무작위로 선택된 공격력 값을 플레이어에게 반영
+            //switch (index)
+            //{
+            //    case 0:
+            //        Debug.Log("Random Sword Attack Added");
+            //        InGameManager.instance.Sword += randomAttackValue;
+            //        break;
+            //    case 1:
+            //        Debug.Log("Random Magic Attack Added");
+            //        InGameManager.instance.Magic += randomAttackValue;
+            //        break;
+            //    case 2:
+            //        Debug.Log("Random Shield Attack Added");
+            //        InGameManager.instance.Shield += randomAttackValue;
+            //        break;
+            //}
 
             // 이 부분이 각 속성을 두 번 추가하고 있는지 확인하세요.
             Debug.Log($"Final Values: Sword={InGameManager.instance.Sword}, Magic={InGameManager.instance.Magic}, Shield={InGameManager.instance.Shield}");
@@ -534,6 +571,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         yield return new WaitForSeconds(0.5f); // 딜레이 추가
         isPlayingCard = false; // 카드 플레이 종료
     }
+
 
     //private IEnumerator PlayACardWithDelay(CardLogic card, ICharacter target)
     //{
@@ -733,45 +771,45 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
     //    isPlayingCard = false; // 카드 플레이 종료
     //}
 
-    private IEnumerator PerformAdditionalAttack(CardAsset cardAsset)
-    {
-        // 2초 대기
-        yield return new WaitForSeconds(2f);
+    //private IEnumerator PerformAdditionalAttack(CardAsset cardAsset)
+    //{
+    //    // 2초 대기
+    //    yield return new WaitForSeconds(2f);
 
-        // 추가 공격력 반영
-        if (cardAsset.AdditionalSwordAttack > 0)
-        {
-            InGameManager.instance.Sword += cardAsset.AdditionalSwordAttack;
-        }
-        if (cardAsset.AdditionalMagicAttack > 0)
-        {
-            InGameManager.instance.Magic += cardAsset.AdditionalMagicAttack;
-        }
-        if (cardAsset.AdditionalShieldAttack > 0)
-        {
-            InGameManager.instance.Shield += cardAsset.AdditionalShieldAttack;
-        }
-        if (cardAsset.AdditionalRandomAttack > 0)
-        {
-            int[] additionalAttackValues = { cardAsset.AdditionalSwordAttack, cardAsset.AdditionalMagicAttack, cardAsset.AdditionalShieldAttack };
-            System.Random random = new System.Random();
-            int randomIndex = random.Next(additionalAttackValues.Length);
-            int additionalRandomAttackValue = additionalAttackValues[randomIndex];
+    //    // 추가 공격력 반영
+    //    if (cardAsset.AdditionalSwordAttack > 0)
+    //    {
+    //        InGameManager.instance.Sword += cardAsset.AdditionalSwordAttack;
+    //    }
+    //    if (cardAsset.AdditionalMagicAttack > 0)
+    //    {
+    //        InGameManager.instance.Magic += cardAsset.AdditionalMagicAttack;
+    //    }
+    //    if (cardAsset.AdditionalShieldAttack > 0)
+    //    {
+    //        InGameManager.instance.Shield += cardAsset.AdditionalShieldAttack;
+    //    }
+    //    if (cardAsset.AdditionalRandomAttack > 0)
+    //    {
+    //        int[] additionalAttackValues = { cardAsset.AdditionalSwordAttack, cardAsset.AdditionalMagicAttack, cardAsset.AdditionalShieldAttack };
+    //        System.Random random = new System.Random();
+    //        int randomIndex = random.Next(additionalAttackValues.Length);
+    //        int additionalRandomAttackValue = additionalAttackValues[randomIndex];
 
-            if (randomIndex == 0)
-            {
-                InGameManager.instance.Sword += additionalRandomAttackValue;
-            }
-            else if (randomIndex == 1)
-            {
-                InGameManager.instance.Magic += additionalRandomAttackValue;
-            }
-            else if (randomIndex == 2)
-            {
-                InGameManager.instance.Shield += additionalRandomAttackValue;
-            }
-        }
-    }
+    //        if (randomIndex == 0)
+    //        {
+    //            InGameManager.instance.Sword += additionalRandomAttackValue;
+    //        }
+    //        else if (randomIndex == 1)
+    //        {
+    //            InGameManager.instance.Magic += additionalRandomAttackValue;
+    //        }
+    //        else if (randomIndex == 2)
+    //        {
+    //            InGameManager.instance.Shield += additionalRandomAttackValue;
+    //        }
+    //    }
+    //}
 
     private void VanishCard(CardLogic card)
     {
