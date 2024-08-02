@@ -22,9 +22,9 @@ MonoBehaviour:
   IsVanishCard: 0
   TypeOfCard: 0
   SwordAttack: 0
-  MagicAttack: 0
+  MagicAttack: 1
   ShieldAttack: 0
-  RandomAttack: 1
+  RandomAttack: 0
   RandomRestoreDeck: 0
   AdditionalSwordAttack: 0
   AdditionalMagicAttack: 0

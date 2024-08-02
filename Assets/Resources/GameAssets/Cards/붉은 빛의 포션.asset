@@ -27,7 +27,7 @@ MonoBehaviour:
   MagicAttack: 0
   ShieldAttack: 0
   RandomAttack: 0
-  RandomRestoreDeck: 0
+  RandomRestoreDeck: 1
   AdditionalSwordAttack: 0
   AdditionalMagicAttack: 0
   AdditionalShieldAttack: 0

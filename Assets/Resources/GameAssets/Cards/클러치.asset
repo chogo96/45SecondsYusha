@@ -24,9 +24,9 @@ MonoBehaviour:
   LimitOfThisCardInDeck: 1
   IsVanishCard: 1
   TypeOfCard: 0
-  SwordAttack: 0
-  MagicAttack: 0
-  ShieldAttack: 0
+  SwordAttack: 2
+  MagicAttack: 2
+  ShieldAttack: 1
   RandomAttack: 0
   RandomRestoreDeck: 0
   AdditionalSwordAttack: 0
