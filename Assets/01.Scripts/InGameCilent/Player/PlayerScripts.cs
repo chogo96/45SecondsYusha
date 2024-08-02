@@ -211,6 +211,11 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         _magicPoint += magic;
         _shieldPoint += shield;
 
+        InGameManager.instance.Sword = _swordPoint;
+        InGameManager.instance.Magic = _magicPoint;
+        InGameManager.instance.Shield = _shieldPoint;
+
+
         int swordIncrement = _swordPoint - _previousSword;
         int magicIncrement = _magicPoint - _previousMagic;
         int shieldIncrement = _shieldPoint - _previousShield;
@@ -368,7 +373,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             InGameManager.instance.Sword += card.cardAsset.SwordAttack;
             InGameManager.instance.Magic += card.cardAsset.MagicAttack;
             InGameManager.instance.Shield += card.cardAsset.ShieldAttack;
-            InGameManager.instance.RandomValue = card.cardAsset.RandomAttack;
+            //InGameManager.instance.RandomValue = card.cardAsset.RandomAttack;
 
             // 공격력 값을 배열에 저장
             int[] attackValues = { card.cardAsset.SwordAttack, card.cardAsset.MagicAttack, card.cardAsset.ShieldAttack };
