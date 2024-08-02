@@ -15,6 +15,7 @@ public class InGameShop : MonoBehaviourPunCallbacks
     private int _plusCardCount = 0;
 
     private bool _isAllVoting = false;
+    private bool _isAllDone = false;
 
     private EnemySpawner _enemySpawner;
     private UI_Timer uI_Timer;
@@ -72,71 +73,77 @@ public class InGameShop : MonoBehaviourPunCallbacks
         {
             case "plusTime":
                 _plusTimeCount++;
-                _timeText.text = $"AddTime\nVote : {_plusTimeCount}";
                 break;
             case "plusCard":
                 _plusCardCount++;
-                _cardText.text = $"AddCard\nVote : {_plusCardCount}";
                 break;
         }
+        photonView.RPC("ExecuteVotingResult", RpcTarget.All, _plusCardCount, _plusTimeCount);
 
-        if (PhotonNetwork.PlayerList.Length == (_plusTimeCount + _plusCardCount))
-        {
-            _isAllVoting = true;
-        }
-
-        if (_isAllVoting && PhotonNetwork.IsMasterClient)
-        {
-            photonView.RPC("ExecuteVotingResult", RpcTarget.All, _plusCardCount, _plusTimeCount);
-        }
     }
 
     [PunRPC]
     private void ExecuteVotingResult(int plusCardVotes, int plusTimeVotes)
     {
-        if (plusCardVotes > plusTimeVotes)
-        {
-            // 카드추가 투표가 더 많거나
-            Debug.Log("카드가 더해짐");
-            AddRandomCardToDeck();
-            if (_enemySpawner != null)
-            {
-                _enemySpawner.OnShopButtonPressed();
-            }
-        }
-        else if (plusCardVotes < plusTimeVotes)
-        {
-            // 시간추가 투표가 더 많거나
-            Debug.Log("시간이 더해짐");
-            uI_Timer.photonView.RPC("TimePlusMinus", RpcTarget.All, 10f);
+        _plusCardCount = plusCardVotes;
+        _plusTimeCount = plusTimeVotes;
 
-            if (_enemySpawner != null)
-            {
-                _enemySpawner.OnShopButtonPressed();
-            }
-        }
-        else
+        _timeText.text = $"AddTime\nVote : {_plusTimeCount}";
+        _cardText.text = $"AddCard\nVote : {_plusCardCount}";
+
+        if (PhotonNetwork.PlayerList.Length == (_plusTimeCount + _plusCardCount))
         {
-            // 둘의 투표가 같다면 랜덤으로 결정
-            int randomVoting = Random.Range(0, 2);
-            if (randomVoting == 0)
+            _isAllVoting = true;
+        }
+        if (_isAllVoting)
+        {
+            if (plusCardVotes > plusTimeVotes)
             {
+                // 카드추가 투표가 더 많거나
+                Debug.Log("카드가 더해짐");
+                AddRandomCardToDeck();
+                _isAllDone = true;
+            }
+
+            else if (plusCardVotes < plusTimeVotes && PhotonNetwork.IsMasterClient)
+            {
+                // 시간추가 투표가 더 많거나
                 Debug.Log("시간이 더해짐");
                 uI_Timer.photonView.RPC("TimePlusMinus", RpcTarget.All, 10f);
+                _isAllDone = true;
             }
             else
             {
-                Debug.Log("카드가 더해짐");
-                AddRandomCardToDeck();
-                if (_enemySpawner != null)
+                // 둘의 투표가 같다면 랜덤으로 결정
+                int randomVoting = Random.Range(0, 2);
+                if (PhotonNetwork.IsMasterClient)
                 {
-                    _enemySpawner.OnShopButtonPressed();
+
+                    if (randomVoting == 0)
+                    {
+                        Debug.Log("시간이 더해짐");
+                        uI_Timer.photonView.RPC("TimePlusMinus", RpcTarget.All, 10f);
+                        _isAllDone = true;
+                    }
+                }
+
+                else
+                {
+                    Debug.Log("카드가 더해짐");
+                    AddRandomCardToDeck();
+                    _isAllDone = true;
                 }
             }
         }
+        if (_isAllDone && PhotonNetwork.IsMasterClient)
+        {
+            _enemySpawner.OnShopButtonPressed();
+            _isAllDone = false;
+            _isAllVoting = false;
+            Destroy(gameObject); // 상점 UI 제거
+        }
+        
 
-        _isAllVoting = false;
-        Destroy(gameObject); // 상점 UI 제거
     }
 
     private void AddRandomCardToDeck()
