@@ -9,10 +9,8 @@ using UnityEngine.UI;
 public class RoomCreator : MonoBehaviourPunCallbacks
 {
     private Button _createRoomButton;
-    private Button[] _maxPlayer;
 
     private TMP_InputField _inputFieldRoomName;
-    private TMP_Text _textRoomName;
 
     public RoomListDisplay roomListDisplay;
     public PlayerListDisplay playerListDisplay;
@@ -49,19 +47,9 @@ public class RoomCreator : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
-        _maxPlayer = new Button[4];
-        // 버튼 찾기 및 배열에 추가
-        for (int i = 0; i < _maxPlayer.Length; i++)
-        {
-            string buttonName = $"Panel - BG/RoomOption/MaxPlayer/MaxPlayer_Button/Button - {i + 1}";
-            _maxPlayer[i] = transform.Find(buttonName).GetComponent<Button>();
-            int index = i;
-            _maxPlayer[i].onClick.AddListener(() => OnClickButton(index));
-        }
 
         _createRoomButton = transform.Find("Panel - BG/RoomOption/Button - RoomCreate").GetComponent<Button>();
         _inputFieldRoomName = transform.Find("Panel - BG/RoomOption/RoomName/InputField (TMP) - RoomName").GetComponent<TMP_InputField>();
-        _textRoomName = transform.Find("Panel - BG/RoomOption/MaxPlayer/Text (TMP) - SelectPlayer").GetComponent<TMP_Text>();
 
         _roomOptionPanel = transform.Find("Panel - BG/RoomOption").gameObject;
         _inRoomPanel = transform.Find("Panel - BG/InRoom").gameObject;
@@ -358,14 +346,10 @@ public class RoomCreator : MonoBehaviourPunCallbacks
     /// </summary>
     void CreateCustomRoom()
     {
-        if (int.Parse(_textRoomName.text) >= 5)
-        {
-            Debug.LogError("Max players should be less than 5");
-        }
-        else if (PhotonNetwork.IsConnected)
+        if (PhotonNetwork.IsConnected)
         {
             RoomOptions roomOptions = new RoomOptions();
-            roomOptions.MaxPlayers = byte.Parse(_textRoomName.text);
+            roomOptions.MaxPlayers = 4;
             roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable { { "roomType", _customRoomType } };
             roomOptions.CustomRoomPropertiesForLobby = new string[] { "roomType" };
             PhotonNetwork.CreateRoom(_inputFieldRoomName.text, roomOptions, null);
@@ -440,25 +424,6 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         roomListDisplay.OnRoomListUpdate(roomList);
     }
 
-    private void OnClickButton(int index)
-    {
-        switch (index)
-        {
-            case 0:
-                _textRoomName.text = "1";
-                break;
-            case 1:
-                _textRoomName.text = "2";
-                break;
-            case 2:
-                _textRoomName.text = "3";
-                break;
-            case 3:
-                _textRoomName.text = "4";
-                break;
-        }
-    }
-
     private void OnClickNewRoomButton()
     {
         _inRoomPanel.SetActive(false);
@@ -473,10 +438,21 @@ public class RoomCreator : MonoBehaviourPunCallbacks
 
     private void OnClickRoomStart()
     {
+        //if (PhotonNetwork.IsMasterClient && (PhotonNetwork.CurrentRoom.PlayerCount == 4))
+        //{
+        //    PhotonNetwork.LoadLevel("05.GamePlay Scene");
+        //}
+        //else
+        //{
+        //    Utils.LogRed($"플레이어 수가 4명이 아닙니다.\n현재 플레이어 수는 {PhotonNetwork.CurrentRoom.PlayerCount} 입니다.");
+        //}
+        
         if (PhotonNetwork.IsMasterClient)
         {
+            // 서버 테스트할때 사용할 내용
             PhotonNetwork.LoadLevel("05.GamePlay Scene");
         }
+        
     }
 
 
