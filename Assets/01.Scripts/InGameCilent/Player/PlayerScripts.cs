@@ -207,9 +207,15 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             Debug.LogWarning("현재 적이 null 상태입니다. RealTimeBossStatusCheck 호출을 무시합니다.");
             return;
         }
+
         _swordPoint += sword;
         _magicPoint += magic;
         _shieldPoint += shield;
+
+        InGameManager.instance.Sword = _swordPoint;
+        InGameManager.instance.Magic = _magicPoint;
+        InGameManager.instance.Shield = _shieldPoint;
+
 
         int swordIncrement = _swordPoint - _previousSword;
         int magicIncrement = _magicPoint - _previousMagic;
@@ -239,7 +245,6 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
 
     private IEnumerator DrawCardsCoroutine(int n)
     {
-        photonView.RPC("RealTimeBossStatusCheck", RpcTarget.All, InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
         isDrawingCard = true;
         HandVisual handVisual = PArea.handVisual;  // 현재 플레이어의 HandVisual 참조
 
