@@ -90,21 +90,29 @@ public class UI_Setting : MonoBehaviourPunCallbacks
     {
         _yes.interactable = false;
         _no.interactable = false;
-        photonView.RPC("RegisterVote", RpcTarget.MasterClient, vote == 0);
+        switch (vote)
+        {
+            case 0:
+                _giveUpVotes++;
+
+                break;
+            case 1:
+                _noGiveUpVotes++;
+
+                break;
+            default:
+                break;
+        }
+        photonView.RPC("RegisterVote", RpcTarget.MasterClient, _giveUpVotes, _noGiveUpVotes);
     }
 
     [PunRPC]
-    public void RegisterVote(bool giveUp)
+    public void RegisterVote(int _giveUp , int noGiveUp)
     {
-        _votesCount++;
-        if (giveUp)
-        {
-            _giveUpVotes++;
-        }
-        else
-        {
-            _noGiveUpVotes++;
-        }
+        _giveUpVotes = _giveUp;
+        _noGiveUpVotes = noGiveUp;
+        _votesCount = _giveUpVotes + _noGiveUpVotes;
+
 
         _votingResults.text = $"Agree: {_giveUpVotes} | Opposite: {_noGiveUpVotes}";
 
@@ -112,15 +120,6 @@ public class UI_Setting : MonoBehaviourPunCallbacks
         {
             CheckVoteResult();
         }
-        //photonView.RPC("UpdateVoteResults", RpcTarget.All, _giveUpVotes, _noGiveUpVotes, _votesCount);
-    }
-
-    [PunRPC]
-    public void UpdateVoteResults(int giveUpVotes, int noGiveUpVotes, int votesCount)
-    {
-        _giveUpVotes = giveUpVotes;
-        _noGiveUpVotes = noGiveUpVotes;
-        _votesCount = votesCount;
     }
 
     private void CheckVoteResult()
@@ -132,20 +131,7 @@ public class UI_Setting : MonoBehaviourPunCallbacks
             // 항복 시 DisplayLose 호출
             if (gameOverManager != null)
             {
-                // gameOverManager.DisplayLose();
-                if (PhotonNetwork.IsMasterClient)
-                {
-                    PhotonNetwork.LoadLevel("04.Lobby Scene");
-                }
-            }
-            else
-            {
-                // Debug.LogError("GameOverManager not found.");
-                if (PhotonNetwork.IsMasterClient)
-                {
-                    PhotonNetwork.LoadLevel("04.Lobby Scene");
-                }
-
+                gameOverManager.DisplayLose();
             }
         }
         else
