@@ -87,7 +87,7 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
 
 
 
-        _playerImage[_actorNumber].sprite = playerScripts.charAsset.AvatarImage;
+        _playerImage[_actorNumber].sprite = playerScripts.charAsset.AvatarImage; 
         HandCardCount(_actorNumber, "Minus");
     }
 
