@@ -82,12 +82,12 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
             _deckCountText[i] = playerTransform.Find("DeckImage/DeckCountText (TMP)")?.GetComponent<TMP_Text>();
 
             _playerHandArea[i] = playerTransform.Find($"HandArea")?.gameObject;
+            _playerImage[i].sprite = playerScripts.charAsset.AvatarImage;
 
         }
 
 
 
-        _playerImage[_actorNumber].sprite = playerScripts.charAsset.AvatarImage; 
         HandCardCount(_actorNumber, "Minus");
     }
 

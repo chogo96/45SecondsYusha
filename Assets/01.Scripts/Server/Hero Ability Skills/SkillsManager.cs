@@ -16,6 +16,7 @@ public class SkillsManager : MonoBehaviour
     private void Start()
     {
         _heroSkillButton.onClick.AddListener(UseCurrentSkill);
+        _heroSkillButton.interactable = true;
     }
 
     public void SetSkill(SkillsInterface skill)
@@ -26,5 +27,6 @@ public class SkillsManager : MonoBehaviour
     public void UseCurrentSkill()
     {
         _currentSkill?.UseSkill();
+        _heroSkillButton.interactable = false;
     }
 }

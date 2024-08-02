@@ -28,13 +28,13 @@ public class UI_Timer : MonoBehaviourPunCallbacks
         _time -= Time.deltaTime;
         _time = Mathf.Max(0, _time); // 시간이 음수가 되지 않도록 보정.
         //시간 초가 지나간다면 패배 판넬 켬
-        //if (_gameOverManager != null)
-        //{
-        //    if (_time == 0f)
-        //    {
-        //        _gameOverManager.DisplayLose();
-        //    }
-        //}
+        if (_gameOverManager != null)
+        {
+            if (_time == 0f)
+            {
+                _gameOverManager.DisplayLose();
+            }
+        }
     }
 
 
