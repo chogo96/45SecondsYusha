@@ -30,26 +30,22 @@ public class AddCardToDeck : MonoBehaviour
         if (asset == null)
             return;
 
-        Debug.Log("if문 실행전.");
 
         // 딕셔너리에 키가 존재하는지 확인
         if (firebaseCardManager.viewCardss.ContainsKey(cardAsset))
         {
             if (firebaseCardManager.viewCardss[cardAsset] - DeckBuildingScreen.instance.BuilderScript.NumberOfThisCardInDeck(cardAsset) >= 0)
             {
-                Debug.Log("클릭 활성화. 추가");
                 DeckBuildingScreen.instance.BuilderScript.AddCard(asset);
                 UpdateQuantity();
             }
             else
             {
-                Debug.Log("카드없음 ㅅㄱ.");
                 // 카드가 충분하지 않음을 알려줍시다.
             }
         }
         else
         {
-            Debug.LogError("viewCardss 딕셔너리에 해당 카드가 없습니다: " + cardAsset.CardScriptName);
         }
     }
 
@@ -82,17 +78,16 @@ public class AddCardToDeck : MonoBehaviour
         //    return;
         //}
 
-        Ray clickPoint = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hitPoint;
+        //Ray clickPoint = Camera.main.ScreenPointToRay(Input.mousePosition);
+        //RaycastHit hitPoint;
 
-        if (Physics.Raycast(clickPoint, out hitPoint))
-        {
-            if (hitPoint.collider == this.GetComponent<Collider>())
-            {
-                Debug.Log("Right Clicked on " + this.name);
-                //CraftingScreen.instance.ShowCraftingScreen(GetComponent<OneCardManager>().cardAsset);
-            }
-        }
+        //if (Physics.Raycast(clickPoint, out hitPoint))
+        //{
+        //    if (hitPoint.collider == this.GetComponent<Collider>())
+        //    {
+        //        //CraftingScreen.instance.ShowCraftingScreen(GetComponent<OneCardManager>().cardAsset);
+        //    }
+        //}
     }
 
     public void UpdateQuantity()
@@ -108,7 +103,6 @@ public class AddCardToDeck : MonoBehaviour
         }
         else
         {
-            Debug.LogError("QuantityOfEachCard 딕셔너리에 해당 카드가 없습니다: " + cardAsset.name);
         }
     }
 }

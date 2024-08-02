@@ -36,7 +36,6 @@ public class CardNameRibbon : MonoBehaviour
 
     public void ReduceQuantity()
     {
-        Debug.Log("In reduce Quantity");
         DeckBuildingScreen.instance.BuilderScript.RemoveCard(Asset);
     }
 }

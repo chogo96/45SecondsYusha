@@ -38,7 +38,6 @@ public class InGameShop : MonoBehaviourPunCallbacks
 
         if (uI_Timer == null || uI_Timer.photonView == null)
         {
-            Debug.LogError("UI_Timer or its PhotonView component is not found.");
             return;
         }
 
@@ -97,7 +96,6 @@ public class InGameShop : MonoBehaviourPunCallbacks
         if (plusCardVotes > plusTimeVotes)
         {
             // 카드추가 투표가 더 많거나
-            Debug.Log("카드가 더해짐");
             AddRandomCardToDeck();
             if (_enemySpawner != null)
             {
@@ -107,7 +105,6 @@ public class InGameShop : MonoBehaviourPunCallbacks
         else if (plusCardVotes < plusTimeVotes)
         {
             // 시간추가 투표가 더 많거나
-            Debug.Log("시간이 더해짐");
             uI_Timer.photonView.RPC("TimePlusMinus", RpcTarget.All, 10f);
 
             if (_enemySpawner != null)
@@ -121,12 +118,10 @@ public class InGameShop : MonoBehaviourPunCallbacks
             int randomVoting = Random.Range(0, 2);
             if (randomVoting == 0)
             {
-                Debug.Log("시간이 더해짐");
                 uI_Timer.photonView.RPC("TimePlusMinus", RpcTarget.All, 10f);
             }
             else
             {
-                Debug.Log("카드가 더해짐");
                 AddRandomCardToDeck();
                 if (_enemySpawner != null)
                 {

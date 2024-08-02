@@ -33,7 +33,6 @@ public class Enemy : MonoBehaviourPunCallbacks
     {
         if (players == null || players.Count == 0)
         {
-            Debug.LogError("플레이어 리스트가 null이거나 비어 있습니다.");
             return;
         }
 
@@ -44,11 +43,11 @@ public class Enemy : MonoBehaviourPunCallbacks
         _specialEffects = data.specialEffects;
         IsFinalBoss = isFinalBoss;
 
-        // 특수 효과 초기화
-        foreach (var effect in _specialEffects)
-        {
-            StartCoroutine(HandleSpecialEffect(effect));
-        }
+        //// 특수 효과 초기화
+        //foreach (var effect in _specialEffects)
+        //{
+        //    StartCoroutine(HandleSpecialEffect(effect));
+        //}
 
         // 디버프 적용
         foreach (var debuff in _debuffs)
@@ -98,7 +97,6 @@ public class Enemy : MonoBehaviourPunCallbacks
         }
         else
         {
-            Debug.LogError("플레이어 리스트가 null이거나 비어 있습니다. 출혈 디버프를 적용할 수 없습니다.");
         }
     }
 
@@ -116,7 +114,6 @@ public class Enemy : MonoBehaviourPunCallbacks
         }
         else
         {
-            Debug.LogError("플레이어 리스트가 null이거나 비어 있습니다. 실명 디버프를 적용할 수 없습니다.");
         }
     }
 
@@ -134,7 +131,6 @@ public class Enemy : MonoBehaviourPunCallbacks
         }
         else
         {
-            Debug.LogError("플레이어 리스트가 null이거나 비어 있습니다. 혼란 디버프를 적용할 수 없습니다.");
         }
     }
 
@@ -147,10 +143,8 @@ public class Enemy : MonoBehaviourPunCallbacks
     {
         if (IsFinalBoss)
         {
-            Debug.Log("승리!");
             _gameOverManager.DisplayWin();
         }
-        Debug.Log("사망!");
 
         // 플레이어의 _currentEnemy 참조를 해제
         if (_playerScripts != null)
@@ -164,7 +158,6 @@ public class Enemy : MonoBehaviourPunCallbacks
 
     public void CheckDeathCondition(int sword, int magic, int shield)
     {
-        Debug.Log("죽었음? 혹은 넘어감?");
         if ((requiredSword == 0 || sword >= requiredSword) &&
             (requiredMagic == 0 || magic >= requiredMagic) &&
             (requiredShield == 0 || shield >= requiredShield))
@@ -181,8 +174,6 @@ public class Enemy : MonoBehaviourPunCallbacks
         while (true)
         {
             yield return new WaitForSeconds(effect.Cooldown);
-
-            // 특수 효과 적용 로직 (예: 다른 디버프 적용)
         }
     }
 }

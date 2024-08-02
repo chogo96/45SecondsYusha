@@ -196,7 +196,6 @@ public class HoverPreview : MonoBehaviour
         // 3) 게임 오브젝트의 프리뷰 활성화
         if (previewGameObject == null)
         {
-            Debug.LogError("Preview GameObject is not assigned!");
             return;
         }
 
@@ -204,14 +203,11 @@ public class HoverPreview : MonoBehaviour
         OneCardManager previewManager = previewGameObject.GetComponent<OneCardManager>();
         if (previewManager == null)
         {
-            Debug.LogError("OneCardManager is not attached to the previewGameObject!");
-            return;
         }
 
         OneCardManager originalManager = GetComponent<OneCardManager>();
         if (originalManager == null)
         {
-            Debug.LogError("OneCardManager is not attached to the current GameObject!");
             return;
         }
 

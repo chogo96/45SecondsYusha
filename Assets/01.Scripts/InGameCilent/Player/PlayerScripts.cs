@@ -2,12 +2,13 @@ using UnityEngine;
 using System.Collections.Generic;
 using Photon.Pun;
 using System.Collections;
-using System;
 using static UnityEngine.Rendering.DebugUI;
+using System;
 
+// The PlayerScripts class handles player actions, interactions, and state management.
 public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
 {
-    // 멤버 변수 선언
+    // Member variables
     public int Sword;
     public int Magic;
     public int Shield;
@@ -22,66 +23,59 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
     private int _previousSword;
     private int _previousMagic;
     private int _previousShield;
-    public Deck _deck; // Deck1의 Deck 스크립트를 참조
+    public Deck _deck; // Reference to the Deck script on Deck1
     public Hand hand;
     public Table table;
     private PlayerDeckVisual _playerDeckVisual;
     private EnemyUIManager _enemyUIManager;
     private bool isFillingHand = false;
-    //카드 플레이 딜레이 주기위한 것
-    private bool isPlayingCard = false;
-
-    //적이 살아있는지 여부 체크
-    private bool isEnemyAlive = true;
+    private bool isPlayingCard = false; // For delaying card play
+    private bool isEnemyAlive = true;   // Check if enemy is alive
 
     public static PlayerScripts[] Players;
     private BuffManager _buffManager;
-
     private PlayerSetManager playerSetManager;
     private int actorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
-
     private bool isDrawingCard = false;
-
     private GameObject _playerTransform;
 
-    // 서버에서 사용할 int값임
+    // Server-side int values
     public int _swordPoint;
     public int _magicPoint;
     public int _shieldPoint;
 
+    // Player ID property
     public int ID
     {
         get { return PlayerID; }
     }
 
+    // Reference to the other player
     public PlayerScripts otherPlayer
     {
         get
         {
-            if (Players[0] == this)
-                return Players[1];
-            else
-                return Players[0];
+            return Players[0] == this ? Players[1] : Players[0];
         }
     }
 
+    // Delegate declaration
     public delegate void VoidWithNoArguments();
 
+    // Set the current enemy
     public void SetCurrentEnemy(Enemy enemy)
     {
         _currentEnemy = enemy;
         isEnemyAlive = _currentEnemy != null;
 
+        // Log the current enemy status
         if (_currentEnemy != null)
         {
             Debug.Log($"SetCurrentEnemy: {_currentEnemy}");
         }
-        else
-        {
-            Debug.Log("SetCurrentEnemy: null");
-        }
     }
 
+    // Reset player values
     public void ResetValues()
     {
         Sword = 0;
@@ -89,6 +83,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         Shield = 0;
     }
 
+    // Awake is called when the script instance is being loaded
     void Awake()
     {
         playerSetManager = FindObjectOfType<PlayerSetManager>();
@@ -97,43 +92,28 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         PlayerID = IDFactory.GetUniquePlayerID();
         _playerDeckVisual = FindObjectOfType<PlayerDeckVisual>();
 
-        // EnemySpawner에 자신을 등록
-        RegisterWithEnemySpawner();
-        // BuffManager 초기화
+        RegisterWithEnemySpawner(); // Register with EnemySpawner
+
+        // Initialize BuffManager
         GameObject buffManagerObject = GameObject.Find("BuffManager");
         if (buffManagerObject != null)
         {
             _buffManager = buffManagerObject.GetComponent<BuffManager>();
-            if (_buffManager == null)
-            {
-                Debug.LogError("BuffManager 컴포넌트를 찾을 수 없습니다.");
-            }
-        }
-        else
-        {
-            Debug.LogError("BuffManager 오브젝트를 찾을 수 없습니다.");
         }
 
-        // Deck1 오브젝트를 찾아서 Deck 스크립트를 참조합니다.
+        // Reference the Deck script on Deck1
         GameObject deckObject = GameObject.Find("Deck1");
         if (deckObject != null)
         {
             _deck = deckObject.GetComponent<Deck>();
-            if (_deck == null)
-            {
-                Debug.LogError("Deck1 오브젝트에서 Deck 컴포넌트를 찾을 수 없습니다.");
-            }
-        }
-        else
-        {
-            Debug.LogError("Deck1 오브젝트를 찾을 수 없습니다.");
         }
 
         _playerTransform = gameObject;
 
-        InitializePlayerDeck();
+        InitializePlayerDeck(); // Initialize the player's deck
     }
 
+    // Register player with EnemySpawner
     private void RegisterWithEnemySpawner()
     {
         EnemySpawner enemySpawner = FindObjectOfType<EnemySpawner>();
@@ -141,12 +121,9 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         {
             enemySpawner.RegisterPlayer(this);
         }
-        else
-        {
-            Debug.LogError("EnemySpawner를 찾을 수 없습니다.");
-        }
     }
 
+    // Start is called before the first frame update
     void Start()
     {
         if (hand.CardsInHand.Count <= 4 && !isFillingHand)
@@ -154,59 +131,60 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             StartCoroutine(FillHandCoroutine());
         }
 
-        // 적이 죽었을 때 호출되는 이벤트 핸들러 등록
+        // Register event handlers for enemy actions
         Enemy.OnEnemyDeath += OnEnemyDeath;
         Enemy.OnEnemySpawned += OnNewEnemySpawned;
 
-        #region 직업 스크립트를 AddComponent 하는곳
-        if (charAsset.ClassName == "Attacker")// Attacker, Buffer, Healer, Tanker
+        #region AddComponent for Character Scripts
+        if (charAsset.ClassName == "Attacker") // Attacker, Buffer, Healer, Tanker
         {
-            // AttackerSkills attackerSkills = _playerTransform.AddComponent<AttackerSkills>();
-            BufferSkills bufferSkills = _playerTransform.AddComponent<BufferSkills>();
+            _playerTransform.AddComponent<BufferSkills>();
         }
         else if (charAsset.ClassName == "Buffer")
         {
-            BufferSkills bufferSkills = _playerTransform.AddComponent<BufferSkills>();
+            _playerTransform.AddComponent<BufferSkills>();
         }
         else if (charAsset.ClassName == "Healer")
         {
-            // HealerSkills healerSkills = _playerTransform.AddComponent<HealerSkills>();
-            BufferSkills bufferSkills = _playerTransform.AddComponent<BufferSkills>();
+            _playerTransform.AddComponent<BufferSkills>();
         }
-        else //Tanker
+        else // Tanker
         {
-            // TankerSkills tankerSkills = _playerTransform.AddComponent<TankerSkills>();
-            BufferSkills bufferSkills = _playerTransform.AddComponent<BufferSkills>();
+            _playerTransform.AddComponent<BufferSkills>();
         }
         #endregion
     }
 
+    // OnDestroy is called when the script is destroyed
     void OnDestroy()
     {
-        // 이벤트 핸들러 등록 해제
+        // Unregister event handlers
         Enemy.OnEnemyDeath -= OnEnemyDeath;
         Enemy.OnEnemySpawned -= OnNewEnemySpawned;
     }
 
+    // Handle enemy death
     void OnEnemyDeath()
     {
-        isEnemyAlive = false; // 적이 죽으면 플래그를 false로 설정
+        isEnemyAlive = false; // Set flag to false when enemy dies
     }
 
+    // Handle new enemy spawn
     void OnNewEnemySpawned(Enemy newEnemy)
     {
         SetCurrentEnemy(newEnemy);
-        isEnemyAlive = true; // 새로운 적이 생성되면 플래그를 true로 설정
+        isEnemyAlive = true; // Set flag to true when new enemy spawns
     }
 
+    // Real-time boss status check with Photon RPC
     [PunRPC]
     public void RealTimeBossStatusCheck(int sword, int magic, int shield)
     {
         if (_currentEnemy == null)
         {
-            Debug.LogWarning("현재 적이 null 상태입니다. RealTimeBossStatusCheck 호출을 무시합니다.");
-            return;
+            return; // Skip if current enemy is null
         }
+
         _swordPoint += sword;
         _magicPoint += magic;
         _shieldPoint += shield;
@@ -214,7 +192,6 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         InGameManager.instance.Sword = _swordPoint;
         InGameManager.instance.Magic = _magicPoint;
         InGameManager.instance.Shield = _shieldPoint;
-
 
         int swordIncrement = _swordPoint - _previousSword;
         int magicIncrement = _magicPoint - _previousMagic;
@@ -224,16 +201,15 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         _enemyUIManager.ChangeAlphaForIncrement(magicIncrement, _enemyUIManager.magicImageParent, Magic, _currentEnemy.requiredMagic);
         _enemyUIManager.ChangeAlphaForIncrement(shieldIncrement, _enemyUIManager.shieldImageParent, Shield, _currentEnemy.requiredShield);
 
-        Debug.Log($"Sword: {InGameManager.instance.Sword}, Magic: {InGameManager.instance.Magic}, Shield: {InGameManager.instance.Shield}");
-        Debug.Log($"CurrentEnemy: {_currentEnemy}");
-
-        // 현재 적의 생존 조건 확인
+        // Check if the enemy meets the death condition
         _currentEnemy?.CheckDeathCondition(_swordPoint, _magicPoint, _shieldPoint);
     }
 
+    // Draw a card from the deck
     public void DrawACard(int n)
     {
-        if (isDrawingCard || !isEnemyAlive) // 적이 죽었거나 새로운 적이 생성되기 전이면 카드 드로우를 일시 중지
+        // Pause card draw if enemy is dead or new enemy is spawning
+        if (isDrawingCard || !isEnemyAlive)
         {
             return;
         }
@@ -242,11 +218,12 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         StartCoroutine(DrawCardsCoroutine(n));
     }
 
+    // Coroutine to handle drawing cards
     private IEnumerator DrawCardsCoroutine(int n)
     {
         photonView.RPC("RealTimeBossStatusCheck", RpcTarget.All, InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
         isDrawingCard = true;
-        HandVisual handVisual = PArea.handVisual;  // 현재 플레이어의 HandVisual 참조
+        HandVisual handVisual = PArea.handVisual;  // Reference to current player's HandVisual
 
         for (int i = 0; i < n; i++)
         {
@@ -260,23 +237,23 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                     new DrawACardCommand(hand.CardsInHand[0], this, fromDeck: true).AddToQueue();
                     _playerDeckVisual.UpdateDeckCount();
 
-                    // 바로 정렬 수행
+                    // Immediately arrange cards
                     handVisual.PlaceCardsOnNewSlots();
 
-                    yield return new WaitForSeconds(0.1f); // 카드 드로우 사이에 짧은 대기 시간을 추가하여 동시에 많은 카드 드로우를 방지합니다.
+                    yield return new WaitForSeconds(0.1f); // Short delay to prevent simultaneous card draws
                 }
                 else
                 {
-                    // 덱을 다 썼을 때 탈진 효과 넣는 곳
+                    // Implement fatigue effect if deck is empty
                     break;
                 }
             }
         }
 
         isDrawingCard = false;
-
     }
 
+    // Initialize player's deck
     private void InitializePlayerDeck()
     {
         List<CardAsset> selectedDeckCards = DeckGameManager.instance.GetSelectedDeckCards();
@@ -288,9 +265,10 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         }
     }
 
+    // Obtain a card not from the deck
     public void GetACardNotFromDeck(CardAsset cardAsset)
     {
-        HandVisual handVisual = PArea.handVisual;  // 현재 플레이어의 HandVisual 참조
+        HandVisual handVisual = PArea.handVisual;  // Reference to current player's HandVisual
         if (hand.CardsInHand.Count < handVisual.GetMaxSlots() && hand.CardsInHand.Count < 5)
         {
             CardLogic newCard = new CardLogic(cardAsset, this);
@@ -300,6 +278,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         }
     }
 
+    // Play a card from the hand
     public void PlayACardFromHand(int CardUniqueID, int TargetUniqueID)
     {
         if (CardLogic.CardsCreatedThisGame.TryGetValue(CardUniqueID, out CardLogic card))
@@ -321,24 +300,20 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                     target = creature;
                 }
             }
-            //PlayACardFromHand(card, target);
-            StartCoroutine(PlayACardWithDelay(card, target)); // 코루틴 시작
-        }
-        else
-        {
-            Debug.LogError("Card not found");
+            StartCoroutine(PlayACardWithDelay(card, target)); // Start coroutine for card play with delay
         }
     }
 
+    // Coroutine to handle card play with delay
     private IEnumerator PlayACardWithDelay(CardLogic card, ICharacter target)
     {
-        // 적이 죽었을 때 카드 플레이를 일시 중지
+        // Pause card play if enemy is dead
         while (isPlayingCard || !isEnemyAlive)
         {
             yield return null;
         }
 
-        isPlayingCard = true; // 카드 플레이 시작
+        isPlayingCard = true; // Start card play
 
         playerSetManager.photonView.RPC("HandCardCount", RpcTarget.All, actorNumber, "Minus");
 
@@ -346,9 +321,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         {
             if (UnityEngine.Random.Range(0, 2) == 0)
             {
-                Debug.Log("카드가 실명 효과로 버려졌습니다!! ^^");
-
-                // 카드 처리 로직을 이곳에서 처리
+                // Discard card due to blindness effect
                 if (card.cardAsset.IsVanishCard)
                 {
                     VanishCard(card);
@@ -358,7 +331,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                     DiscardCard(card);
                 }
 
-                isPlayingCard = false; // 카드 플레이 종료
+                isPlayingCard = false; // End card play
                 yield break;
             }
         }
@@ -369,19 +342,18 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             _previousMagic = InGameManager.instance.Magic;
             _previousShield = InGameManager.instance.Shield;
 
-            // 카드의 SwordAttack, MagicAttack, ShieldAttack 값을 플레이어에게 반영
+            // Apply card's attack values to player
             InGameManager.instance.Sword += card.cardAsset.SwordAttack;
             InGameManager.instance.Magic += card.cardAsset.MagicAttack;
             InGameManager.instance.Shield += card.cardAsset.ShieldAttack;
-            //InGameManager.instance.RandomValue = card.cardAsset.RandomAttack;
 
-            // 공격력 값을 배열에 저장
+            // Store attack values in an array
             int[] attackValues = { card.cardAsset.SwordAttack, card.cardAsset.MagicAttack, card.cardAsset.ShieldAttack };
             System.Random random = new System.Random();
             int index = random.Next(attackValues.Length);
             int randomAttackValue = attackValues[index];
 
-            // 무작위로 선택된 공격력 값을 플레이어에게 반영
+            // Apply randomly selected attack value to player
             switch (index)
             {
                 case 0:
@@ -395,6 +367,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                     break;
             }
 
+            // Function to remove debuffs
             void RemoveDebuff(string debuff)
             {
                 switch (debuff)
@@ -412,14 +385,13 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                         RemoveRandomDebuff();
                         break;
                     case "모든":
-                        RemoveAllDebuffs();
-                        break;
                     case "모든버프":
                         RemoveAllDebuffs();
                         break;
                 }
             }
 
+            // Function to remove a random debuff
             void RemoveRandomDebuff()
             {
                 int randomDebuffIndex = UnityEngine.Random.Range(0, 3);
@@ -437,7 +409,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                 }
             }
 
-            // 전체 플레이어의 모든 디버프 제거
+            // Remove all debuffs from all players
             void RemoveAllDebuffs()
             {
                 foreach (var player in Players)
@@ -448,7 +420,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                 }
             }
 
-            // 디버프 제거 함수 호출
+            // Call debuff removal function
             RemoveDebuff(card.cardAsset.RemoveDebuff);
 
             if (card.cardAsset.DiscardFromDeck > 0)
@@ -463,7 +435,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                 }
             }
 
-            // 카드 처리 로직을 이곳에서 처리
+            // Handle card processing
             if (card.cardAsset.IsVanishCard)
             {
                 VanishCard(card);
@@ -473,35 +445,26 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                 DiscardCard(card);
             }
 
-            // 조건 확인 및 알파값 변경
+            // Check conditions and change alpha values
             if (_enemyUIManager != null)
             {
-                Debug.Log("ㅇㅇ 적 ui매니저 있음");
                 int swordIncrement = InGameManager.instance.Sword - _previousSword;
                 int magicIncrement = InGameManager.instance.Magic - _previousMagic;
                 int shieldIncrement = InGameManager.instance.Shield - _previousShield;
 
-                Debug.Log($"Sword Increment: {swordIncrement}");
-                Debug.Log($"Magic Increment: {magicIncrement}");
-                Debug.Log($"Shield Increment: {shieldIncrement}");
-
-                Debug.Log($"_enemyUIManager.swordImageParent: {_enemyUIManager.swordImageParent}");
-                Debug.Log($"Sword: {Sword}");
-                Debug.Log($"_currentEnemy.requiredSword: {_currentEnemy.requiredSword}");
-
-                // _enemyUIManager.ChangeAlphaForIncrement(swordIncrement, _enemyUIManager.swordImageParent, Sword, _currentEnemy.requiredSword);
-                // _enemyUIManager.ChangeAlphaForIncrement(magicIncrement, _enemyUIManager.magicImageParent, Magic, _currentEnemy.requiredMagic);
-                // _enemyUIManager.ChangeAlphaForIncrement(shieldIncrement, _enemyUIManager.shieldImageParent, Shield, _currentEnemy.requiredShield);
+                _enemyUIManager.ChangeAlphaForIncrement(swordIncrement, _enemyUIManager.swordImageParent, Sword, _currentEnemy.requiredSword);
+                _enemyUIManager.ChangeAlphaForIncrement(magicIncrement, _enemyUIManager.magicImageParent, Magic, _currentEnemy.requiredMagic);
+                _enemyUIManager.ChangeAlphaForIncrement(shieldIncrement, _enemyUIManager.shieldImageParent, Shield, _currentEnemy.requiredShield);
             }
 
-            // 적 객체가 null이 아닌 경우에만 RealTimeBossStatusCheck 호출
+            // Call RealTimeBossStatusCheck if enemy object is not null
             if (_currentEnemy != null)
             {
                 photonView.RPC("RealTimeBossStatusCheck", RpcTarget.All, InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
             }
             _deck.ReturnRandomCardsFromDiscard(card.cardAsset.RandomRestoreDeck);
 
-            // 2초 후에 추가 공격을 수행하는 코루틴 시작 (조건 확인)
+            // Start coroutine for additional attack after 2 seconds (check conditions)
             if (card.cardAsset.AdditionalSwordAttack > 0 ||
                 card.cardAsset.AdditionalMagicAttack > 0 ||
                 card.cardAsset.AdditionalShieldAttack > 0 ||
@@ -509,7 +472,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             {
                 StartCoroutine(PerformAdditionalAttack(card.cardAsset));
 
-                // 적 객체가 null이 아닌 경우에만 RealTimeBossStatusCheck 호출
+                // Call RealTimeBossStatusCheck if enemy object is not null
                 if (_currentEnemy != null)
                 {
                     photonView.RPC("RealTimeBossStatusCheck", RpcTarget.All, InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
@@ -517,23 +480,24 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             }
         }
 
-        // 손패의 카드 개수가 4장 이하일 때 덱에서 카드를 채우는 로직 추가
+        // Add logic to fill deck with cards if card count is 4 or less
         if (hand.CardsInHand.Count <= 4 && !isFillingHand)
         {
             playerSetManager.photonView.RPC("HandCardCount", RpcTarget.All, actorNumber, "Plus");
             StartCoroutine(FillHandCoroutine());
         }
 
-        yield return new WaitForSeconds(0.5f); // 딜레이 추가
-        isPlayingCard = false; // 카드 플레이 종료
+        yield return new WaitForSeconds(0.5f); // Add delay
+        isPlayingCard = false; // End card play
     }
 
+    // Coroutine to handle additional attack
     private IEnumerator PerformAdditionalAttack(CardAsset cardAsset)
     {
-        // 2초 대기
+        // Wait for 2 seconds
         yield return new WaitForSeconds(2f);
 
-        // 추가 공격력 반영
+        // Apply additional attack
         if (cardAsset.AdditionalSwordAttack > 0)
         {
             InGameManager.instance.Sword += cardAsset.AdditionalSwordAttack;
@@ -568,20 +532,21 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         }
     }
 
+    // Vanish the card
     private void VanishCard(CardLogic card)
     {
         hand.CardsInHand.Remove(card);
         _deck.VanishDeck.Add(card.cardAsset);
-        Debug.Log($"Card {card.cardAsset.name} vanished.");
     }
 
+    // Discard the card
     private void DiscardCard(CardLogic card)
     {
         hand.CardsInHand.Remove(card);
         _deck.DiscardDeck.Add(card.cardAsset);
-        Debug.Log($"Card {card.cardAsset.name} discarded.");
     }
 
+    // Use hero power
     public void UseHeroPower()
     {
         ICharacter target = null;
@@ -589,72 +554,37 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         HeroPowerEffect.ActivateEffect(this, target);
     }
 
-    // 특정 상황에서 출혈 디버프를 적용
+    // Apply bleed debuff
     public void ApplyBleedToPlayer()
     {
-        if (_buffManager != null)
-        {
-            _buffManager.ApplyBleedEffect();
-        }
-        else
-        {
-            Debug.LogError("BuffManager가 null입니다. ApplyBleedToPlayer를 실행할 수 없습니다.");
-        }
+        _buffManager?.ApplyBleedEffect();
     }
 
-    // 특정 상황에서 출혈 디버프를 제거
+    // Remove bleed debuff
     public void RemoveBleedFromPlayer()
     {
-        if (_buffManager != null)
-        {
-            _buffManager.RemoveBleedEffect();
-        }
-        else
-        {
-            Debug.LogError("BuffManager가 null입니다. RemoveBleedFromPlayer를 실행할 수 없습니다.");
-        }
+        _buffManager?.RemoveBleedEffect();
     }
 
-    // 특정 상황에서 실명 디버프를 적용
+    // Apply blind debuff
     public void ApplyBlindToPlayer()
     {
-        if (_buffManager != null)
-        {
-            _buffManager.ApplyBlindEffect();
-        }
-        else
-        {
-            Debug.LogError("BuffManager가 null입니다. ApplyBlindToPlayer를 실행할 수 없습니다.");
-        }
+        _buffManager?.ApplyBlindEffect();
     }
 
-    // 특정 상황에서 실명 디버프를 제거
+    // Remove blind debuff
     public void RemoveBlindFromPlayer()
     {
-        if (_buffManager != null)
-        {
-            _buffManager.RemoveBlindEffect();
-        }
-        else
-        {
-            Debug.LogError("BuffManager가 null입니다. RemoveBlindFromPlayer를 실행할 수 없습니다.");
-        }
+        _buffManager?.RemoveBlindEffect();
     }
 
-    // 특정 상황에서 혼란 디버프를 적용
+    // Apply confusion debuff
     public void ApplyConfusionToPlayer()
     {
-        if (_buffManager != null)
-        {
-            _buffManager.ApplyConfusionEffect();
-        }
-        else
-        {
-            Debug.LogError("BuffManager가 null입니다. ApplyConfusionToPlayer를 실행할 수 없습니다.");
-        }
+        _buffManager?.ApplyConfusionEffect();
     }
 
-    // 특정 상황에서 혼란 디버프를 제거
+    // Remove confusion debuff
     public void RemoveConfusionEffect()
     {
         if (_buffManager != null)
@@ -662,32 +592,20 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             _buffManager.RemoveConfusionEffect();
             if (_buffManager.ConfusionDebuff)
             {
-                // EnemyUIManager의 UpdateUI 메소드 호출
-                if (_enemyUIManager != null)
-                {
-                    // 필요한 파라미터를 넘겨줌
-                    _enemyUIManager.UpdateUI(_currentEnemy.requiredSword, _currentEnemy.requiredMagic, _currentEnemy.requiredShield);
+                _enemyUIManager?.UpdateUI(_currentEnemy.requiredSword, _currentEnemy.requiredMagic, _currentEnemy.requiredShield);
 
-                    int swordIncrement = InGameManager.instance.Sword - _previousSword;
-                    int magicIncrement = InGameManager.instance.Magic - _previousMagic;
-                    int shieldIncrement = InGameManager.instance.Shield - _previousShield;
+                int swordIncrement = InGameManager.instance.Sword - _previousSword;
+                int magicIncrement = InGameManager.instance.Magic - _previousMagic;
+                int shieldIncrement = InGameManager.instance.Shield - _previousShield;
 
-                    Debug.Log($"Sword Increment: {swordIncrement}");
-                    Debug.Log($"Magic Increment: {magicIncrement}");
-                    Debug.Log($"Shield Increment: {shieldIncrement}");
-
-                    _enemyUIManager.ChangeAlphaForIncrement(swordIncrement, _enemyUIManager.swordImageParent, Sword, _currentEnemy.requiredSword);
-                    _enemyUIManager.ChangeAlphaForIncrement(magicIncrement, _enemyUIManager.magicImageParent, Magic, _currentEnemy.requiredMagic);
-                    _enemyUIManager.ChangeAlphaForIncrement(shieldIncrement, _enemyUIManager.shieldImageParent, Shield, _currentEnemy.requiredShield);
-                }
+                _enemyUIManager?.ChangeAlphaForIncrement(swordIncrement, _enemyUIManager.swordImageParent, Sword, _currentEnemy.requiredSword);
+                _enemyUIManager?.ChangeAlphaForIncrement(magicIncrement, _enemyUIManager.magicImageParent, Magic, _currentEnemy.requiredMagic);
+                _enemyUIManager?.ChangeAlphaForIncrement(shieldIncrement, _enemyUIManager.shieldImageParent, Shield, _currentEnemy.requiredShield);
             }
-        }
-        else
-        {
-            Debug.LogError("BuffManager가 null입니다. RemoveConfusionEffect를 실행할 수 없습니다.");
         }
     }
 
+    // Load character information from asset
     public void LoadCharacterInfoFromAsset()
     {
         PArea.Portrait.charAsset = charAsset;
@@ -697,12 +615,9 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         {
             HeroPowerEffect = Activator.CreateInstance(Type.GetType(charAsset.HeroPowerName)) as SpellEffect;
         }
-        else
-        {
-            Debug.LogWarning("Check hero power name for character " + charAsset.ClassName);
-        }
     }
 
+    // Coroutine to fill the hand
     private IEnumerator FillHandCoroutine()
     {
         isFillingHand = true;

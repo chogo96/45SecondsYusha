@@ -128,20 +128,16 @@ public class LoginManager : MonoBehaviour
 
         if (auth == null)
         {
-            Debug.LogError("FirebaseAuth instance is null.");
         }
         else
         {
-            Debug.Log("FirebaseAuth instance initialized.");
         }
 
         if (databaseReference == null)
         {
-            Debug.LogError("DatabaseReference is null.");
         }
         else
         {
-            Debug.Log("DatabaseReference initialized.");
         }
     }
 
@@ -181,31 +177,24 @@ public class LoginManager : MonoBehaviour
     public async Task NickNameSetting(FirebaseUser user)
     {
         string email = user.Email;
-        Debug.Log("nicknameTask 요청전");
 
         // 이메일을 키로 사용하기 위해 인코딩
         string encodedEmail = EncodeEmail(email);
         var nicknameTask = databaseReference.Child("users").Child(encodedEmail).Child("nickname").GetValueAsync();
         await nicknameTask;
 
-        Debug.Log("nicknameTask 요청후");
 
-        if (nicknameTask.Exception != null)
-        {
-            Debug.LogError("Failed to retrieve nickname from Firebase: " + nicknameTask.Exception);
-            return;
-        }
+        //if (nicknameTask.Exception != null)
+        //{
+        //    Debug.LogError("Failed to retrieve nickname from Firebase: " + nicknameTask.Exception);
+        //    return;
+        //}
 
         DataSnapshot snapshot = nicknameTask.Result;
         if (snapshot.Exists)
         {
             string nickname = snapshot.Value.ToString();
             PhotonNetwork.NickName = nickname;
-            Debug.Log("Photon Nickname set to: " + nickname);
-        }
-        else
-        {
-            Debug.LogError("Nickname does not exist in Firebase.");
         }
     }
 
@@ -228,10 +217,6 @@ public class LoginManager : MonoBehaviour
             {
                 yield return null;
             }
-        }
-        else
-        {
-            Debug.Log("Not connected to Photon Server!");
         }
     }
 

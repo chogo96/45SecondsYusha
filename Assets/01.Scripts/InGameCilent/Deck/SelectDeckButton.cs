@@ -13,12 +13,10 @@ public class SelectDeckButton : MonoBehaviour
         
         if(NameText == null)
         {
-            Debug.LogError("이름이가 없습니다");
             return;
         }
         if (AvatarImage == null)
         {
-            Debug.LogError("AvatarImage가 없습니다");
             return;
         }
         deckInfo = info;
@@ -30,7 +28,6 @@ public class SelectDeckButton : MonoBehaviour
     {
         if (deckInfo == null)
         {
-            Debug.LogError("deckInfo가 null입니다.");
             return;
         }
 

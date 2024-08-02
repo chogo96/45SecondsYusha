@@ -94,7 +94,6 @@ public class DeckBuilder : MonoBehaviour
 
     public void RemoveCard(CardAsset asset)
     {
-        Debug.Log("InRemoveCard");
         CardNameRibbon ribbonToRemove = ribbons[asset];
         ribbonToRemove.SetQuantity(ribbonToRemove.Quantity - 1);
 
