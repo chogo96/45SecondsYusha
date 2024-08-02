@@ -26,8 +26,8 @@ MonoBehaviour:
   LimitOfThisCardInDeck: 3
   IsVanishCard: 0
   TypeOfCard: 0
-  SwordAttack: 0
-  MagicAttack: 3
+  SwordAttack: 3
+  MagicAttack: 0
   ShieldAttack: 0
   RandomAttack: 0
   RandomRestoreDeck: 0
@@ -39,4 +39,4 @@ MonoBehaviour:
   CardScriptName: "\uD6C4\uD68C"
   RemoveDebuff: 0
   Targets: 1
-  DiscardFromDeck: 0
+  DiscardFromDeck: 2

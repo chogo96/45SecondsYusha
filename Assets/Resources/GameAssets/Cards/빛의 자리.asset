@@ -19,7 +19,7 @@ MonoBehaviour:
   Rarity: 1
   CardImage: {fileID: 21300000, guid: 7bdfbb980049ea541a134eae4160c6f3, type: 3}
   TokenCard: 0
-  LimitOfThisCardInDeck: 1
+  LimitOfThisCardInDeck: 3
   IsVanishCard: 0
   TypeOfCard: 0
   SwordAttack: 0

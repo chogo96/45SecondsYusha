@@ -27,8 +27,8 @@ MonoBehaviour:
   TypeOfCard: 0
   SwordAttack: 0
   MagicAttack: 0
-  ShieldAttack: 0
-  RandomAttack: 2
+  ShieldAttack: 2
+  RandomAttack: 0
   RandomRestoreDeck: 0
   AdditionalSwordAttack: 0
   AdditionalMagicAttack: 0
