@@ -18,6 +18,7 @@ public class DeckBuilder : MonoBehaviour
     private Dictionary<CardAsset, CardNameRibbon> ribbons = new Dictionary<CardAsset, CardNameRibbon>();
 
     public bool InDeckBuildingMode { get; set; }
+
     private CharacterAsset buildingForCharacter;
 
     void Awake()
