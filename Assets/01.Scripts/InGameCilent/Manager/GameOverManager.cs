@@ -43,7 +43,6 @@ public class GameOverManager : MonoBehaviour
 
     private void ReturnToLobby()
     {
-        PhotonNetwork.LeaveRoom();
-        SceneManager.LoadScene("04.Lobby Scene"); // 로비 씬의 이름으로 변경
+        PhotonNetwork.LoadLevel("04.Lobby Scene"); // 로비 씬의 이름으로 변경
     }
 }
