@@ -208,9 +208,9 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             return;
         }
 
-        _swordPoint += sword;
-        _magicPoint += magic;
-        _shieldPoint += shield;
+        _swordPoint = sword;
+        _magicPoint = magic;
+        _shieldPoint = shield;
 
         InGameManager.instance.Sword = _swordPoint;
         InGameManager.instance.Magic = _magicPoint;
@@ -369,10 +369,12 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             _previousMagic = InGameManager.instance.Magic;
             _previousShield = InGameManager.instance.Shield;
 
-            // SwordAttack, MagicAttack, ShieldAttack 값을 플레이어에게 반영
-            Debug.Log($"Before: Sword={InGameManager.instance.Sword}");
+            // SwordAttack, MagicAttack, ShieldAttack, RandomAttack 값을 플레이어에게 반영
+            Debug.Log($"Before: Sword={InGameManager.instance.Sword}, Magic={InGameManager.instance.Magic}, Shield={InGameManager.instance.Shield}");
             InGameManager.instance.Sword += card.cardAsset.SwordAttack;
-            Debug.Log($"After Sword Attack: Sword={InGameManager.instance.Sword}");
+            InGameManager.instance.Magic += card.cardAsset.MagicAttack;
+            InGameManager.instance.Shield += card.cardAsset.ShieldAttack;
+            Debug.Log($"After Attack: Sword={InGameManager.instance.Sword}, Magic={InGameManager.instance.Magic}, Shield={InGameManager.instance.Shield}");
 
             // 공격력 값을 배열에 저장
             int[] attackValues = { card.cardAsset.SwordAttack, card.cardAsset.MagicAttack, card.cardAsset.ShieldAttack };
@@ -388,16 +390,17 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                     InGameManager.instance.Sword += randomAttackValue;
                     break;
                 case 1:
+                    Debug.Log("Random Magic Attack Added");
                     InGameManager.instance.Magic += randomAttackValue;
                     break;
                 case 2:
+                    Debug.Log("Random Shield Attack Added");
                     InGameManager.instance.Shield += randomAttackValue;
                     break;
             }
 
-            // 이 부분이 SwordAttack을 두 번 추가하고 있는지 확인하세요.
-            Debug.Log($"Final Sword Value: {InGameManager.instance.Sword}");
-            Debug.Log($"SwordAttack: {card.cardAsset.SwordAttack}");
+            // 이 부분이 각 속성을 두 번 추가하고 있는지 확인하세요.
+            Debug.Log($"Final Values: Sword={InGameManager.instance.Sword}, Magic={InGameManager.instance.Magic}, Shield={InGameManager.instance.Shield}");
 
             void RemoveDebuff(string debuff)
             {
@@ -531,6 +534,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         yield return new WaitForSeconds(0.5f); // 딜레이 추가
         isPlayingCard = false; // 카드 플레이 종료
     }
+
     //private IEnumerator PlayACardWithDelay(CardLogic card, ICharacter target)
     //{
     //    // 적이 죽었을 때 카드 플레이를 일시 중지
