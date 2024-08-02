@@ -9,6 +9,8 @@ public class EmoteManager : MonoBehaviourPun
     private Button _emotePanelOnOffButton; // 패널 온오프 버튼 
     private bool _emotePanelOnOff = false; // 패널 온오프 상황 초기값 false(비활성화)
     private Button[] _emoteButtons;  // 이모티콘 버튼 배열화
+
+    //private GameObject 
     public static PlayerManager LocalPlayerInstance;
     private void Awake()
     {
@@ -85,8 +87,12 @@ public class EmoteManager : MonoBehaviourPun
             if (player.photonView.Owner.ActorNumber == actorNumber)
             {
                 // 플레이어의 머리 위에 이모티콘 생성
+                // 이위치 수정해야함
+                
                 Vector3 emotePosition = player.transform.position + Vector3.up * 2; // 머리 위의 위치
                 GameObject emote = Instantiate(emotePrefabs[emoteIndex], emotePosition, Quaternion.identity);
+
+                emote.transform.SetParent(_emotePanel.transform, false);
 
                 Debug.Log("Emote instantiated at position: " + emotePosition);
 
