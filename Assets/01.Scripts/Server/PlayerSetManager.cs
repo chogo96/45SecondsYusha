@@ -60,8 +60,8 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
 
     private void Reset()
     {
-        playerScripts = GetComponentInChildren<PlayerScripts>();
-        hand = GetComponentInChildren<Hand>();
+        playerScripts = transform.Find($"Player_{_actorNumber}").GetComponent<PlayerScripts>();
+        hand = transform.Find($"Player_{_actorNumber}/Hand").GetComponent<Hand>();
 
         for (int i = 1; i < _playerCount; i++)
         {
@@ -104,19 +104,9 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void HandCardCount(int playerNumber,string plusMinus)
     {
-        int GetListCardCount(List<CardLogic> list)
-        {
-            return list.Count;
-        }
-        // _baseHandCards[playerNumber] = GetCardCount(_playerHandArea[playerNumber]);
-
-        _baseHandCards[playerNumber] = GetListCardCount(hand.CardsInHand);
-
-        int GetListCount(List<CardAsset> list)
-        {
-            return list.Count;
-        }
-        _baseDeckCards[playerNumber] = GetListCount( playerScripts._deck.Cards);
+        
+        _baseHandCards[playerNumber] = hand.CardsInHand.Count;
+        _baseDeckCards[playerNumber] = playerScripts._deck.Cards.Count;
 
         // 손패 몇장있는지 숫자 보여주면서
         switch (plusMinus)
@@ -125,11 +115,15 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
                 _handCountText[playerNumber].text = $"{_baseHandCards[playerNumber]}";
                 break;
             case "Plus":
-                _handCountText[playerNumber].text = $"{_baseHandCards[playerNumber]}";
-                _deckCountText[playerNumber].text = $"{_baseDeckCards[playerNumber]}";
-                if(_baseDeckCards[playerNumber] <= 0)
+                _handCountText[playerNumber].text = $"{_baseHandCards[playerNumber] + 1}";
+                _deckCountText[playerNumber].text = $"{_baseDeckCards[playerNumber] - 1}";
+                if (_baseDeckCards[playerNumber] <= 0)
                 {
                     _deckCountText[playerNumber].text = $"0";
+                }
+                if (_baseHandCards[playerNumber] <= 1)
+                {
+                    _handCountText[playerNumber].text = $"0";
                 }
                 break;
             default:

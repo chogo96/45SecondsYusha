@@ -16,7 +16,6 @@ public class RoomCreator : MonoBehaviourPunCallbacks
     public PlayerListDisplay playerListDisplay;
 
     private Button _newRoom;
-    private Button _reSearch;
     private GameObject _roomOptionPanel;
     private GameObject _inRoomPanel;
     private Button _roomExit;
@@ -44,6 +43,9 @@ public class RoomCreator : MonoBehaviourPunCallbacks
     // 메인로비 버튼 추가
     private Button _mainLobby;
 
+    // 방생성시 버튼비활성화 처리할 게임오브젝트
+    private GameObject _buttons;
+
 
     private void Awake()
     {
@@ -59,7 +61,6 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         _selectDeck = transform.Find("Panel - BG/InRoom/Button - DeckSelect").GetComponent<Button>();
 
         _newRoom = transform.Find("Panel - BG/Buttons/Button - NewRoom").GetComponent<Button>();
-        _reSearch = transform.Find("Panel - BG/Buttons/Button - ReSearch").GetComponent<Button>();
         _matchmaking = transform.Find("Panel - BG/Buttons/Button - Matchmaking").GetComponent<Button>();
         _mainLobby = transform.Find("Panel - BG/Buttons/Button - MainLobby").GetComponent<Button>();
 
@@ -71,6 +72,9 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         _matchmakingStart = transform.Find("Panel - BG/InRoom/Button - MatchingStart").GetComponent<Button>();
 
         _punChatPanel = transform.Find("Panel - BG/PunChat").gameObject;
+
+        _buttons = transform.Find("Panel - BG/Buttons").gameObject;
+
     }
 
     void Start()
@@ -193,6 +197,9 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         }
         else
         {
+            // 버튼 활성화
+            _buttons.SetActive(true);
+            
             _punChatPanel.SetActive(false);
         }
     }
@@ -358,6 +365,9 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         {
             Debug.LogError("Photon is not connected!");
         }
+        // 버튼 비활성화
+        _buttons.SetActive(false);
+
         _roomOptionPanel.SetActive(false);
         _inRoomPanel.SetActive(true);
     }
