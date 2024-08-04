@@ -190,7 +190,7 @@ public class LoginManager : MonoBehaviour
     {
         if (PhotonNetwork.IsConnected)
         {
-            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("MainScene");
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("01.MainScene");
             while (!asyncLoad.isDone)
             {
                 yield return null;

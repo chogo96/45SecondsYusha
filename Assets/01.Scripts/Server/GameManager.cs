@@ -113,7 +113,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (!PhotonNetwork.IsMasterClient)
         {
             // 마스터 클라이언트가 아니면
-            PhotonNetwork.LoadLevel("04.Lobby Scene");
+            PhotonNetwork.LoadLevel("02.Lobby Scene");
         }
     }
 }

@@ -37,8 +37,5 @@ public class DeckGameManager : MonoBehaviour
     {
         return selectedDeckInfo;
     }
-    public void GoToLobby()
-    {
-        SceneManager.LoadScene("04.Lobby Scene");
-    }
+
 }
