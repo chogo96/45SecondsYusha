@@ -12,7 +12,7 @@ public class PlayerSetup : MonoBehaviourPun
 
         if (playerCamera == null)
         {
-            Debug.LogError("PlayerSetup: Camera not found. Make sure the Camera is a child of the Player prefab and named correctly.");
+            Utils.LogRed("PlayerSetup: Camera not found. Make sure the Camera is a child of the Player prefab and named correctly.");
         }
     }
 

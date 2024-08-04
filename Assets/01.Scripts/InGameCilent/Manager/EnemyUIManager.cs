@@ -37,7 +37,7 @@ public class EnemyUIManager : MonoBehaviour
         }
         if (BuffManager.instance.ConfusionDebuff)
         {
-            Debug.Log("혼란스러워서 적의 요구치가 보이지 않습니다!!!!");
+            Utils.Log("혼란스러워서 적의 요구치가 보이지 않습니다!!!!");
             return;
         }
         // 새로운 이미지 생성 및 초기 알파값 설정
@@ -56,7 +56,7 @@ public class EnemyUIManager : MonoBehaviour
 
     public void ChangeAlphaForIncrement(int increment, Transform parent, int currentAmount, int requiredAmount)
     {
-        Debug.Log($"ChangeAlphaForIncrement called with increment: {increment}, currentAmount: {currentAmount}, requiredAmount: {requiredAmount}");
+        Utils.Log($"ChangeAlphaForIncrement called with increment: {increment}, currentAmount: {currentAmount}, requiredAmount: {requiredAmount}");
 
         if (increment <= 0) return;
 
@@ -73,10 +73,10 @@ public class EnemyUIManager : MonoBehaviour
                 color.a = 1f; // 알파값을 255로 변경
                 image.color = color;
                 changedCount++;
-                Debug.Log($"Changed alpha for {parent.name} at index {changedCount}");
+                Utils.Log($"Changed alpha for {parent.name} at index {changedCount}");
             }
         }
 
-        Debug.Log($"ChangeAlphaForIncrement completed for {parent.name}, total changed: {changedCount}");
+        Utils.Log($"ChangeAlphaForIncrement completed for {parent.name}, total changed: {changedCount}");
     }
 }

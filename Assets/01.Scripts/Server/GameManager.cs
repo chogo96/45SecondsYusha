@@ -19,12 +19,12 @@ public class GameManager : MonoBehaviourPunCallbacks
         canvasTransform = GameObject.Find("Canvas - PlayerSpawn").transform;
         if (canvasTransform == null)
         {
-            Debug.LogError("Canvas - PlayerSpawn object not found in Start.");
+            Utils.LogRed("Canvas - PlayerSpawn object not found in Start.");
             return;
         }
         else
         {
-            Debug.Log("Canvas - PlayerSpawn found in Start: " + canvasTransform.name);
+            Utils.Log("Canvas - PlayerSpawn found in Start: " + canvasTransform.name);
         }
 
         otherPlayerPositions = new Vector3[]
@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            Debug.LogError("PhotonNetwork is not connected and ready.");
+            Utils.LogRed("PhotonNetwork is not connected and ready.");
         }
     }
 
@@ -90,12 +90,12 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
 
             // Debugging information
-            Debug.Log("Player parent after setting: " + playerObject.transform.parent.name);
-            Debug.Log("Player local position after setting: " + playerObject.transform.localPosition);
+            Utils.Log("Player parent after setting: " + playerObject.transform.parent.name);
+            Utils.Log("Player local position after setting: " + playerObject.transform.localPosition);
         }
         else
         {
-            Debug.LogError("Player instantiation failed.");
+            Utils.LogRed("Player instantiation failed.");
         }
     }
 

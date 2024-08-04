@@ -31,7 +31,7 @@ public class RoomData : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Photon is not connected!");
+            Utils.LogRed("Photon is not connected!");
         }
     }
 }

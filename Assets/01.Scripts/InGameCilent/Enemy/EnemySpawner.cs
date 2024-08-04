@@ -31,13 +31,13 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
         midBosses = new List<EnemyData>(Resources.LoadAll<EnemyData>("GameAssets/Enemies/MinibossEnemy"));
         finalBosses = new List<EnemyData>(Resources.LoadAll<EnemyData>("GameAssets/Enemies/FinalBossEnemy"));
 
-        Debug.Log("Normal Enemies Count: " + normalEnemies.Count);
-        Debug.Log("Mid Bosses Count: " + midBosses.Count);
-        Debug.Log("Final Bosses Count: " + finalBosses.Count);
+        Utils.Log("Normal Enemies Count: " + normalEnemies.Count);
+        Utils.Log("Mid Bosses Count: " + midBosses.Count);
+        Utils.Log("Final Bosses Count: " + finalBosses.Count);
 
-        if (normalEnemies.Count == 0) Debug.LogError("Normal enemies list is empty.");
-        if (midBosses.Count == 0) Debug.LogError("Mid bosses list is empty.");
-        if (finalBosses.Count == 0) Debug.LogError("Final bosses list is empty.");
+        if (normalEnemies.Count == 0) Utils.LogRed("Normal enemies list is empty.");
+        if (midBosses.Count == 0) Utils.LogRed("Mid bosses list is empty.");
+        if (finalBosses.Count == 0) Utils.LogRed("Final bosses list is empty.");
     }
 
     private IEnumerator WaitForPlayersAndSpawnEnemies()
@@ -61,13 +61,13 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
                 Error = (sender, args) =>
                 {
-                    Debug.LogError($"Serialization error: {args.ErrorContext.Error.Message}");
+                    Utils.LogRed($"Serialization error: {args.ErrorContext.Error.Message}");
                     args.ErrorContext.Handled = true;
                 }
             };
 
             spawnOrderJson = JsonConvert.SerializeObject(spawnOrder, settings);
-            Debug.Log("Spawn order generated and serialized: " + spawnOrderJson);
+            Utils.Log("Spawn order generated and serialized: " + spawnOrderJson);
 
             // 다른 클라이언트에게 스폰 순서 전송
             photonView.RPC("RPC_SetSpawnOrder", RpcTarget.Others, spawnOrderJson);
@@ -82,16 +82,16 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_SetSpawnOrder(string json)
     {
-        Debug.Log("Received spawn order JSON: " + json);
+        Utils.Log("Received spawn order JSON: " + json);
         spawnOrder = JsonConvert.DeserializeObject<List<string>>(json);
 
         if (spawnOrder == null || spawnOrder.Count == 0)
         {
-            Debug.LogError("Deserialized spawn order is null or empty!");
+            Utils.LogRed("Deserialized spawn order is null or empty!");
         }
         else
         {
-            Debug.Log("Spawn order deserialized, count: " + spawnOrder.Count);
+            Utils.Log("Spawn order deserialized, count: " + spawnOrder.Count);
         }
     }
 
@@ -111,7 +111,7 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
                 }
                 else
                 {
-                    Debug.LogError("normalEnemies 리스트가 비어있습니다.");
+                    Utils.LogRed("normalEnemies 리스트가 비어있습니다.");
                 }
             }
 
@@ -125,7 +125,7 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
             }
             else
             {
-                Debug.LogError("midBosses 리스트가 비어있습니다.");
+                Utils.LogRed("midBosses 리스트가 비어있습니다.");
             }
         }
 
@@ -136,7 +136,7 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
         }
         else
         {
-            Debug.LogError("finalBosses 리스트가 비어있습니다.");
+            Utils.LogRed("finalBosses 리스트가 비어있습니다.");
         }
     }
 
@@ -145,7 +145,7 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
     {
         if (spawnOrder == null || spawnOrder.Count == 0)
         {
-            Debug.LogError("Spawn order is null or empty!");
+            Utils.LogRed("Spawn order is null or empty!");
             return;
         }
 
@@ -171,7 +171,7 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
                 }
                 if (enemyData == null)
                 {
-                    Debug.LogError($"EnemyData with name {spawnOrder[index]} could not be found in Resources.");
+                    Utils.LogRed($"EnemyData with name {spawnOrder[index]} could not be found in Resources.");
                     return;
                 }
 
@@ -197,7 +197,7 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
         }
         else
         {
-            Debug.LogError("Index out of range: " + index);
+            Utils.LogRed("Index out of range: " + index);
         }
     }
 

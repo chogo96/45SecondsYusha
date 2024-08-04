@@ -74,11 +74,11 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
 
         if (_currentEnemy != null)
         {
-            Debug.Log($"SetCurrentEnemy: {_currentEnemy}");
+            Utils.Log($"SetCurrentEnemy: {_currentEnemy}");
         }
         else
         {
-            Debug.Log("SetCurrentEnemy: null");
+            Utils.Log("SetCurrentEnemy: null");
         }
     }
 
@@ -106,12 +106,12 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             _buffManager = buffManagerObject.GetComponent<BuffManager>();
             if (_buffManager == null)
             {
-                Debug.LogError("BuffManager 컴포넌트를 찾을 수 없습니다.");
+                Utils.LogRed("BuffManager 컴포넌트를 찾을 수 없습니다.");
             }
         }
         else
         {
-            Debug.LogError("BuffManager 오브젝트를 찾을 수 없습니다.");
+            Utils.LogRed("BuffManager 오브젝트를 찾을 수 없습니다.");
         }
 
         // Deck1 오브젝트를 찾아서 Deck 스크립트를 참조합니다.
@@ -121,12 +121,12 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             _deck = deckObject.GetComponent<Deck>();
             if (_deck == null)
             {
-                Debug.LogError("Deck1 오브젝트에서 Deck 컴포넌트를 찾을 수 없습니다.");
+                Utils.LogRed("Deck1 오브젝트에서 Deck 컴포넌트를 찾을 수 없습니다.");
             }
         }
         else
         {
-            Debug.LogError("Deck1 오브젝트를 찾을 수 없습니다.");
+            Utils.LogRed("Deck1 오브젝트를 찾을 수 없습니다.");
         }
 
         _playerTransform = gameObject;
@@ -154,7 +154,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         }
         else
         {
-            Debug.LogError("EnemySpawner를 찾을 수 없습니다.");
+            Utils.LogRed("EnemySpawner를 찾을 수 없습니다.");
         }
     }
 
@@ -239,8 +239,8 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         _enemyUIManager.ChangeAlphaForIncrement(magicIncrement, _enemyUIManager.magicImageParent, Magic, _currentEnemy.requiredMagic);
         _enemyUIManager.ChangeAlphaForIncrement(shieldIncrement, _enemyUIManager.shieldImageParent, Shield, _currentEnemy.requiredShield);
 
-        Debug.Log($"Sword: {InGameManager.instance.Sword}, Magic: {InGameManager.instance.Magic}, Shield: {InGameManager.instance.Shield}");
-        Debug.Log($"CurrentEnemy: {_currentEnemy}");
+        Utils.Log($"Sword: {InGameManager.instance.Sword}, Magic: {InGameManager.instance.Magic}, Shield: {InGameManager.instance.Shield}");
+        Utils.Log($"CurrentEnemy: {_currentEnemy}");
         Utils.LogGreen($"{_swordPoint},{_magicPoint},{_shieldPoint},{swordIncrement},{magicIncrement},{shieldIncrement}");
 
         // 현재 적의 생존 조건 확인
@@ -341,12 +341,12 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
     //    }
     //    else
     //    {
-    //        Debug.LogError("Card not found");
+    //        Utils.LogRed("Card not found");
     //    }
     //}
     public void PlayACardFromHand(int CardUniqueID, int TargetUniqueID)
     {
-        Debug.Log($"PlayACardFromHand called with CardUniqueID: {CardUniqueID}, TargetUniqueID: {TargetUniqueID}");
+        Utils.Log($"PlayACardFromHand called with CardUniqueID: {CardUniqueID}, TargetUniqueID: {TargetUniqueID}");
 
         if (CardLogic.CardsCreatedThisGame.TryGetValue(CardUniqueID, out CardLogic card))
         {
@@ -372,13 +372,13 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         }
         else
         {
-            Debug.LogError("Card not found");
+            Utils.LogRed("Card not found");
         }
     }
 
     private IEnumerator PlayACardWithDelay(CardLogic card, ICharacter target)
     {
-        Debug.Log($"PlayACardWithDelay called for card: {card.cardAsset.name}");
+        Utils.Log($"PlayACardWithDelay called for card: {card.cardAsset.name}");
 
         // 적이 죽었을 때 카드 플레이를 일시 중지
         while (isPlayingCard || !isEnemyAlive)
@@ -394,7 +394,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         {
             if (UnityEngine.Random.Range(0, 2) == 0)
             {
-                Debug.Log("카드가 실명 효과로 버려졌습니다!! ^^");
+                Utils.Log("카드가 실명 효과로 버려졌습니다!! ^^");
 
                 // 카드 처리 로직을 이곳에서 처리
                 if (card.cardAsset.IsVanishCard)
@@ -418,11 +418,11 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             _previousShield = InGameManager.instance.Shield;
 
             //// SwordAttack, MagicAttack, ShieldAttack, RandomAttack 값을 플레이어에게 반영
-            Debug.Log($"Before: Sword={InGameManager.instance.Sword}, Magic={InGameManager.instance.Magic}, Shield={InGameManager.instance.Shield}");
+            Utils.Log($"Before: Sword={InGameManager.instance.Sword}, Magic={InGameManager.instance.Magic}, Shield={InGameManager.instance.Shield}");
             InGameManager.instance.Sword += card.cardAsset.SwordAttack;
             InGameManager.instance.Magic += card.cardAsset.MagicAttack;
             InGameManager.instance.Shield += card.cardAsset.ShieldAttack;
-            Debug.Log($"After Attack: Sword={InGameManager.instance.Sword}, Magic={InGameManager.instance.Magic}, Shield={InGameManager.instance.Shield}");
+            Utils.Log($"After Attack: Sword={InGameManager.instance.Sword}, Magic={InGameManager.instance.Magic}, Shield={InGameManager.instance.Shield}");
 
             //// 공격력 값을 배열에 저장
             //int[] attackValues = { card.cardAsset.SwordAttack, card.cardAsset.MagicAttack, card.cardAsset.ShieldAttack };
@@ -434,21 +434,21 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             //switch (index)
             //{
             //    case 0:
-            //        Debug.Log("Random Sword Attack Added");
+            //        Utils.Log("Random Sword Attack Added");
             //        InGameManager.instance.Sword += randomAttackValue;
             //        break;
             //    case 1:
-            //        Debug.Log("Random Magic Attack Added");
+            //        Utils.Log("Random Magic Attack Added");
             //        InGameManager.instance.Magic += randomAttackValue;
             //        break;
             //    case 2:
-            //        Debug.Log("Random Shield Attack Added");
+            //        Utils.Log("Random Shield Attack Added");
             //        InGameManager.instance.Shield += randomAttackValue;
             //        break;
             //}
 
             // 이 부분이 각 속성을 두 번 추가하고 있는지 확인하세요.
-            Debug.Log($"Final Values: Sword={InGameManager.instance.Sword}, Magic={InGameManager.instance.Magic}, Shield={InGameManager.instance.Shield}");
+            Utils.Log($"Final Values: Sword={InGameManager.instance.Sword}, Magic={InGameManager.instance.Magic}, Shield={InGameManager.instance.Shield}");
 
             void RemoveDebuff(string debuff)
             {
@@ -531,18 +531,18 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             // 조건 확인 및 알파값 변경
             if (_enemyUIManager != null)
             {
-                Debug.Log("ㅇㅇ 적 ui매니저 있음");
+                Utils.Log("ㅇㅇ 적 ui매니저 있음");
                 int swordIncrement = InGameManager.instance.Sword - _previousSword;
                 int magicIncrement = InGameManager.instance.Magic - _previousMagic;
                 int shieldIncrement = InGameManager.instance.Shield - _previousShield;
 
-                Debug.Log($"Sword Increment: {swordIncrement}");
-                Debug.Log($"Magic Increment: {magicIncrement}");
-                Debug.Log($"Shield Increment: {shieldIncrement}");
+                Utils.Log($"Sword Increment: {swordIncrement}");
+                Utils.Log($"Magic Increment: {magicIncrement}");
+                Utils.Log($"Shield Increment: {shieldIncrement}");
 
-                Debug.Log($"_enemyUIManager.swordImageParent: {_enemyUIManager.swordImageParent}");
-                Debug.Log($"Sword: {Sword}");
-                Debug.Log($"_currentEnemy.requiredSword: {_currentEnemy.requiredSword}");
+                Utils.Log($"_enemyUIManager.swordImageParent: {_enemyUIManager.swordImageParent}");
+                Utils.Log($"Sword: {Sword}");
+                Utils.Log($"_currentEnemy.requiredSword: {_currentEnemy.requiredSword}");
 
                 // _enemyUIManager.ChangeAlphaForIncrement(swordIncrement, _enemyUIManager.swordImageParent, Sword, _currentEnemy.requiredSword);
                 // _enemyUIManager.ChangeAlphaForIncrement(magicIncrement, _enemyUIManager.magicImageParent, Magic, _currentEnemy.requiredMagic);
@@ -589,14 +589,14 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
     {
         hand.CardsInHand.Remove(card);
         _deck.VanishDeck.Add(card.cardAsset);
-        Debug.Log($"Card {card.cardAsset.name} vanished.");
+        Utils.Log($"Card {card.cardAsset.name} vanished.");
     }
 
     private void DiscardCard(CardLogic card)
     {
         hand.CardsInHand.Remove(card);
         _deck.DiscardDeck.Add(card.cardAsset);
-        Debug.Log($"Card {card.cardAsset.name} discarded.");
+        Utils.Log($"Card {card.cardAsset.name} discarded.");
     }
 
     public void UseHeroPower()
@@ -615,7 +615,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         }
         else
         {
-            Debug.LogError("BuffManager가 null입니다. ApplyBleedToPlayer를 실행할 수 없습니다.");
+            Utils.LogRed("BuffManager가 null입니다. ApplyBleedToPlayer를 실행할 수 없습니다.");
         }
     }
 
@@ -628,7 +628,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         }
         else
         {
-            Debug.LogError("BuffManager가 null입니다. RemoveBleedFromPlayer를 실행할 수 없습니다.");
+            Utils.LogRed("BuffManager가 null입니다. RemoveBleedFromPlayer를 실행할 수 없습니다.");
         }
     }
 
@@ -641,7 +641,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         }
         else
         {
-            Debug.LogError("BuffManager가 null입니다. ApplyBlindToPlayer를 실행할 수 없습니다.");
+            Utils.LogRed("BuffManager가 null입니다. ApplyBlindToPlayer를 실행할 수 없습니다.");
         }
     }
 
@@ -654,7 +654,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         }
         else
         {
-            Debug.LogError("BuffManager가 null입니다. RemoveBlindFromPlayer를 실행할 수 없습니다.");
+            Utils.LogRed("BuffManager가 null입니다. RemoveBlindFromPlayer를 실행할 수 없습니다.");
         }
     }
 
@@ -667,7 +667,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         }
         else
         {
-            Debug.LogError("BuffManager가 null입니다. ApplyConfusionToPlayer를 실행할 수 없습니다.");
+            Utils.LogRed("BuffManager가 null입니다. ApplyConfusionToPlayer를 실행할 수 없습니다.");
         }
     }
 
@@ -689,9 +689,9 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
                     int magicIncrement = InGameManager.instance.Magic - _previousMagic;
                     int shieldIncrement = InGameManager.instance.Shield - _previousShield;
 
-                    Debug.Log($"Sword Increment: {swordIncrement}");
-                    Debug.Log($"Magic Increment: {magicIncrement}");
-                    Debug.Log($"Shield Increment: {shieldIncrement}");
+                    Utils.Log($"Sword Increment: {swordIncrement}");
+                    Utils.Log($"Magic Increment: {magicIncrement}");
+                    Utils.Log($"Shield Increment: {shieldIncrement}");
 
                     _enemyUIManager.ChangeAlphaForIncrement(swordIncrement, _enemyUIManager.swordImageParent, Sword, _currentEnemy.requiredSword);
                     _enemyUIManager.ChangeAlphaForIncrement(magicIncrement, _enemyUIManager.magicImageParent, Magic, _currentEnemy.requiredMagic);
@@ -701,7 +701,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         }
         else
         {
-            Debug.LogError("BuffManager가 null입니다. RemoveConfusionEffect를 실행할 수 없습니다.");
+            Utils.LogRed("BuffManager가 null입니다. RemoveConfusionEffect를 실행할 수 없습니다.");
         }
     }
 

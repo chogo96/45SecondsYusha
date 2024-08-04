@@ -32,23 +32,23 @@ public class PhotonLauncher : MonoBehaviourPunCallbacks
         if (!PhotonNetwork.IsConnected)
         {
             PhotonNetwork.ConnectUsingSettings();
-            Debug.Log("Connecting to Photon...");
+            Utils.Log("Connecting to Photon...");
         }
     }
 
     public override void OnConnectedToMaster()
     {
-        Debug.Log("Connected to Photon Master Server");
+        Utils.Log("Connected to Photon Master Server");
         PhotonNetwork.JoinLobby(); // 로비에 접속합니다.
     }
 
     public override void OnJoinedLobby()
     {
-        Debug.Log("Joined Lobby");
+        Utils.Log("Joined Lobby");
     }
 
     public override void OnDisconnected(DisconnectCause cause)
     {
-        Debug.LogError("Disconnected from Photon: " + cause.ToString());
+        Utils.LogRed("Disconnected from Photon: " + cause.ToString());
     }
 }

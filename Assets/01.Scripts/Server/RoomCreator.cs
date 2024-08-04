@@ -137,7 +137,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         }
         else
         {
-            Debug.LogError("Photon is not connected!");
+            Utils.LogRed("Photon is not connected!");
         }
     }
 
@@ -166,7 +166,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
-        Debug.Log("Failed to join a random room, creating a new room");
+        Utils.Log("Failed to join a random room, creating a new room");
         CreateMatchmakingRoom();
     }
 
@@ -213,11 +213,11 @@ public class RoomCreator : MonoBehaviourPunCallbacks
     {
         while (!PhotonNetwork.IsConnectedAndReady || (PhotonNetwork.NetworkClientState != ClientState.ConnectedToMasterServer && PhotonNetwork.NetworkClientState != ClientState.JoinedLobby))
         {
-            Debug.Log($"Waiting for connection to Master server... IsConnectedAndReady: {PhotonNetwork.IsConnectedAndReady}, NetworkClientState: {PhotonNetwork.NetworkClientState}");
+            Utils.Log($"Waiting for connection to Master server... IsConnectedAndReady: {PhotonNetwork.IsConnectedAndReady}, NetworkClientState: {PhotonNetwork.NetworkClientState}");
             yield return null; // 다음 프레임까지 대기
         }
 
-        Debug.Log("Connected and ready. Joining random room...");
+        Utils.Log("Connected and ready. Joining random room...");
         JoinRandomRoom();
     }
 
@@ -257,7 +257,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
                 { "roomType", _matchmakingRoomType }
             };
             PhotonNetwork.CurrentRoom.SetCustomProperties(newProperties);
-            Debug.Log("방 정보가 업데이트되었습니다.");
+            Utils.Log("방 정보가 업데이트되었습니다.");
             isChangedRoom = true;
             _matchmakingPlayer.text = $"Matching ( {PhotonNetwork.CurrentRoom.PlayerCount} / {PhotonNetwork.CurrentRoom.MaxPlayers} )";
             _panelMatchmaking.SetActive(true);
@@ -274,7 +274,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         }
         else
         {
-            Debug.LogError("방에 입장한 상태가 아닙니다.");
+            Utils.LogRed("방에 입장한 상태가 아닙니다.");
         }
     }/// <summary>
      /// 매칭 방 정보를 커스텀 방으로 변경하는 함수
@@ -290,7 +290,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
                 { "roomType", _customRoomType }
             };
             PhotonNetwork.CurrentRoom.SetCustomProperties(newProperties);
-            Debug.Log("방 정보가 업데이트되었습니다.");
+            Utils.Log("방 정보가 업데이트되었습니다.");
             KickNonChangedRoomPlayers(); //같은방 유저였던 유저 제외 강퇴 함수.
             isChangedRoom = false;
             _panelMatchmaking.SetActive(false);
@@ -307,7 +307,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         }
         else
         {
-            Debug.LogError("방에 입장한 상태가 아닙니다.");
+            Utils.LogRed("방에 입장한 상태가 아닙니다.");
         }
     }
 
@@ -330,13 +330,13 @@ public class RoomCreator : MonoBehaviourPunCallbacks
                 if (!isChangedRoom)
                 {
                     photonView.RPC("KickPlayer", player);
-                    Debug.Log($"{player.NickName} has been kicked.");
+                    Utils.Log($"{player.NickName} has been kicked.");
                 }
             }
             else
             {
                 photonView.RPC("KickPlayer", player);
-                Debug.Log($"{player.NickName} has been kicked (property not set).");
+                Utils.Log($"{player.NickName} has been kicked (property not set).");
             }
         }
     }
@@ -363,7 +363,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         }
         else
         {
-            Debug.LogError("Photon is not connected!");
+            Utils.LogRed("Photon is not connected!");
         }
         // 버튼 비활성화
         _buttons.SetActive(false);
@@ -374,18 +374,18 @@ public class RoomCreator : MonoBehaviourPunCallbacks
 
     public override void OnCreatedRoom()
     {
-        Debug.Log("Room created successfully!");
+        Utils.Log("Room created successfully!");
         PhotonNetwork.JoinLobby(); // 방을 생성한 후 로비에 다시 입장하여 방 목록을 갱신합니다.
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
-        Debug.LogError("Room creation failed: " + message);
+        Utils.LogRed("Room creation failed: " + message);
     }
 
     public override void OnJoinedRoom()
     {
-        Debug.Log("Joined room successfully!");
+        Utils.Log("Joined room successfully!");
 
         string roomType = (string)PhotonNetwork.CurrentRoom.CustomProperties["roomType"];
 
@@ -430,7 +430,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        Debug.Log("Room list updated");
+        Utils.Log("Room list updated");
         roomListDisplay.OnRoomListUpdate(roomList);
     }
 
@@ -489,13 +489,13 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         }
         else
         {
-            Debug.LogError("DeckSelectionUI 인스턴스를 찾을 수 없습니다.");
+            Utils.LogRed("DeckSelectionUI 인스턴스를 찾을 수 없습니다.");
         }
     }
 
     private void StartGame()
     {
-        Debug.Log("All players joined. Starting the game...");
+        Utils.Log("All players joined. Starting the game...");
         isMatchmaking = false;
         PhotonNetwork.CurrentRoom.IsOpen = false;
         PhotonNetwork.CurrentRoom.IsVisible = false;

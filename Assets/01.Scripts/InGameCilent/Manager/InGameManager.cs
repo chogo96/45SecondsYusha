@@ -31,7 +31,7 @@ public class InGameManager : MonoBehaviourPunCallbacks
     public void SetCurrentEnemy(Enemy enemy)
     {
         _currentEnemy = enemy;
-        Debug.Log($"SetCurrentEnemy: {_currentEnemy}");
+        Utils.Log($"SetCurrentEnemy: {_currentEnemy}");
         UpdateEnemyUI(); // 새로운 적 설정 시 UI 업데이트
     }
 
