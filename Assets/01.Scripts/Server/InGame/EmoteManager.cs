@@ -44,18 +44,18 @@ public class EmoteManager : MonoBehaviourPun
     /// <param name="emoteIndex">이모티콘 인덱스 값</param>
     private void OnEmoteButtonClicked(int emoteIndex)
     {
-        Debug.Log("Emote button clicked, index: " + emoteIndex);
+        Utils.Log("Emote button clicked, index: " + emoteIndex);
 
         // Ensure photonView is properly assigned
         if (photonView == null)
         {
-            Debug.LogError("PhotonView component is missing on EmoteManager object.");
+            Utils.LogRed("PhotonView component is missing on EmoteManager object.");
             return;
         }
 
         if (PhotonNetwork.LocalPlayer == null)
         {
-            Debug.LogError("Local player is not yet connected to Photon Network.");
+            Utils.LogRed("Local player is not yet connected to Photon Network.");
             return;
         }
 
@@ -73,11 +73,11 @@ public class EmoteManager : MonoBehaviourPun
     [PunRPC]
     void ShowEmote(int actorNumber, int emoteIndex)
     {
-        Debug.Log("ShowEmote RPC called, actorNumber: " + actorNumber + ", emoteIndex: " + emoteIndex);
+        Utils.Log("ShowEmote RPC called, actorNumber: " + actorNumber + ", emoteIndex: " + emoteIndex);
 
         if (emoteIndex < 0 || emoteIndex >= emotePrefabs.Length)
         {
-            Debug.LogError("Invalid emote index");
+            Utils.LogRed("Invalid emote index");
             return;
         }
 
@@ -94,7 +94,7 @@ public class EmoteManager : MonoBehaviourPun
 
                 emote.transform.SetParent(_emotePanel.transform, false);
 
-                Debug.Log("Emote instantiated at position: " + emotePosition);
+                Utils.Log("Emote instantiated at position: " + emotePosition);
 
                 // 일정 시간 후 이모티콘 삭제
                 Destroy(emote, 3f);

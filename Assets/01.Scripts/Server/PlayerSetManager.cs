@@ -68,7 +68,7 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
             Transform playerTransform = transform.Find($"Player_{i}");
             if (playerTransform == null)
             {
-                Debug.LogError($"Player_{i} not found");
+                Utils.LogRed($"Player_{i} not found");
                 continue;
             }
 

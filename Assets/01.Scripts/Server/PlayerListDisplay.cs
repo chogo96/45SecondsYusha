@@ -19,13 +19,13 @@ public class PlayerListDisplay : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        Debug.Log($"{newPlayer.NickName} joined the room.");
+        Utils.Log($"{newPlayer.NickName} joined the room.");
         UpdatePlayerList();
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        Debug.Log($"{otherPlayer.NickName} left the room.");
+        Utils.Log($"{otherPlayer.NickName} left the room.");
         UpdatePlayerList();
     }
 

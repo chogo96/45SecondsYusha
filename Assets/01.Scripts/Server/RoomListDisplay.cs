@@ -21,7 +21,7 @@ public class RoomListDisplay : MonoBehaviourPunCallbacks
     // 방 목록이 업데이트될 때 호출됩니다
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        Debug.Log("Room list updated");
+        Utils.Log("Room list updated");
 
         // 삭제된 RoomItem 프리팹을 저장할 임시변수
         GameObject tempRoom = null;
@@ -68,7 +68,7 @@ public class RoomListDisplay : MonoBehaviourPunCallbacks
                 }
             }
 
-            Debug.Log($"Room={roomInfo.Name} ({roomInfo.PlayerCount}/{roomInfo.MaxPlayers})");
+            Utils.Log($"Room={roomInfo.Name} ({roomInfo.PlayerCount}/{roomInfo.MaxPlayers})");
         }
     }
 }

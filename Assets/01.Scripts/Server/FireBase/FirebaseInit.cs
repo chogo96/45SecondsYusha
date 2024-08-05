@@ -17,9 +17,9 @@ public class FirebaseInit : MonoBehaviour
 
     private async void Awake()
     {
-        Debug.Log("FirebaseInit: Initializing Firebase...");
+        Utils.Log("FirebaseInit: Initializing Firebase...");
         await InitializeFirebase();
-        Debug.Log("FirebaseInit: Firebase initialization completed.");
+        Utils.Log("FirebaseInit: Firebase initialization completed.");
 
         // 초기화 완료 이벤트 호출
         OnFirebaseInitialized?.Invoke();
@@ -44,12 +44,12 @@ public class FirebaseInit : MonoBehaviour
                         DatabaseUrl = new System.Uri(databaseURL)
                     };
                     app = FirebaseApp.Create(options);
-                    Debug.Log("FirebaseInit: FirebaseApp created with custom options.");
+                    Utils.Log("FirebaseInit: FirebaseApp created with custom options.");
                 }
                 else
                 {
                     app = FirebaseApp.DefaultInstance;
-                    Debug.Log("FirebaseInit: Using Default FirebaseApp instance.");
+                    Utils.Log("FirebaseInit: Using Default FirebaseApp instance.");
                 }
 
                 // 초기화 성공 시 Firebase 인스턴스 설정
@@ -57,16 +57,16 @@ public class FirebaseInit : MonoBehaviour
                 database = FirebaseDatabase.GetInstance(app);
                 firestore = FirebaseFirestore.DefaultInstance;
 
-                Debug.Log("FirebaseInit: FirebaseAuth, FirebaseDatabase, and FirebaseFirestore instances initialized.");
+                Utils.Log("FirebaseInit: FirebaseAuth, FirebaseDatabase, and FirebaseFirestore instances initialized.");
             }
             else
             {
-                Debug.LogError($"FirebaseInit: Could not resolve all Firebase dependencies: {dependencyStatus}");
+                Utils.LogRed($"FirebaseInit: Could not resolve all Firebase dependencies: {dependencyStatus}");
             }
         }
         catch (System.Exception e)
         {
-            Debug.LogError($"FirebaseInit: Exception during Firebase initialization: {e.Message}");
+            Utils.LogRed($"FirebaseInit: Exception during Firebase initialization: {e.Message}");
         }
     }
 }

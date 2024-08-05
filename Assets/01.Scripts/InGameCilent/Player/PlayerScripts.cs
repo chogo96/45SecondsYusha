@@ -74,7 +74,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
 
         if (_currentEnemy != null)
         {
-            Debug.Log($"SetCurrentEnemy: {_currentEnemy}");
+            Utils.Log($"SetCurrentEnemy: {_currentEnemy}");
         }
         else
         {
@@ -218,7 +218,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
     {
         if (_currentEnemy == null)
         {
-            Utils.LogRed("현재 적이 null 상태입니다. RealTimeBossStatusCheck 호출을 무시합니다.");
+            Debug.LogWarning("현재 적이 null 상태입니다. RealTimeBossStatusCheck 호출을 무시합니다.");
             return;
         }
 
@@ -314,6 +314,36 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             new DrawACardCommand(hand.CardsInHand[0], this, fromDeck: false).AddToQueue();
         }
     }
+
+    //public void PlayACardFromHand(int CardUniqueID, int TargetUniqueID)
+    //{
+    //    if (CardLogic.CardsCreatedThisGame.TryGetValue(CardUniqueID, out CardLogic card))
+    //    {
+    //        ICharacter target = null;
+
+    //        if (TargetUniqueID >= 0)
+    //        {
+    //            if (TargetUniqueID == ID)
+    //            {
+    //                target = this;
+    //            }
+    //            else if (TargetUniqueID == otherPlayer.ID)
+    //            {
+    //                target = otherPlayer;
+    //            }
+    //            else if (CreatureLogic.CreaturesCreatedThisGame.TryGetValue(TargetUniqueID, out CreatureLogic creature))
+    //            {
+    //                target = creature;
+    //            }
+    //        }
+    //        //PlayACardFromHand(card, target);
+    //        StartCoroutine(PlayACardWithDelay(card, target)); // 코루틴 시작
+    //    }
+    //    else
+    //    {
+    //        Utils.LogRed("Card not found");
+    //    }
+    //}
     public void PlayACardFromHand(int CardUniqueID, int TargetUniqueID)
     {
         Utils.Log($"PlayACardFromHand called with CardUniqueID: {CardUniqueID}, TargetUniqueID: {TargetUniqueID}");
@@ -394,7 +424,28 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             InGameManager.instance.Shield += card.cardAsset.ShieldAttack;
             Utils.Log($"After Attack: Sword={InGameManager.instance.Sword}, Magic={InGameManager.instance.Magic}, Shield={InGameManager.instance.Shield}");
 
-            
+            //// 공격력 값을 배열에 저장
+            //int[] attackValues = { card.cardAsset.SwordAttack, card.cardAsset.MagicAttack, card.cardAsset.ShieldAttack };
+            //System.Random random = new System.Random();
+            //int index = random.Next(attackValues.Length);
+            //int randomAttackValue = attackValues[index];
+
+            //// 무작위로 선택된 공격력 값을 플레이어에게 반영
+            //switch (index)
+            //{
+            //    case 0:
+            //        Utils.Log("Random Sword Attack Added");
+            //        InGameManager.instance.Sword += randomAttackValue;
+            //        break;
+            //    case 1:
+            //        Utils.Log("Random Magic Attack Added");
+            //        InGameManager.instance.Magic += randomAttackValue;
+            //        break;
+            //    case 2:
+            //        Utils.Log("Random Shield Attack Added");
+            //        InGameManager.instance.Shield += randomAttackValue;
+            //        break;
+            //}
 
             // 이 부분이 각 속성을 두 번 추가하고 있는지 확인하세요.
             Utils.Log($"Final Values: Sword={InGameManager.instance.Sword}, Magic={InGameManager.instance.Magic}, Shield={InGameManager.instance.Shield}");
@@ -665,7 +716,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         }
         else
         {
-            Utils.LogRed("Check hero power name for character " + charAsset.ClassName);
+            Debug.LogWarning("Check hero power name for character " + charAsset.ClassName);
         }
     }
 
