@@ -185,7 +185,7 @@ public class CollectionBrowser : MonoBehaviour
     {
         //ShowCards(_showingCardsPlayerDoesNotOwn, _pageIndex, _includeAllRarities, _includeAllCharacters, _rarity, _asset, _keyword, _includeTokenCards);
 
-        firebaseCardManager.LoadCardNames(LoginManager.Email);
+        firebaseCardManager.LoadCardNames(LoginManager.UserId);
     }
 
     private void ShowCards(bool showingCardsPlayerDoesNotOwn = false, int pageIndex = 0, bool includeAllRarities = true, bool includeAllCharacters = true,

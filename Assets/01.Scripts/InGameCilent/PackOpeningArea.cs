@@ -126,7 +126,7 @@ public class PackOpeningArea : MonoBehaviour
             card.transform.position = cardsInitialPosition;
             card.transform.DOMove(SlotsForCards[i].position, 0.5f);
         }
-        firebaseCardManager.SaveCardData(openCardPackData, LoginManager.Email);
+        firebaseCardManager.SaveCardData(openCardPackData, LoginManager.UserId);
     }
 
     private GameObject CardFromPack(RarityOptions rarity, Dictionary<CardAsset, int> openpack)

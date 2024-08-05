@@ -56,6 +56,6 @@ public class DeckSelectionScreen : MonoBehaviour
     }
     //public void GoToPlay()
     //{
-    //    SceneManager.LoadScene("05.GamePlay Scene");
+    //    SceneManager.LoadScene("03.GamePlay Scene");
     //}
 }

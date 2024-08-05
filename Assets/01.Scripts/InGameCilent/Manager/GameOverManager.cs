@@ -47,7 +47,7 @@ public class GameOverManager : MonoBehaviour
         if (PhotonNetwork.IsMasterClient)
         {
             returnToLobbyButton.interactable = true;
-            PhotonNetwork.LoadLevel("04.Lobby Scene"); // 로비 씬의 이름으로 변경
+            PhotonNetwork.LoadLevel("02.Lobby Scene"); // 로비 씬의 이름으로 변경
         }
         else
         {

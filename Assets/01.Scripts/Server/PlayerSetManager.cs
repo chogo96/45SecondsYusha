@@ -29,10 +29,8 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
 
     private GameObject[] _playerHandArea;
 
-
     private void Awake()
     {
-
         _playerCount = PhotonNetwork.PlayerList.Length + 1;
 
         _playerImage = new Image[_playerCount];
@@ -46,8 +44,6 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
         _baseHandCards = new int[_playerCount];
         _baseDeckCards = new int[_playerCount];
 
-
-
         // GameManager의 AllPlayersSpawned 이벤트 구독
         GameManager.AllPlayersSpawned += Reset;
     }
@@ -60,40 +56,34 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
 
     private void Reset()
     {
-        playerScripts = transform.Find($"Player_{_actorNumber}").GetComponent<PlayerScripts>();
-        hand = transform.Find($"Player_{_actorNumber}/Hand").GetComponent<Hand>();
+        string localPlayerName = PhotonNetwork.LocalPlayer.UserId + "_" + _actorNumber;
+        playerScripts = transform.Find(localPlayerName).GetComponent<PlayerScripts>();
+        hand = transform.Find($"{localPlayerName}/Hand").GetComponent<Hand>();
 
         for (int i = 1; i < _playerCount; i++)
         {
-            Transform playerTransform = transform.Find($"Player_{i}");
+            Player player = PhotonNetwork.PlayerList[i - 1];
+            string playerName = player.UserId + "_" + player.ActorNumber;
+            Transform playerTransform = transform.Find(playerName);
             if (playerTransform == null)
             {
-                Utils.LogRed($"Player_{i} not found");
+                Utils.LogRed($"{playerName} not found");
                 continue;
             }
 
             _playerImage[i] = playerTransform.Find("Player_Image")?.GetComponent<Image>();
-
-
             _bleedDebuffImage[i] = playerTransform.Find("BleedDebuffImage")?.gameObject;
             _blindDebuffImage[i] = playerTransform.Find("BlindDebuffImage")?.gameObject;
             _confusionDebuffImage[i] = playerTransform.Find("ConfusionDebuffImage")?.gameObject;
             _handCountText[i] = playerTransform.Find("HandImage/HandCountText (TMP)")?.GetComponent<TMP_Text>();
             _deckCountText[i] = playerTransform.Find("DeckImage/DeckCountText (TMP)")?.GetComponent<TMP_Text>();
-
-            _playerHandArea[i] = playerTransform.Find($"HandArea")?.gameObject;
-            _playerImage[i].sprite = playerScripts.charAsset.AvatarImage;
+            _playerHandArea[i] = playerTransform.Find("HandArea")?.gameObject;
 
             _playerImage[i].sprite = playerScripts.charAsset.AvatarImage;
-
         }
-
-
 
         HandCardCount(_actorNumber, "Minus");
     }
-
-
 
     /// <summary>
     /// 카드사용, 드로우 했을때 Deck text 랑 Hand text 를 갱신해주 면서 서버와 연동해주는 함수.
@@ -102,9 +92,8 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
     /// <param name="cardNum">사용한카드 수 or 뽑는 카드 수</param>
     /// <param name="plusMinus">Minus = 카드사용 / Plus = 카드드로우</param>
     [PunRPC]
-    public void HandCardCount(int playerNumber,string plusMinus)
+    public void HandCardCount(int playerNumber, string plusMinus)
     {
-        
         _baseHandCards[playerNumber] = hand.CardsInHand.Count;
         _baseDeckCards[playerNumber] = playerScripts._deck.Cards.Count;
 
@@ -116,7 +105,7 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
                 break;
             case "Plus":
                 _handCountText[playerNumber].text = $"{_baseHandCards[playerNumber] + 1}";
-                _deckCountText[playerNumber].text = $"{_baseDeckCards[playerNumber] - 1}";
+                _deckCountText[playerNumber].text = $"{_baseDeckCards[playerNumber]}";
                 if (_baseDeckCards[playerNumber] <= 0)
                 {
                     _deckCountText[playerNumber].text = $"0";
@@ -129,10 +118,7 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
             default:
                 break;
         }
-
-        // 카드뒷면  생성 삭제 로직
     }
-
 
     /// <summary>
     /// 디버프 이미지 활성화 함수

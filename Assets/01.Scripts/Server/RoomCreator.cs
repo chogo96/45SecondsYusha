@@ -1,9 +1,11 @@
+using Photon.Chat;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class RoomCreator : MonoBehaviourPunCallbacks
@@ -39,6 +41,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
 
     // PunChat 기능추가
     private GameObject _punChatPanel;
+    private PunChatManager punChatManager;
 
     // 메인로비 버튼 추가
     private Button _mainLobby;
@@ -74,6 +77,8 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         _punChatPanel = transform.Find("Panel - BG/PunChat").gameObject;
 
         _buttons = transform.Find("Panel - BG/Buttons").gameObject;
+
+        punChatManager = FindObjectOfType<PunChatManager>();
 
     }
 
@@ -112,6 +117,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
             int playerNumber = PhotonNetwork.CurrentRoom.PlayerCount;
             playerListDisplay.UpdatePlayerList(); // 방에 입장한 후 플레이어 목록 갱신
             _punChatPanel.SetActive(true);
+            punChatManager.SendChatMessage();
         }
         else
         {
@@ -450,7 +456,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
     {
         //if (PhotonNetwork.IsMasterClient && (PhotonNetwork.CurrentRoom.PlayerCount == 4))
         //{
-        //    PhotonNetwork.LoadLevel("05.GamePlay Scene");
+        //    PhotonNetwork.LoadLevel("03.GamePlay Scene");
         //}
         //else
         //{
@@ -460,7 +466,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             // 서버 테스트할때 사용할 내용
-            PhotonNetwork.LoadLevel("05.GamePlay Scene");
+            PhotonNetwork.LoadLevel("03.GamePlay Scene");
         }
         
     }
@@ -499,12 +505,12 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         isMatchmaking = false;
         PhotonNetwork.CurrentRoom.IsOpen = false;
         PhotonNetwork.CurrentRoom.IsVisible = false;
-        PhotonNetwork.LoadLevel("05.GamePlay Scene");
+        PhotonNetwork.LoadLevel("03.GamePlay Scene");
     }
 
     private void OnClickMainLobby()
     {
-        PhotonNetwork.LoadLevel("MainScene");
+        SceneManager.LoadScene("01.MainScene");
 
     }
 }

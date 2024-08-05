@@ -30,7 +30,7 @@ public class LoginManager : MonoBehaviour
 
     private TMP_Text _errorMessage;
 
-    public static string Email { get; private set; }
+    public static string UserId { get; private set; }
 
     private void Awake()
     {
@@ -72,23 +72,23 @@ public class LoginManager : MonoBehaviour
         switch (num)
         {
             case 1:
-                _id.text = "jinodumok@naver.com";
+                _id.text = "jinodumok";
                 _pw.text = "jino1364";
                 Login();
                 break;
             case 2:
-                _id.text = "1@1.1";
-                _pw.text = "jino1364";
+                _id.text = "user2";
+                _pw.text = "password2";
                 Login();
                 break;
             case 3:
-                _id.text = "a@a.kr";
-                _pw.text = "123456";
+                _id.text = "user3";
+                _pw.text = "password3";
                 Login();
                 break;
             case 4:
-                _id.text = "ab@ab.kr";
-                _pw.text = "abcdef";
+                _id.text = "user4";
+                _pw.text = "password4";
                 Login();
                 break;
             default:
@@ -109,27 +109,30 @@ public class LoginManager : MonoBehaviour
 
     public async void Login()
     {
-        string email = _id.text;
+        string userId = _id.text;
         string password = _pw.text;
 
-        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+        if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(password))
         {
-            _errorMessage.text = "Email and Password must be filled!";
+            _errorMessage.text = "ID and Password must be filled!";
             return;
         }
+
+        // Firebase 인증을 위해 가상의 이메일 주소 생성
+        string email = $"{userId}@example.com";
 
         try
         {
             AuthResult authResult = await auth.SignInWithEmailAndPasswordAsync(email, password);
             FirebaseUser user = authResult.User;
-            Email = user.Email;
+            UserId = userId;
 
             _errorMessage.text = "User signed in successfully!";
 
-            await NickNameSetting(user);
+            await NickNameSetting(userId);
 
             // 튜토리얼 상태 확인 후 메인 씬으로 이동
-            await CheckTutorialStatus(user);
+            await CheckTutorialStatus(userId);
         }
         catch (System.Exception e)
         {
@@ -137,11 +140,9 @@ public class LoginManager : MonoBehaviour
         }
     }
 
-    public async Task NickNameSetting(FirebaseUser user)
+    public async Task NickNameSetting(string userId)
     {
-        string email = user.Email;
-        string encodedEmail = EncodeEmail(email);
-        var nicknameTask = databaseReference.Child("users").Child(encodedEmail).Child("nickname").GetValueAsync();
+        var nicknameTask = databaseReference.Child("users").Child(userId).Child("nickname").GetValueAsync();
         await nicknameTask;
 
         if (nicknameTask.Exception != null)
@@ -162,15 +163,9 @@ public class LoginManager : MonoBehaviour
         }
     }
 
-    private string EncodeEmail(string email)
+    private async Task CheckTutorialStatus(string userId)
     {
-        return email.Replace(".", ",");
-    }
-
-    private async Task CheckTutorialStatus(FirebaseUser user)
-    {
-        string encodedEmail = EncodeEmail(user.Email);
-        var tutorialStatusTask = databaseReference.Child("users").Child(encodedEmail).Child("TutorialCompleted").GetValueAsync();
+        var tutorialStatusTask = databaseReference.Child("users").Child(userId).Child("TutorialCompleted").GetValueAsync();
         await tutorialStatusTask;
 
         if (tutorialStatusTask.Exception != null)
@@ -190,7 +185,7 @@ public class LoginManager : MonoBehaviour
     {
         if (PhotonNetwork.IsConnected)
         {
-            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("MainScene");
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("01.MainScene");
             while (!asyncLoad.isDone)
             {
                 yield return null;
