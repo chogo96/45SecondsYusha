@@ -6517,7 +6517,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000038452}
+  m_AnchoredPosition: {x: 0, y: 0.00008780385}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &897640883
@@ -13601,20 +13601,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1614343818}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13244be8a0fbfaf44acef3ef200990bc, type: 3}
+  m_Script: {fileID: 11500000, guid: 98f3eea414541ec4482f61bd28a52ce3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   images:
-  - {fileID: 21300000, guid: d301ba98139c05845adcbc019b0fbdfb, type: 3}
-  - {fileID: 21300000, guid: 9f730ef9f2402f94f87665dd0c69ddb8, type: 3}
-  - {fileID: 21300000, guid: 0adda164251ae2044983536b0320d907, type: 3}
-  - {fileID: 21300000, guid: 3c204ece725af014ca0b1aa01cc18749, type: 3}
-  - {fileID: 21300000, guid: 6c798839ed618324280a688819e62891, type: 3}
-  - {fileID: 21300000, guid: 933649474feba304392d27506bf15b57, type: 3}
-  - {fileID: 21300000, guid: 0408967c889960b4fbca4035850cfc54, type: 3}
-  - {fileID: 21300000, guid: c0c5eb463c16704469ea2faba91c40fc, type: 3}
-  - {fileID: 21300000, guid: 7cca4a5fc3a4932488947b1465d14d88, type: 3}
-  - {fileID: 21300000, guid: 4346d6c06f9091a44b5d93665a64a51b, type: 3}
+  - {fileID: 21300000, guid: e4997f487b8e882448fc187e484acb1b, type: 3}
+  - {fileID: 21300000, guid: 0f2f165eea06b2d4ba19c672dc4e2e38, type: 3}
+  - {fileID: 21300000, guid: 0d66754c00a0721499f861bc92fa1418, type: 3}
+  - {fileID: 21300000, guid: da6e245e42f66df4fa0bcf4101d9f1f5, type: 3}
+  - {fileID: 21300000, guid: 05c398344074964478a9043b661f070e, type: 3}
+  - {fileID: 21300000, guid: 1e3ab8954fcef2f488102ff4fa0c1486, type: 3}
 --- !u!1 &1630807906
 GameObject:
   m_ObjectHideFlags: 0
@@ -15988,7 +15984,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2057381082}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.9999683
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

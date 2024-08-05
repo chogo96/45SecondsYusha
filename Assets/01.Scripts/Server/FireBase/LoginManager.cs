@@ -77,8 +77,8 @@ public class LoginManager : MonoBehaviour
                 Login();
                 break;
             case 2:
-                _id.text = "user2";
-                _pw.text = "password2";
+                _id.text = "jino1364";
+                _pw.text = "jino1364";
                 Login();
                 break;
             case 3:
