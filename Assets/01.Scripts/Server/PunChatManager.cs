@@ -6,14 +6,15 @@ using System;
 
 public class PunChatManager : MonoBehaviourPunCallbacks, IChatClientListener
 {
-    private ChatClient chatClient;
-    private string currentChannel; // 현재 방의 채널 이름
+    public ChatClient chatClient;
+    public string currentChannel; // 현재 방의 채널 이름
 
     public event Action<string, string> OnMessageReceived;
 
     void Start()
     {
         ConnectToPhotonChat();
+        DontDestroyOnLoad(gameObject);
     }
 
     void ConnectToPhotonChat()
@@ -89,6 +90,11 @@ public class PunChatManager : MonoBehaviourPunCallbacks, IChatClientListener
         {
             currentChannel = PhotonNetwork.CurrentRoom.Name;
             chatClient.PublishMessage(currentChannel, message);
+        }
+        else
+        {
+            Utils.LogRed($"chatClient = {chatClient}");
+            Utils.LogRed($"chatClient.CanChat = {chatClient.CanChat}");
         }
     }
 

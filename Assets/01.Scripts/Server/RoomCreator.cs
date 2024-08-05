@@ -1,3 +1,4 @@
+using Photon.Chat;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
@@ -40,6 +41,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
 
     // PunChat 기능추가
     private GameObject _punChatPanel;
+    private PunChatManager punChatManager;
 
     // 메인로비 버튼 추가
     private Button _mainLobby;
@@ -75,6 +77,8 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         _punChatPanel = transform.Find("Panel - BG/PunChat").gameObject;
 
         _buttons = transform.Find("Panel - BG/Buttons").gameObject;
+
+        punChatManager = FindObjectOfType<PunChatManager>();
 
     }
 
@@ -113,6 +117,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
             int playerNumber = PhotonNetwork.CurrentRoom.PlayerCount;
             playerListDisplay.UpdatePlayerList(); // 방에 입장한 후 플레이어 목록 갱신
             _punChatPanel.SetActive(true);
+            punChatManager.SendChatMessage();
         }
         else
         {

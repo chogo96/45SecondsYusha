@@ -61,7 +61,6 @@ public class UITutorial : MonoBehaviour
         UpdateButtons();
     }
 
-
     /// <summary>
     /// 튜토리얼 했는지를 파이어베이스의 TutorialCompleted의 bool 값으로 확인후 패널 온오프 하는 함수
     /// </summary>
@@ -74,10 +73,10 @@ public class UITutorial : MonoBehaviour
             return;
         }
 
-        string encodedEmail = EncodeEmail(user.Email);
+        string userId = LoginManager.UserId;
         try
         {
-            DataSnapshot snapshot = await databaseReference.Child("users").Child(encodedEmail).Child("TutorialCompleted").GetValueAsync();
+            DataSnapshot snapshot = await databaseReference.Child("users").Child(userId).Child("TutorialCompleted").GetValueAsync();
 
             if (snapshot.Exists)
             {
@@ -100,15 +99,13 @@ public class UITutorial : MonoBehaviour
         }
     }
 
-
-
     /// <summary>
     /// 튜토리얼 완료했을때 파이어베이스에 등록하는 곳 + 나가기버튼 눌렀을때 실행됨
     /// </summary>
     public void CompleteTutorial()
     {
-        string encodedEmail = EncodeEmail(user.Email);
-        databaseReference.Child("users").Child(encodedEmail).Child("TutorialCompleted").SetValueAsync(true).ContinueWith(task =>
+        string userId = LoginManager.UserId;
+        databaseReference.Child("users").Child(userId).Child("TutorialCompleted").SetValueAsync(true).ContinueWith(task =>
         {
             if (task.IsCompleted && !task.IsCanceled && !task.IsFaulted)
             {
@@ -120,16 +117,6 @@ public class UITutorial : MonoBehaviour
             }
         });
         _tutorialPanel.SetActive(false);
-    }
-
-    /// <summary>
-    /// 현재 아이디를 이메일 형식으로 받고있기 때문에 . 을 , 로 교체해야함.
-    /// </summary>
-    /// <param name="email">유저 이메일(아이디)</param>
-    /// <returns></returns>
-    private string EncodeEmail(string email)
-    {
-        return email.Replace(".", ",");
     }
 
     /// <summary>
