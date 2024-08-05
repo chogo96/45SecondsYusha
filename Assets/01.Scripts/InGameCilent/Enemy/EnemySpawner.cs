@@ -34,13 +34,13 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
         midBosses = new List<EnemyData>(Resources.LoadAll<EnemyData>("GameAssets/Enemies/MinibossEnemy"));
         finalBosses = new List<EnemyData>(Resources.LoadAll<EnemyData>("GameAssets/Enemies/FinalBossEnemy"));
 
-        Debug.Log("Normal Enemies Count: " + normalEnemies.Count);
-        Debug.Log("Mid Bosses Count: " + midBosses.Count);
-        Debug.Log("Final Bosses Count: " + finalBosses.Count);
+        Utils.Log("Normal Enemies Count: " + normalEnemies.Count);
+        Utils.Log("Mid Bosses Count: " + midBosses.Count);
+        Utils.Log("Final Bosses Count: " + finalBosses.Count);
 
-        if (normalEnemies.Count == 0) Debug.LogError("Normal enemies list is empty.");
-        if (midBosses.Count == 0) Debug.LogError("Mid bosses list is empty.");
-        if (finalBosses.Count == 0) Debug.LogError("Final bosses list is empty.");
+        if (normalEnemies.Count == 0) Utils.LogRed("Normal enemies list is empty.");
+        if (midBosses.Count == 0) Utils.LogRed("Mid bosses list is empty.");
+        if (finalBosses.Count == 0) Utils.LogRed("Final bosses list is empty.");
     }
 
     private void LoadEnemyPrefabs()
@@ -53,7 +53,7 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
             if (!enemyPrefabs.ContainsKey(prefab.name))
             {
                 enemyPrefabs[prefab.name] = prefab;
-                Debug.Log($"Loaded prefab: {prefab.name}"); // 로드된 프리팹의 이름을 출력
+                Utils.Log($"Loaded prefab: {prefab.name}"); // 로드된 프리팹의 이름을 출력
             }
         }
     }
@@ -81,7 +81,7 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
                 Error = (sender, args) =>
                 {
-                    Debug.LogError($"Serialization error: {args.ErrorContext.Error.Message}");
+                    Utils.LogRed($"Serialization error: {args.ErrorContext.Error.Message}");
                     args.ErrorContext.Handled = true;
                 }
             };
@@ -131,7 +131,7 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
                 }
                 else
                 {
-                    Utils.LogError("normalEnemies 리스트가 비어있습니다.");
+                    Utils.LogRed("normalEnemies 리스트가 비어있습니다.");
                 }
             }
 
@@ -145,7 +145,7 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
             }
             else
             {
-                Utils.LogError("midBosses 리스트가 비어있습니다.");
+                Utils.LogRed("midBosses 리스트가 비어있습니다.");
             }
         }
 
@@ -165,7 +165,7 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
     {
         if (spawnOrder == null || spawnOrder.Count == 0)
         {
-            Debug.LogError("Spawn order is null or empty!");
+            Utils.LogRed("Spawn order is null or empty!");
             return;
         }
 
@@ -185,7 +185,7 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
                 // EnemyName에 맞는 프리팹 로드
                 if (!enemyPrefabs.TryGetValue(enemyName, out GameObject prefab))
                 {
-                    Debug.LogError($"No prefab found for enemy with name {enemyName}");
+                    Utils.LogRed($"No prefab found for enemy with name {enemyName}");
                     return;
                 }
 
@@ -214,7 +214,7 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
                     }
                     else
                     {
-                        Debug.LogError($"EnemyData with name {enemyName} could not be found in Resources.");
+                        Utils.LogRed($"EnemyData with name {enemyName} could not be found in Resources.");
                     }
                 }
             }
@@ -226,7 +226,7 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
         }
         else
         {
-            Debug.LogError("Index out of range: " + index);
+            Utils.LogRed("Index out of range: " + index);
         }
     }
 
