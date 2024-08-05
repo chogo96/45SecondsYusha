@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class EnemySpawner : MonoBehaviourPunCallbacks
 {
-    public GameObject enemyPrefab; // 적 프리팹
     public GameObject shopPrefab; // 상점 프리팹
     public Transform canvasTransform; // 적을 생성할 캔버스 트랜스폼
     public List<EnemyData> normalEnemies; // 일반 몹 데이터 리스트
@@ -19,9 +18,13 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
     private int currentEnemyIndex = 0;
     private string spawnOrderJson;
 
+    // 프리팹 로드용 딕셔너리
+    private Dictionary<string, GameObject> enemyPrefabs;
+
     void Start()
     {
         LoadEnemyData();
+        LoadEnemyPrefabs(); // 프리팹 로드
         StartCoroutine(WaitForPlayersAndSpawnEnemies());
     }
 
@@ -39,6 +42,23 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
         if (midBosses.Count == 0) Utils.LogRed("Mid bosses list is empty.");
         if (finalBosses.Count == 0) Utils.LogRed("Final bosses list is empty.");
     }
+
+    private void LoadEnemyPrefabs()
+    {
+        enemyPrefabs = new Dictionary<string, GameObject>();
+        GameObject[] prefabs = Resources.LoadAll<GameObject>("SPUM/SPUM_Units"); // 정확한 경로로 수정
+
+        foreach (GameObject prefab in prefabs)
+        {
+            if (!enemyPrefabs.ContainsKey(prefab.name))
+            {
+                enemyPrefabs[prefab.name] = prefab;
+                Utils.Log($"Loaded prefab: {prefab.name}"); // 로드된 프리팹의 이름을 출력
+            }
+        }
+    }
+
+
 
     private IEnumerator WaitForPlayersAndSpawnEnemies()
     {
@@ -160,33 +180,42 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
             }
             else
             {
-                var enemyData = Resources.Load<EnemyData>($"GameAssets/Enemies/NormalEnemy/{spawnOrder[index]}");
-                if (enemyData == null)
+                string enemyName = spawnOrder[index];
+
+                // EnemyName에 맞는 프리팹 로드
+                if (!enemyPrefabs.TryGetValue(enemyName, out GameObject prefab))
                 {
-                    enemyData = Resources.Load<EnemyData>($"GameAssets/Enemies/MinibossEnemy/{spawnOrder[index]}");
-                }
-                if (enemyData == null)
-                {
-                    enemyData = Resources.Load<EnemyData>($"GameAssets/Enemies/FinalBossEnemy/{spawnOrder[index]}");
-                }
-                if (enemyData == null)
-                {
-                    Utils.LogRed($"EnemyData with name {spawnOrder[index]} could not be found in Resources.");
+                    Utils.LogRed($"No prefab found for enemy with name {enemyName}");
                     return;
                 }
 
-                newEntity = PhotonNetwork.Instantiate(enemyPrefab.name, Vector3.zero, Quaternion.identity);
-                Image enemyImage = newEntity.GetComponent<Image>();
-                if (enemyImage != null && enemyData.enemySprite != null)
-                {
-                    enemyImage.sprite = enemyData.enemySprite;
-                }
+                // Photon을 통해 프리팹 인스턴스화
+                newEntity = PhotonNetwork.Instantiate($"SPUM/SPUM_Units/{prefab.name}", Vector3.zero, Quaternion.identity);
 
+                // 프리팹에서 적 정보 초기화
                 Enemy enemy = newEntity.GetComponent<Enemy>();
                 if (enemy != null)
                 {
-                    bool isFinalBoss = (index == spawnOrder.Count - 1);
-                    enemy.Initialize(enemyData, players, isFinalBoss);
+                    // EnemyData 로드
+                    var enemyData = Resources.Load<EnemyData>($"GameAssets/Enemies/NormalEnemy/{enemyName}");
+                    if (enemyData == null)
+                    {
+                        enemyData = Resources.Load<EnemyData>($"GameAssets/Enemies/MinibossEnemy/{enemyName}");
+                    }
+                    if (enemyData == null)
+                    {
+                        enemyData = Resources.Load<EnemyData>($"GameAssets/Enemies/FinalBossEnemy/{enemyName}");
+                    }
+
+                    if (enemyData != null)
+                    {
+                        bool isFinalBoss = (index == spawnOrder.Count - 1);
+                        enemy.Initialize(enemyData, players, isFinalBoss);
+                    }
+                    else
+                    {
+                        Utils.LogRed($"EnemyData with name {enemyName} could not be found in Resources.");
+                    }
                 }
             }
 
@@ -200,6 +229,7 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
             Utils.LogRed("Index out of range: " + index);
         }
     }
+
 
     public void OnShopButtonPressed()
     {

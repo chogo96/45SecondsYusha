@@ -37,5 +37,14 @@ public class SelectDeckButton : MonoBehaviour
         DeckGameManager.instance.SetSelectedDeck(deckInfo.Cards);
         // 필요한 경우 추가 작업 수행
         DeckGameManager.instance.SetSelectedDeckInfo(deckInfo);
+        // ScreenContent 오브젝트 비활성화
+        Transform currentTransform = transform;
+
+        Transform screenContent = transform.parent?.parent?.parent; // 부모의 부모의 부모 찾기
+
+        if (screenContent != null && screenContent.name == "ScreenContent")
+        {
+            screenContent.gameObject.SetActive(false);
+        }
     }
 }
