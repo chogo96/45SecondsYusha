@@ -56,14 +56,14 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
 
     private void Reset()
     {
-        string localPlayerName = PhotonNetwork.LocalPlayer.UserId + "_" + _actorNumber;
+        string localPlayerName = $"{PhotonNetwork.LocalPlayer.NickName}_{_actorNumber}";
         playerScripts = transform.Find(localPlayerName).GetComponent<PlayerScripts>();
         hand = transform.Find($"{localPlayerName}/Hand").GetComponent<Hand>();
 
         for (int i = 1; i < _playerCount; i++)
         {
             Player player = PhotonNetwork.PlayerList[i - 1];
-            string playerName = player.UserId + "_" + player.ActorNumber;
+            string playerName = $"{PhotonNetwork.LocalPlayer.NickName}_{_actorNumber}";
             Transform playerTransform = transform.Find(playerName);
             if (playerTransform == null)
             {

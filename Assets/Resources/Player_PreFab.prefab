@@ -996,9 +996,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1371782393068297548}
+  - component: {fileID: -199935069691417893}
   - component: {fileID: 4684571111801863881}
-  - component: {fileID: -6961283133551894298}
   - component: {fileID: 7441035515764275795}
+  - component: {fileID: -6961283133551894298}
   - component: {fileID: 6966195465294581271}
   - component: {fileID: -6199456347257983558}
   m_Layer: 5
@@ -1037,6 +1038,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &-199935069691417893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7646088978091066834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9ea08b8ea65ced428e21fa61bacdda8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &4684571111801863881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1059,18 +1072,6 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &-6961283133551894298
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7646088978091066834}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 126494ae2a10a34499272ed97a6c9f5d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &7441035515764275795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1096,6 +1097,18 @@ MonoBehaviour:
   _swordPoint: 0
   _magicPoint: 0
   _shieldPoint: 0
+--- !u!114 &-6961283133551894298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7646088978091066834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 126494ae2a10a34499272ed97a6c9f5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!82 &6966195465294581271
 AudioSource:
   m_ObjectHideFlags: 0

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UITutorial : MonoBehaviour
+public class TutorialUI : MonoBehaviour
 {
     // 게임 오브젝트
     private GameObject _tutorialPanel; // 패널 위치

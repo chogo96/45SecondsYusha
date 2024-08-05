@@ -117,7 +117,6 @@ public class RoomCreator : MonoBehaviourPunCallbacks
             int playerNumber = PhotonNetwork.CurrentRoom.PlayerCount;
             playerListDisplay.UpdatePlayerList(); // 방에 입장한 후 플레이어 목록 갱신
             _punChatPanel.SetActive(true);
-            punChatManager.SendChatMessage();
         }
         else
         {
