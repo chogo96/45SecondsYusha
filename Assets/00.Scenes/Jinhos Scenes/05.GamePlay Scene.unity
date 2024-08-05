@@ -3537,8 +3537,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd4c73330e6937a479cde424821cda02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 3183067550004617147, guid: c410e67c9e6dcce4ebabaa8c7dd08e98,
-    type: 3}
   shopPrefab: {fileID: 5838901569437610503, guid: 3c9061beeca243345b59056fe3a13e41,
     type: 3}
   canvasTransform: {fileID: 1429192502}
@@ -5470,7 +5468,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1497913102
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5714,7 +5712,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1650100700
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6860,14 +6858,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.31132078, g: 0.31132078, b: 0.31132078, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 9a848525b1fa01445a9aec7e92cd70cc, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 847252d7e857921459ddd6f8c994f000, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
