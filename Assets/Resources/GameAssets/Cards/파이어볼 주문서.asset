@@ -16,7 +16,7 @@ MonoBehaviour:
   Description: "\uD50C\uB808\uC774\uC5B4 \uB9D0\uC0B4\uC758...\uCE74\uB4DC!"
   Tags: Neutral
   Rarity: 0
-  CardImage: {fileID: 21300000, guid: 17506a138ef680547bf131ef5efc7243, type: 3}
+  CardImage: {fileID: 21300000, guid: a4e136b0c44864b49a50d4d877e13eb0, type: 3}
   TokenCard: 0
   LimitOfThisCardInDeck: 3
   IsVanishCard: 0

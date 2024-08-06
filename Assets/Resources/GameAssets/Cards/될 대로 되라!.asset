@@ -16,7 +16,7 @@ MonoBehaviour:
   Description: "\"\uC73C\uC544\uC544\uC544! \uAC00\uAE4C\uC774 \uC624\uC9C0\uB9C8!\""
   Tags: Buffer
   Rarity: 0
-  CardImage: {fileID: 21300000, guid: b8ed2c374ee6a354898651a556cbfafe, type: 3}
+  CardImage: {fileID: 21300000, guid: bca43074faabe9c4ca938f9f58ae74a2, type: 3}
   TokenCard: 0
   LimitOfThisCardInDeck: 3
   IsVanishCard: 0

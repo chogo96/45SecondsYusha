@@ -16,7 +16,7 @@ MonoBehaviour:
   Description: "\uAE61!"
   Tags: Tanker
   Rarity: 3
-  CardImage: {fileID: 21300000, guid: 4d314fc1ae5c6be4fadbbb16ab816f48, type: 3}
+  CardImage: {fileID: 21300000, guid: 7bb1348d4a2db1140ae2c4c655994688, type: 3}
   TokenCard: 0
   LimitOfThisCardInDeck: 3
   IsVanishCard: 0

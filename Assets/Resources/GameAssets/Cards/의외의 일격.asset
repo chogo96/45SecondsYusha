@@ -18,7 +18,7 @@ MonoBehaviour:
     Tanker\uAC00 -"
   Tags: Tanker
   Rarity: 2
-  CardImage: {fileID: 21300000, guid: bcb168f4f52feca4bb3ebbc6d6ec4257, type: 3}
+  CardImage: {fileID: 21300000, guid: a87619484b3f8e34cbf7ecefa559d827, type: 3}
   TokenCard: 0
   LimitOfThisCardInDeck: 3
   IsVanishCard: 0
