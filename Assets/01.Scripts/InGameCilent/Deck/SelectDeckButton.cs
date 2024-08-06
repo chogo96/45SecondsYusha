@@ -7,30 +7,39 @@ public class SelectDeckButton : MonoBehaviour
     public Image AvatarImage;
     public TMP_Text NameText;
     public DeckInfo deckInfo;
+    private LobbyPlayer lobbyPlayer;
+
+    private void Awake()
+    {
+        lobbyPlayer = FindObjectOfType<LobbyPlayer>();
+    }
 
     public void SetDeckInfo(DeckInfo info)
     {
         
         if(NameText == null)
         {
-            Debug.LogError("이름이가 없습니다");
+            Utils.LogRed("이름이가 없습니다");
             return;
         }
         if (AvatarImage == null)
         {
-            Debug.LogError("AvatarImage가 없습니다");
+            Utils.LogRed("AvatarImage가 없습니다");
             return;
         }
         deckInfo = info;
         AvatarImage.sprite = deckInfo.Character.AvatarImage;
         NameText.text = deckInfo.DeckName;
-    }
 
+
+
+
+    }
     public void SelectDeck()
     {
         if (deckInfo == null)
         {
-            Debug.LogError("deckInfo가 null입니다.");
+            Utils.LogRed("deckInfo가 null입니다.");
             return;
         }
 
@@ -46,5 +55,10 @@ public class SelectDeckButton : MonoBehaviour
         {
             screenContent.gameObject.SetActive(false);
         }
+
+
+        // 로컬 플레이어의 이미지 설정
+        Utils.LogRed(deckInfo.Character.AvatarImage.name);
+        lobbyPlayer.SetPlayerImage(deckInfo.Character.AvatarImage.name);
     }
 }

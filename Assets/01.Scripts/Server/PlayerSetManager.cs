@@ -79,7 +79,10 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
             _deckCountText[i] = playerTransform.Find("DeckImage/DeckCountText (TMP)")?.GetComponent<TMP_Text>();
             _playerHandArea[i] = playerTransform.Find("HandArea")?.gameObject;
 
-            _playerImage[i].sprite = playerScripts.charAsset.AvatarImage;
+
+            string newImageName = playerScripts.charAsset.AvatarImage.name;
+            Sprite sprite = Resources.Load<Sprite>($"Images/{newImageName}");
+            _playerImage[i].sprite = sprite;
         }
 
         HandCardCount(_actorNumber, "Minus");
@@ -94,6 +97,7 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void HandCardCount(int playerNumber, string plusMinus)
     {
+
         _baseHandCards[playerNumber] = hand.CardsInHand.Count;
         _baseDeckCards[playerNumber] = playerScripts._deck.Cards.Count;
 
