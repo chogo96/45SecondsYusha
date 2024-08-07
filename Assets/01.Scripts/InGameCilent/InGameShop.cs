@@ -8,17 +8,18 @@ public class InGameShop : MonoBehaviourPunCallbacks
     private Button _plusTime;
     private Button _plusCard;
 
-    private TMP_Text _timeText;
-    private TMP_Text _cardText;
+    public TMP_Text _timeText;
+    public TMP_Text _cardText;
 
-    private int _plusTimeCount = 0;
-    private int _plusCardCount = 0;
+    public int _plusTimeCount = 0;
+    public int _plusCardCount = 0;
+    public int _sumCount = 0;
 
-    private bool _isAllVoting = false;
     private bool _isAllDone = false;
 
     private EnemySpawner _enemySpawner;
     private UI_Timer uI_Timer;
+    private GameManager gameManager;
 
     private void Awake()
     {
@@ -27,15 +28,16 @@ public class InGameShop : MonoBehaviourPunCallbacks
 
         _plusCard = transform.Find("AddCardButton").GetComponent<Button>();
         _cardText = transform.Find("AddCardButton/Text (TMP)").GetComponent<TMP_Text>();
+
+        _enemySpawner = FindObjectOfType<EnemySpawner>();
+        uI_Timer = FindObjectOfType<UI_Timer>();
+        gameManager = FindObjectOfType<GameManager>();
     }
 
     void Start()
     {
         _plusTime.interactable = true;
         _plusCard.interactable = true;
-
-        _enemySpawner = FindObjectOfType<EnemySpawner>();
-        uI_Timer = FindObjectOfType<UI_Timer>();
 
         if (uI_Timer == null || uI_Timer.photonView == null)
         {
@@ -58,92 +60,62 @@ public class InGameShop : MonoBehaviourPunCallbacks
         switch (voteNum)
         {
             case 0:
-                photonView.RPC("OnAddTimeOrCardButton", RpcTarget.All, "plusTime");
-                break;
-            case 1:
-                photonView.RPC("OnAddTimeOrCardButton", RpcTarget.All, "plusCard");
-                break;
-        }
-    }
-
-    [PunRPC]
-    void OnAddTimeOrCardButton(string votingName)
-    {
-        switch (votingName)
-        {
-            case "plusTime":
                 _plusTimeCount++;
                 break;
-            case "plusCard":
+            case 1:
                 _plusCardCount++;
                 break;
+            default:
+                break;
         }
-        photonView.RPC("ExecuteVotingResult", RpcTarget.All, _plusCardCount, _plusTimeCount);
-
+        gameManager.photonView.RPC("OnAddTimeOrCardButton", RpcTarget.All, _plusTimeCount, _plusCardCount);
     }
 
-    [PunRPC]
-    private void ExecuteVotingResult(int plusCardVotes, int plusTimeVotes)
+
+    public void ExecuteVotingResult(int plusCardVotes, int plusTimeVotes)
     {
-        _plusCardCount = plusCardVotes;
-        _plusTimeCount = plusTimeVotes;
 
-        _timeText.text = $"AddTime\nVote : {_plusTimeCount}";
-        _cardText.text = $"AddCard\nVote : {_plusCardCount}";
-
-        if (PhotonNetwork.PlayerList.Length == (_plusTimeCount + _plusCardCount))
+        if (plusCardVotes > plusTimeVotes)
         {
-            _isAllVoting = true;
+            // 카드추가 투표가 더 많거나
+            Debug.Log("카드가 더해짐");
+            _isAllDone = true;
+            AddRandomCardToDeck();
         }
-        if (_isAllVoting)
+        else if (plusCardVotes < plusTimeVotes)
         {
-            if (plusCardVotes > plusTimeVotes)
+            // 시간추가 투표가 더 많거나
+            Debug.Log("시간이 더해짐");
+            uI_Timer.photonView.RPC("TimePlusMinus", RpcTarget.All, 10f);
+            _isAllDone = true;
+        }
+        else
+        {
+            // 둘의 투표가 같다면 랜덤으로 결정
+            int randomVoting = Random.Range(0, 2);
+            if (PhotonNetwork.IsMasterClient)
             {
-                // 카드추가 투표가 더 많거나
-                Debug.Log("카드가 더해짐");
-                AddRandomCardToDeck();
-                _isAllDone = true;
-            }
-
-            else if (plusCardVotes < plusTimeVotes && PhotonNetwork.IsMasterClient)
-            {
-                // 시간추가 투표가 더 많거나
-                Debug.Log("시간이 더해짐");
-                uI_Timer.photonView.RPC("TimePlusMinus", RpcTarget.All, 10f);
-                _isAllDone = true;
-            }
-            else
-            {
-                // 둘의 투표가 같다면 랜덤으로 결정
-                int randomVoting = Random.Range(0, 2);
-                if (PhotonNetwork.IsMasterClient)
+                if (randomVoting == 0)
                 {
-
-                    if (randomVoting == 0)
-                    {
-                        Debug.Log("시간이 더해짐");
-                        uI_Timer.photonView.RPC("TimePlusMinus", RpcTarget.All, 10f);
-                        _isAllDone = true;
-                    }
+                    Debug.Log("시간이 더해짐");
+                    uI_Timer.photonView.RPC("TimePlusMinus", RpcTarget.All, 10f);
+                    _isAllDone = true;
                 }
-
                 else
                 {
                     Debug.Log("카드가 더해짐");
-                    AddRandomCardToDeck();
                     _isAllDone = true;
+                    AddRandomCardToDeck();
                 }
             }
         }
+        
         if (_isAllDone && PhotonNetwork.IsMasterClient)
         {
             _enemySpawner.OnShopButtonPressed();
             _isAllDone = false;
-            _isAllVoting = false;
             Destroy(gameObject); // 상점 UI 제거
         }
-        
-
     }
 
     private void AddRandomCardToDeck()
