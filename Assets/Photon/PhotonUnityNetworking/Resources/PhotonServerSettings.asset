@@ -73,6 +73,8 @@ MonoBehaviour:
   - SyncStatsAndUI
   - ImageChangePlayer
   - UpdatePlayerReadyState
+  - RPC_HandCardCount
+  - UpdateHandCardCount
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

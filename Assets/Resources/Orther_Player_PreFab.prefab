@@ -998,13 +998,11 @@ GameObject:
   - component: {fileID: 1371782393068297548}
   - component: {fileID: -199935069691417893}
   - component: {fileID: 4684571111801863881}
-  - component: {fileID: 7441035515764275795}
-  - component: {fileID: 5078675330760673566}
   - component: {fileID: -6961283133551894298}
   - component: {fileID: 6966195465294581271}
   - component: {fileID: -6199456347257983558}
   m_Layer: 5
-  m_Name: Player_PreFab
+  m_Name: Orther_Player_PreFab
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1073,43 +1071,6 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &7441035515764275795
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7646088978091066834}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d9545995764bec84aaf9e2c8c934153d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Sword: 0
-  Magic: 0
-  Shield: 0
-  RandomValue: 0
-  PlayerID: 213
-  charAsset: {fileID: 0}
-  PArea: {fileID: 2571891346215937270}
-  usedHeroPowerThisGame: 0
-  _deck: {fileID: 0}
-  hand: {fileID: 8442993951285010270}
-  _swordPoint: 0
-  _magicPoint: 0
-  _shieldPoint: 0
---- !u!114 &5078675330760673566
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7646088978091066834}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e28a32de0743ff74d9f7e7f6d28ae4bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &-6961283133551894298
 MonoBehaviour:
   m_ObjectHideFlags: 0

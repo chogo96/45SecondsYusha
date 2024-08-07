@@ -76,7 +76,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (playerObject != null)
         {
             // Set a custom name to the player object
-            playerObject.name = $"{player.NickName}_{player.ActorNumber}";
+            playerObject.name = $"{player.NickName}";
 
             // Set the player as a child of the Canvas - PlayerSpawn object
             playerObject.transform.SetParent(canvasTransform, false);

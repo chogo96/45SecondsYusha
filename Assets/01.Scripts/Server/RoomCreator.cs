@@ -547,6 +547,13 @@ public class RoomCreator : MonoBehaviourPunCallbacks
                 allReady = false;
                 break;
             }
+            // PlayerImage가 설정되었는지 확인
+            if (!player.CustomProperties.TryGetValue("PlayerImage", out object playerImage) || playerImage == null)
+            {
+                allReady = false;
+                Utils.LogRed($"Player {player.NickName} has no PlayerImage set.");
+                break;
+            }
         }
 
         if (allReady)
@@ -602,12 +609,12 @@ public class RoomCreator : MonoBehaviourPunCallbacks
                 default:
                     break;
             }
-            Debug.Log("All players are ready!");
+            Utils.Log("All players are ready!");
             // 모든 플레이어가 준비된 상태일 때의 로직
         }
         else
         {
-            Debug.Log("Not all players are ready.");
+            Utils.Log("Not all players are ready.");
             _notReady.SetActive(true);
         }
     }
