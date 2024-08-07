@@ -35,14 +35,22 @@ public class Enemy : MonoBehaviourPunCallbacks
         if (unitRoot != null)
         {
             _animator = unitRoot.GetComponent<Animator>();
-            if (_animator == null)
-            {
-                Debug.LogError("UnitRoot에 애니메이터 컴포넌트가 없습니다.");
-            }
+            
         }
         else
         {
-            Debug.LogError("UnitRoot라는 자식 오브젝트를 찾을 수 없습니다.");
+            Transform HorseRoot = transform.Find("HorseRoot");
+            if (HorseRoot != null)
+            {
+                _animator = HorseRoot.GetComponent<Animator>();
+            }
+            else
+            {
+                if (_animator == null)
+                {
+                    Utils.LogRed("UnitRoot도 horseRoot도 애니메이터 컴포넌트가 없습니다.");
+                }
+            }
         }
     }
 
