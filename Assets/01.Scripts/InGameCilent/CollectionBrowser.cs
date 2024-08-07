@@ -171,23 +171,13 @@ public class CollectionBrowser : MonoBehaviour
         }
         CreatedCards.Clear();
     }
+
     public void UpdateQuantitiesOnPage()
     {
-        for (int i = CreatedCards.Count - 1; i >= 0; i--)
+        foreach (GameObject card in CreatedCards)
         {
-            GameObject card = CreatedCards[i];
-            if (card != null)  // 오브젝트가 존재하는지 확인
-            {
-                AddCardToDeck addCardComponent = card.GetComponent<AddCardToDeck>();
-                if (addCardComponent != null)  // 컴포넌트가 존재하는지 확인
-                {
-                    addCardComponent.UpdateQuantity();
-                }
-            }
-            else
-            {
-                CreatedCards.RemoveAt(i);  // 리스트에서 삭제
-            }
+            AddCardToDeck addCardComponent = card.GetComponent<AddCardToDeck>();
+            addCardComponent.UpdateQuantity();
         }
     }
 
