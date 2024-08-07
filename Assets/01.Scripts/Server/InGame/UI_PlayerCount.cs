@@ -68,6 +68,11 @@ public class UI_PlayerCount : MonoBehaviourPunCallbacks
                     _handCountText.text = $"0";
                 }
                 break;
+                //코루틴이 아닌 상황에서도 추가하기위해 업데이트 case추가
+            case "Update":
+                _handCountText.text = $"{_baseHandCards}";
+                _deckCountText.text = $"{_baseDeckCards}";
+                break;
             default:
                 break;
         }
