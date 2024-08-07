@@ -23,10 +23,27 @@ public class Enemy : MonoBehaviourPunCallbacks
     private PlayerSetManager playerSetManager;
     private GameOverManager _gameOverManager;
 
+    private Animator _animator; // 애니메이터 참조용
+
     private void Awake()
     {
         playerSetManager = FindObjectOfType<PlayerSetManager>();
         _gameOverManager = FindObjectOfType<GameOverManager>();
+
+        // 자식 오브젝트에서 애니메이터 찾기
+        Transform unitRoot = transform.Find("UnitRoot");
+        if (unitRoot != null)
+        {
+            _animator = unitRoot.GetComponent<Animator>();
+            if (_animator == null)
+            {
+                Debug.LogError("UnitRoot에 애니메이터 컴포넌트가 없습니다.");
+            }
+        }
+        else
+        {
+            Debug.LogError("UnitRoot라는 자식 오브젝트를 찾을 수 없습니다.");
+        }
     }
 
     public void Initialize(EnemyData data, List<PlayerScripts> players, bool isFinalBoss = false)
@@ -145,6 +162,17 @@ public class Enemy : MonoBehaviourPunCallbacks
 
     public void Die()
     {
+        if (_animator != null)
+        {
+            _animator.SetTrigger("DieTrigger"); // 애니메이션 트리거 설정
+        }
+        else
+        {
+            Utils.LogRed("애니메이터가 null입니다. 사망 애니메이션을 재생할 수 없습니다.");
+        }
+
+        SoundManager.instance.PlaySfx(SoundManager.Sfx.EnemyDown);
+
         if (IsFinalBoss)
         {
             Utils.Log("승리!");
@@ -159,6 +187,17 @@ public class Enemy : MonoBehaviourPunCallbacks
         }
 
         OnEnemyDeath?.Invoke();
+
+        // 애니메이션 재생 후 오브젝트 제거를 위한 코루틴 실행
+        StartCoroutine(DestroyAfterAnimation());
+    }
+
+    private IEnumerator DestroyAfterAnimation()
+    {
+        // 애니메이션의 길이를 기다림
+        yield return new WaitForSeconds(_animator.GetCurrentAnimatorStateInfo(0).length);
+
+        // 오브젝트 파괴
         Destroy(gameObject);
     }
 
@@ -175,8 +214,6 @@ public class Enemy : MonoBehaviourPunCallbacks
             Die();
         }
     }
-
-
 
     private IEnumerator HandleSpecialEffect(SpecialEffect effect)
     {

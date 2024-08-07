@@ -27,11 +27,13 @@ public class GameOverManager : MonoBehaviour
     public void DisplayWin()
     {
         StartCoroutine(ShowPanel(winPanel));
+        SoundManager.instance.ChangeBgm("Win");
     }
 
     public void DisplayLose()
     {
         StartCoroutine(ShowPanel(losePanel));
+        SoundManager.instance.ChangeBgm("Lose");
     }
 
     private IEnumerator ShowPanel(GameObject panel)
