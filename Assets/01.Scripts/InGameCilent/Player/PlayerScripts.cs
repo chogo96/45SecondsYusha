@@ -49,6 +49,12 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
     public int _magicPoint;
     public int _shieldPoint;
 
+    // UI_PlayerCount 에 보낼 값
+    UI_PlayerCount ui_PlayerCount;
+    private int _deckCardCount;
+    private int _handCardCount;
+
+
     public int ID
     {
         get { return PlayerID; }
@@ -96,6 +102,8 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         Players = GameObject.FindObjectsOfType<PlayerScripts>();
         PlayerID = IDFactory.GetUniquePlayerID();
         _playerDeckVisual = FindObjectOfType<PlayerDeckVisual>();
+        ui_PlayerCount = FindObjectOfType<UI_PlayerCount>();
+
 
         // EnemySpawner에 자신을 등록
         RegisterWithEnemySpawner();
@@ -115,24 +123,26 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         }
 
         // Deck1 오브젝트를 찾아서 Deck 스크립트를 참조합니다.
-        GameObject deckObject = GameObject.Find("Deck1");
-        if (deckObject != null)
-        {
-            _deck = deckObject.GetComponent<Deck>();
-            if (_deck == null)
-            {
-                Utils.LogRed("Deck1 오브젝트에서 Deck 컴포넌트를 찾을 수 없습니다.");
-            }
-        }
-        else
-        {
-            Utils.LogRed("Deck1 오브젝트를 찾을 수 없습니다.");
-        }
+        //GameObject deckObject = GameObject.Find("Deck1");
+        //if (deckObject != null)
+        //{
+        //    _deck = deckObject.GetComponent<Deck>();
+        //    if (_deck == null)
+        //    {
+        //        Utils.LogRed("Deck1 오브젝트에서 Deck 컴포넌트를 찾을 수 없습니다.");
+        //    }
+        //}
+        //else
+        //{
+        //    Utils.LogRed("Deck1 오브젝트를 찾을 수 없습니다.");
+        //}
 
         _playerTransform = gameObject;
 
-        InitializePlayerDeck();
+        // InitializePlayerDeck();
         LoadCharacterInfoFromDeck();
+
+        GameManager.AllPlayersSpawned += C_FillHand;
     }
 
 
@@ -160,10 +170,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
 
     void Start()
     {
-        if (hand.CardsInHand.Count <= 4 && !isFillingHand)
-        {
-            StartCoroutine(FillHandCoroutine());
-        }
+        
 
         //// 적이 죽었을 때 호출되는 이벤트 핸들러 등록
         //Enemy.OnEnemyDeath += OnEnemyDeath;
@@ -172,6 +179,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         Enemy.OnEnemyDeath += OnEnemyDeath;
         Enemy.OnEnemySpawned -= OnNewEnemySpawned;  // 중복 등록 방지
         Enemy.OnEnemySpawned += OnNewEnemySpawned;
+        
         #region 직업 스크립트를 AddComponent 하는곳
         if (charAsset.ClassName == "Attacker")// Attacker, Buffer, Healer, Tanker
         {
@@ -194,12 +202,21 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         }
         #endregion
     }
+    public void C_FillHand()
+    {
+        if (hand.CardsInHand.Count <= 4 && !isFillingHand)
+        {
+            StartCoroutine(FillHandCoroutine());
+        }
+    }
 
     void OnDestroy()
     {
         // 이벤트 핸들러 등록 해제
         Enemy.OnEnemyDeath -= OnEnemyDeath;
         Enemy.OnEnemySpawned -= OnNewEnemySpawned;
+        GameManager.AllPlayersSpawned -= C_FillHand;
+
     }
 
     void OnEnemyDeath()
@@ -254,8 +271,13 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             return;
         }
 
-        playerSetManager.photonView.RPC("HandCardCount", RpcTarget.All, actorNumber, "Plus");
+
+        _deckCardCount = _deck.Cards.Count;
+        _handCardCount = hand.CardsInHand.Count;
+        ui_PlayerCount.HandCardCount("Plus", _deckCardCount, _handCardCount);
+
         StartCoroutine(DrawCardsCoroutine(n));
+
     }
 
     private IEnumerator DrawCardsCoroutine(int n)
@@ -292,7 +314,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
 
     }
 
-    private void InitializePlayerDeck()
+    public void InitializePlayerDeck()
     {
         List<CardAsset> selectedDeckCards = DeckGameManager.instance.GetSelectedDeckCards();
 
@@ -388,7 +410,11 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
 
         isPlayingCard = true; // 카드 플레이 시작
 
-        playerSetManager.photonView.RPC("HandCardCount", RpcTarget.All, actorNumber, "Minus");
+
+        _handCardCount = hand.CardsInHand.Count;
+        _deckCardCount = _deck.Cards.Count;
+        ui_PlayerCount.HandCardCount("Minus", _deckCardCount, _handCardCount);
+
 
         if (BuffManager.instance.BlindDebuff)
         {
@@ -575,7 +601,10 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         // 손패의 카드 개수가 4장 이하일 때 덱에서 카드를 채우는 로직 추가
         if (hand.CardsInHand.Count <= 4 && !isFillingHand)
         {
-            playerSetManager.photonView.RPC("HandCardCount", RpcTarget.All, actorNumber, "Plus");
+            _deckCardCount = _deck.Cards.Count;
+            _handCardCount = hand.CardsInHand.Count;
+            ui_PlayerCount.HandCardCount("Plus", _deckCardCount, _handCardCount);
+
             StartCoroutine(FillHandCoroutine());
         }
 
