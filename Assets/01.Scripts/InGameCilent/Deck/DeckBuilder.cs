@@ -92,24 +92,32 @@ public class DeckBuilder : MonoBehaviour
         }
         return count;
     }
-
     public void RemoveCard(CardAsset asset)
     {
         Debug.Log("InRemoveCard");
-        CardNameRibbon ribbonToRemove = ribbons[asset];
-        ribbonToRemove.SetQuantity(ribbonToRemove.Quantity - 1);
-
-        if (NumberOfThisCardInDeck(asset) == 1)
+        if (ribbons.ContainsKey(asset))
         {
-            ribbons.Remove(asset);
-            Destroy(ribbonToRemove.gameObject);
+            CardNameRibbon ribbonToRemove = ribbons[asset];
+            ribbonToRemove.SetQuantity(ribbonToRemove.Quantity - 1);
+
+            if (NumberOfThisCardInDeck(asset) == 1)
+            {
+                ribbons.Remove(asset);
+                if (ribbonToRemove != null && ribbonToRemove.gameObject != null)
+                {
+                    Destroy(ribbonToRemove.gameObject);
+                }
+            }
         }
 
         deckList.Remove(asset);
 
         CheckDeckCompleteFrame();
 
-        DeckBuildingScreen.instance.CollectionBrowser.UpdateQuantitiesOnPage();
+        if (DeckBuildingScreen.instance.CollectionBrowser != null)
+        {
+            DeckBuildingScreen.instance.CollectionBrowser.UpdateQuantitiesOnPage();
+        }
     }
 
     public void BuildADeckFor(CharacterAsset asset)
