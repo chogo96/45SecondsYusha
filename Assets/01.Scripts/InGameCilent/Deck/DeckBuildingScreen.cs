@@ -17,6 +17,7 @@ public class DeckBuildingScreen : MonoBehaviour
 
     public static DeckBuildingScreen instance;
 
+
     void Awake()
     {
         instance = this;
@@ -35,7 +36,9 @@ public class DeckBuildingScreen : MonoBehaviour
         CollectionBrowser.OneCharacterTabs.gameObject.SetActive(false);
         Canvas.ForceUpdateCanvases();
 
-        //CollectionBrowser.ShowCollectionForBrowsing();
+
+        CollectionBrowser.UpdatePage();
+        // CollectionBrowser.ShowCollectionForBrowsing();
     }
 
     public void ShowScreenForDeckBuilding()

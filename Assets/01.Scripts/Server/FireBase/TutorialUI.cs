@@ -10,7 +10,7 @@ public class TutorialUI : MonoBehaviour
     private GameObject _tutorialPanel; // 패널 위치
 
     // 리스트
-    public List<Sprite> images;  // 이미지 리스트를 Unity Inspector에서 설정
+    public List<Sprite> tutorialImages;  // 이미지 리스트를 Unity Inspector에서 설정
 
     // 이미지
     private Image _displayImage;   // 이미지를 표시할 UI Image
@@ -54,9 +54,9 @@ public class TutorialUI : MonoBehaviour
 
         CheckTutorialStatus();
 
-        if (images.Count > 0)
+        if (tutorialImages.Count > 0)
         {
-            _displayImage.sprite = images[currentIndex];
+            _displayImage.sprite = tutorialImages[currentIndex];
         }
         UpdateButtons();
     }
@@ -128,17 +128,17 @@ public class TutorialUI : MonoBehaviour
         switch (num)
         {
             case 0:
-                if (currentIndex < images.Count - 1)
+                if (currentIndex < tutorialImages.Count - 1)
                 {
                     currentIndex++;
-                    _displayImage.sprite = images[currentIndex];
+                    _displayImage.sprite = tutorialImages[currentIndex];
                 }
                 break;
             case 1:
                 if (currentIndex > 0)
                 {
                     currentIndex--;
-                    _displayImage.sprite = images[currentIndex];
+                    _displayImage.sprite = tutorialImages[currentIndex];
                 }
                 break;
             default:
@@ -154,7 +154,7 @@ public class TutorialUI : MonoBehaviour
     void UpdateButtons()
     {
         _backButton.interactable = currentIndex > 0;
-        _frontButton.interactable = currentIndex < images.Count - 1;
+        _frontButton.interactable = currentIndex < tutorialImages.Count - 1;
     }
 
     /// <summary>
