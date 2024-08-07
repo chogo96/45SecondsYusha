@@ -97,7 +97,7 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void HandCardCount(int playerNumber, string plusMinus)
     {
-
+        
         _baseHandCards[playerNumber] = hand.CardsInHand.Count;
         _baseDeckCards[playerNumber] = playerScripts._deck.Cards.Count;
 
