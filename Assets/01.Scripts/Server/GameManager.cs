@@ -13,6 +13,13 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public static Action AllPlayersSpawned;
 
+    private int _cardCount;
+    private int _timeCount;
+    private int _sumCount;
+
+    private InGameShop inGameShop;
+
+
     private void Start()
     {
         // Find the Canvas - PlayerSpawn object
@@ -115,5 +122,35 @@ public class GameManager : MonoBehaviourPunCallbacks
             // 마스터 클라이언트가 아니면
             PhotonNetwork.LoadLevel("02.Lobby Scene");
         }
+    }
+
+    [PunRPC]
+    public void OnAddTimeOrCardButton(int plusTime, int plusCard)
+    {
+        inGameShop = FindObjectOfType<InGameShop>();
+
+        Utils.LogGreen($"plusTime {plusTime}");
+        Utils.LogGreen($"plusCard {plusCard}");
+
+        _cardCount = _cardCount + plusCard;
+        _timeCount = _timeCount + plusTime;
+
+        inGameShop._plusTimeCount = plusTime;
+        inGameShop._plusCardCount = plusCard;
+
+        Utils.LogGreen($"_cardCount {_cardCount}");
+        Utils.LogGreen($"_timeCount {_timeCount}");
+        _sumCount = _cardCount + _timeCount;
+
+        inGameShop._timeText.text = $"AddTime\nVote : {_timeCount}";
+        inGameShop._cardText.text = $"AddCard\nVote : {_cardCount}";
+
+        Debug.Log($"Votes updated on {PhotonNetwork.LocalPlayer.NickName}: AddTime: {_timeCount}, AddCard: {_cardCount}");
+
+        if (_sumCount == PhotonNetwork.PlayerList.Length)
+        {
+            inGameShop.ExecuteVotingResult(_cardCount, _timeCount);
+        }
+
     }
 }

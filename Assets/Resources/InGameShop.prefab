@@ -346,6 +346,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f97a6d41809af74abf29aa63fa0e3df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _timeText: {fileID: 0}
+  _cardText: {fileID: 0}
+  _plusTimeCount: 0
+  _plusCardCount: 0
+  _sumCount: 0
 --- !u!114 &2289877363385846005
 MonoBehaviour:
   m_ObjectHideFlags: 0

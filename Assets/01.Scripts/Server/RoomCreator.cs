@@ -186,7 +186,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
                 MaxPlayers = 4,
                 CustomRoomProperties = new ExitGames.Client.Photon.Hashtable { { "roomType", _matchmakingRoomType } },
                 CustomRoomPropertiesForLobby = new string[] { "roomType" },
-                //IsVisible = false // ~~매치메이킹 방은 방 목록에 안 나오게 설정~~  X발 이거때문에 계속 매칭안되는거였네 사람은 정보를 정확히 알아야 합니다.
+                //IsVisible = false 
             });
     }
 
@@ -225,7 +225,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         {
             // 버튼 활성화
             _buttons.SetActive(true);
-
+            _matchmaking.gameObject.SetActive(true);
             _punChatPanel.SetActive(false);
         }
     }
@@ -395,14 +395,39 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         if (roomType == _matchmakingRoomType)
         {
             playerListDisplay.UpdatePlayerList();
-            _matchmakingPlayer.text = $"Matching ( {PhotonNetwork.CurrentRoom.PlayerCount} / {PhotonNetwork.CurrentRoom.MaxPlayers} )";
-            int playerNumber = PhotonNetwork.CurrentRoom.PlayerCount;
+            _matchmakingPlayer.text = $"Matching ( {PhotonNetwork.CurrentRoom.PlayerCount} / 4 )";
             playerListDisplay.UpdatePlayerList();
 
             // 현재 방의 인원이 4명인지 확인
-            if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
+            if (PhotonNetwork.CurrentRoom.PlayerCount == 4)
             {
-                StartGame();
+                isMatchmaking = false;
+                _panelMatchmaking.SetActive(false);
+                // 방에 입장한 플레이어 수에 따라 닉네임 설정
+                _inRoomPanel.SetActive(true);
+                int playerNumber = PhotonNetwork.CurrentRoom.PlayerCount;
+                playerListDisplay.UpdatePlayerList(); // 방에 입장한 후 플레이어 목록 갱신
+                _punChatPanel.SetActive(true);
+                _buttons.SetActive(false);
+
+                _playerNickName = transform.Find($"Panel - BG/InRoom/Panel - PlayerImageView/{PhotonNetwork.LocalPlayer.NickName}/Text (TMP)").GetComponent<TMP_Text>();
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    // 마스터클라이언트(방장) 이라면 닉네임을 파랑으로
+                    _playerNickName.color = Color.blue;
+
+                    // 그리고 마스터클라이언트 니까 바로 레디상태 박아버림
+                    ExitGames.Client.Photon.Hashtable customPropertiess = new ExitGames.Client.Photon.Hashtable();
+                    customPropertiess["Ready"] = true;
+                    PhotonNetwork.LocalPlayer.SetCustomProperties(customPropertiess);
+                }
+                else
+                {
+                    // 다른플레이어는 기본상태가 준비X 니까 닉네임을 빨강으로 변경
+                    _playerNickName.color = Color.red;
+                }
+                photonView.RPC("UpdatePlayerReadyState", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber, _isRoomReady);
+                UpdateStartButtonVisibility();
             }
         }
         else if (roomType == _customRoomType)
@@ -441,12 +466,38 @@ public class RoomCreator : MonoBehaviourPunCallbacks
 
         if (roomType == _matchmakingRoomType)
         {
-            _matchmakingPlayer.text = $"Matching ( {PhotonNetwork.CurrentRoom.PlayerCount} / {PhotonNetwork.CurrentRoom.MaxPlayers} )";
+            _matchmakingPlayer.text = $"Matching ( {PhotonNetwork.CurrentRoom.PlayerCount} / 4)";
             playerListDisplay.UpdatePlayerList();
 
-            if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
+            if (PhotonNetwork.CurrentRoom.PlayerCount == 4)
             {
-                StartGame();
+                isMatchmaking = false;
+                _panelMatchmaking.SetActive(false);
+                // 방에 입장한 플레이어 수에 따라 닉네임 설정
+                _inRoomPanel.SetActive(true);
+                int playerNumber = PhotonNetwork.CurrentRoom.PlayerCount;
+                playerListDisplay.UpdatePlayerList(); // 방에 입장한 후 플레이어 목록 갱신
+                _punChatPanel.SetActive(true);
+                _buttons.SetActive(false);
+
+                _playerNickName = transform.Find($"Panel - BG/InRoom/Panel - PlayerImageView/{PhotonNetwork.LocalPlayer.NickName}/Text (TMP)").GetComponent<TMP_Text>();
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    // 마스터클라이언트(방장) 이라면 닉네임을 파랑으로
+                    _playerNickName.color = Color.blue;
+
+                    // 그리고 마스터클라이언트 니까 바로 레디상태 박아버림
+                    ExitGames.Client.Photon.Hashtable customPropertiess = new ExitGames.Client.Photon.Hashtable();
+                    customPropertiess["Ready"] = true;
+                    PhotonNetwork.LocalPlayer.SetCustomProperties(customPropertiess);
+                }
+                else
+                {
+                    // 다른플레이어는 기본상태가 준비X 니까 닉네임을 빨강으로 변경
+                    _playerNickName.color = Color.red;
+                }
+                photonView.RPC("UpdatePlayerReadyState", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber, _isRoomReady);
+                UpdateStartButtonVisibility();
             }
         }
     }
@@ -507,15 +558,6 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         {
             Utils.LogRed("DeckSelectionUI 인스턴스를 찾을 수 없습니다.");
         }
-    }
-
-    private void StartGame()
-    {
-        Utils.Log("All players joined. Starting the game...");
-        isMatchmaking = false;
-        PhotonNetwork.CurrentRoom.IsOpen = false;
-        PhotonNetwork.CurrentRoom.IsVisible = false;
-        PhotonNetwork.LoadLevel("03.GamePlay Scene");
     }
 
     private void OnClickMainLobby()
@@ -635,6 +677,12 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         // RPC 호출로 모든 클라이언트에게 상태 변경 전파
         photonView.RPC("UpdatePlayerReadyState", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber, _isRoomReady);
     }
+
+    /// <summary>
+    /// 방에들어올때, 레디 박을때, 레디 취소할때 이름색 변경 함수
+    /// </summary>
+    /// <param name="playerID">대상</param>
+    /// <param name="isReady">레디 했는지?</param>
     [PunRPC]
     public void UpdatePlayerReadyState(int playerID, bool isReady)
     {
@@ -649,7 +697,6 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         if (playerObject == null)
         {
             Utils.LogRed("Player object not found.");
-            
             return;
         }
 
@@ -669,7 +716,42 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         {
             Utils.LogRed("Player's NickName component is null.");
         }
+
+        // 방에 있는 모든 플레이어의 상태 업데이트
+        foreach (Player otherPlayer in PhotonNetwork.PlayerList)
+        {
+            GameObject otherPlayerObject = GameObject.Find($"{otherPlayer.NickName}");
+            if (otherPlayerObject != null)
+            {
+                TMP_Text otherPlayerNickName = otherPlayerObject.GetComponentInChildren<TMP_Text>();
+                if (otherPlayerNickName != null)
+                {
+                    if (otherPlayer.IsMasterClient)
+                    {
+                        otherPlayerNickName.color = Color.blue; // 방장의 닉네임 색상을 파란색으로 설정
+                    }
+                    else if (otherPlayer.CustomProperties.TryGetValue("Ready", out object otherIsReady))
+                    {
+                        otherPlayerNickName.color = (bool)otherIsReady ? Color.green : Color.red; // 다른 플레이어의 준비 상태에 따라 색상 설정
+                    }
+                    else
+                    {
+                        otherPlayerNickName.color = Color.red; // 기본적으로 빨간색으로 설정
+                    }
+                }
+                else
+                {
+                    Utils.LogRed("Other player's NickName component is null.");
+                }
+            }
+            else
+            {
+                Utils.LogRed("Other player object not found.");
+            }
+        }
     }
+
+
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
         if (changedProps.ContainsKey("Ready"))
@@ -694,6 +776,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         {
             _roomStart.gameObject.SetActive(true); // 방장이라면 Start 버튼 활성화
             _matchmakingStart.gameObject.SetActive(true); // 방장이라면 Start 버튼 활성화
+            _roomReady.gameObject.SetActive(false);  // 방장은 Ready 누를 필요가 없음
         }
         else
         {

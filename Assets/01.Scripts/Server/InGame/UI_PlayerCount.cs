@@ -16,6 +16,11 @@ public class UI_PlayerCount : MonoBehaviourPunCallbacks
 
     private string _nickName;
 
+    private int _timeCount;
+    private int _cardCount;
+    private int _sumCount;
+
+
     private void Awake()
     {
         _nickName = PhotonNetwork.LocalPlayer.NickName;
@@ -77,4 +82,6 @@ public class UI_PlayerCount : MonoBehaviourPunCallbacks
                 break;
         }
     }
+
+    
 }
