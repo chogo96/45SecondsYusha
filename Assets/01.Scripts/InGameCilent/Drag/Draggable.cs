@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using static SoundManager;
 
 /// <summary>
 /// 이 클래스는 게임 오브젝트를 드래그 드롭 할 수 있는 클래스임
@@ -71,6 +72,7 @@ public class Draggable : MonoBehaviour
         _draggingActions.OnStartDrag();
         _zDisplacement = -Camera.main.transform.position.z + transform.position.z;
         _privateDisplacement = -transform.position + MouseInWorldCoords();
+        SoundManager.instance.PlaySfx(Sfx.CardUse);
     }
 
     public void CancelDrag()

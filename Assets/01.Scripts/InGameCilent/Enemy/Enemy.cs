@@ -145,6 +145,7 @@ public class Enemy : MonoBehaviourPunCallbacks
 
     public void Die()
     {
+        SoundManager.instance.PlaySfx(SoundManager.Sfx.EnemyDown);
         if (IsFinalBoss)
         {
             Utils.Log("½Â¸®!");
