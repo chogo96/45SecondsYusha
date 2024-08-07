@@ -7,7 +7,7 @@ using TMPro;
 
 public class AddCardToDeck : MonoBehaviour
 {
-    public TMP_Text QuantityText;
+    public Text QuantityText;
     private Vector3 _initialScale;
     private float scaleFactor = 1.5f;
     private CardAsset cardAsset;
