@@ -24,12 +24,14 @@ public class GoogleSheetsToCardAsset : MonoBehaviour
         GoogleCredential credential;
 
         string credentialsPath = Path.Combine(Application.dataPath, "Resources/teamfullleafcard-2fbd6d7473cb.json");
+        Debug.Log("Loading credentials from: " + credentialsPath);
 
         using (var stream = new FileStream(credentialsPath, FileMode.Open, FileAccess.Read))
         {
             credential = GoogleCredential.FromStream(stream).CreateScoped(Scopes);
         }
 
+        Debug.Log("Credentials loaded successfully.");
 
         service = new SheetsService(new BaseClientService.Initializer()
         {
@@ -53,11 +55,13 @@ public class GoogleSheetsToCardAsset : MonoBehaviour
 
         if (values != null && values.Count > 0)
         {
+            Debug.Log($"Values found: {values.Count}");
             foreach (var row in values)
             {
                 // 데이터가 충분하지 않으면 건너뜀
                 if (row.Count < 25) // 필요한 최소 열 개수
                 {
+                    Debug.LogWarning("Skipping row due to insufficient data: " + row.Count);
                     continue;
                 }
 

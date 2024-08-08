@@ -17,6 +17,7 @@ public class DeckSelectionUI : MonoBehaviour
     {
         if (ScreenContent == null || DeckListContent == null || DeckButtonPrefab == null)
         {
+            Debug.LogError("ScreenContent, DeckListContent 또는 DeckButtonPrefab이 할당되지 않았습니다.");
             return;
         }
 
@@ -34,11 +35,13 @@ public class DeckSelectionUI : MonoBehaviour
 
         if (DecksStorage.instance == null)
         {
+            Debug.LogError("DecksStorage.instance가 null입니다.");
             return;
         }
 
         if (DecksStorage.instance.AllDecks == null)
         {
+            Debug.LogError("DecksStorage.instance.AllDecks가 null입니다.");
             return;
         }
 

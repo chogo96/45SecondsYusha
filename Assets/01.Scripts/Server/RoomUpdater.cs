@@ -20,11 +20,11 @@ public class RoomUpdater : MonoBehaviourPunCallbacks
                 { "roomType", _matchmakingRoomType }
             };
             PhotonNetwork.CurrentRoom.SetCustomProperties(newProperties);
-            Debug.Log("방 정보가 업데이트되었습니다.");
+            Utils.Log("방 정보가 업데이트되었습니다.");
         }
         else
         {
-            Debug.LogError("방에 입장한 상태가 아닙니다.");
+            Utils.LogRed("방에 입장한 상태가 아닙니다.");
         }
     }
 }

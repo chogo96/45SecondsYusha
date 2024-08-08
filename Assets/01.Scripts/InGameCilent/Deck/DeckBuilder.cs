@@ -18,6 +18,7 @@ public class DeckBuilder : MonoBehaviour
     private Dictionary<CardAsset, CardNameRibbon> ribbons = new Dictionary<CardAsset, CardNameRibbon>();
 
     public bool InDeckBuildingMode { get; set; }
+
     private CharacterAsset buildingForCharacter;
 
     void Awake()
@@ -91,23 +92,32 @@ public class DeckBuilder : MonoBehaviour
         }
         return count;
     }
-
     public void RemoveCard(CardAsset asset)
     {
-        CardNameRibbon ribbonToRemove = ribbons[asset];
-        ribbonToRemove.SetQuantity(ribbonToRemove.Quantity - 1);
-
-        if (NumberOfThisCardInDeck(asset) == 1)
+        Debug.Log("InRemoveCard");
+        if (ribbons.ContainsKey(asset))
         {
-            ribbons.Remove(asset);
-            Destroy(ribbonToRemove.gameObject);
+            CardNameRibbon ribbonToRemove = ribbons[asset];
+            ribbonToRemove.SetQuantity(ribbonToRemove.Quantity - 1);
+
+            if (NumberOfThisCardInDeck(asset) == 1)
+            {
+                ribbons.Remove(asset);
+                if (ribbonToRemove != null && ribbonToRemove.gameObject != null)
+                {
+                    Destroy(ribbonToRemove.gameObject);
+                }
+            }
         }
 
         deckList.Remove(asset);
 
         CheckDeckCompleteFrame();
 
-        DeckBuildingScreen.instance.CollectionBrowser.UpdateQuantitiesOnPage();
+        if (DeckBuildingScreen.instance.CollectionBrowser != null)
+        {
+            DeckBuildingScreen.instance.CollectionBrowser.UpdateQuantitiesOnPage();
+        }
     }
 
     public void BuildADeckFor(CharacterAsset asset)

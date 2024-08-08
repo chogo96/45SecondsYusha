@@ -15,7 +15,7 @@ MonoBehaviour:
   Class: 3
   ClassName: "\uD0F1\uCEE4"
   HeroPowerName: 
-  AvatarImage: {fileID: 21300000, guid: 14c029b4a6558cb4386b99b73e77426f, type: 3}
+  AvatarImage: {fileID: 21300000, guid: 91cff77df8feae047a53650da584651b, type: 3}
   HeroPowerIconImage: {fileID: 0}
   AvatarBGImage: {fileID: 0}
   HeroPowerBGImage: {fileID: 0}
@@ -27,7 +27,7 @@ MonoBehaviour:
     rgba: 0
   ClassCardTint:
     serializedVersion: 2
-    rgba: 0
+    rgba: 4294967295
   ClassRibbonsTint:
     serializedVersion: 2
-    rgba: 0
+    rgba: 4294967295

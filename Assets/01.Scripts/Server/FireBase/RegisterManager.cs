@@ -1,11 +1,8 @@
-using Firebase;
 using Firebase.Auth;
 using Firebase.Database;
 using TMPro;
 using UnityEngine;
-using System.Threading.Tasks;
 using UnityEngine.UI;
-using Photon.Pun;
 
 public class RegisterManager : MonoBehaviour
 {
@@ -17,10 +14,9 @@ public class RegisterManager : MonoBehaviour
 
     private TMP_Text _errorMessage;
 
-    private FirebaseAuth auth;
-    private DatabaseReference databaseReference;
+    private FirebaseAuth _auth;
+    private DatabaseReference _databaseReference;
     private LoginManager _loginManager;
-
 
     private void Awake()
     {
@@ -35,21 +31,19 @@ public class RegisterManager : MonoBehaviour
 
     private void Start()
     {
-
-
-        auth = FirebaseAuth.DefaultInstance;
-        databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
+        _auth = FirebaseAuth.DefaultInstance;
+        _databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
 
         _confirm.onClick.AddListener(SignUp);
     }
 
     public async void SignUp()
     {
-        string email = _registerId.text;
+        string userId = _registerId.text;
         string password = _registerPw.text;
         string nickname = _nickName.text;
 
-        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(nickname))
+        if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(nickname))
         {
             _errorMessage.text = "All fields must be filled!";
             return;
@@ -57,18 +51,18 @@ public class RegisterManager : MonoBehaviour
 
         try
         {
+            // Firebase 인증은 여전히 이메일과 비밀번호로 처리해야 함
+            string email = $"{userId}@example.com";
+
             // 유저정보 만들기
-            AuthResult authResult = await auth.CreateUserWithEmailAndPasswordAsync(email, password);
+            AuthResult authResult = await _auth.CreateUserWithEmailAndPasswordAsync(email, password);
             FirebaseUser newUser = authResult.User;
 
             // 파이어베이스에 닉네임 저장
             User newUserProfile = new User(nickname);
             string json = JsonUtility.ToJson(newUserProfile);
 
-            // 이메일을 키로 사용하기 위해 인코딩
-            string encodedEmail = EncodeEmail(email);
-
-            await databaseReference.Child("users").Child(encodedEmail).SetRawJsonValueAsync(json);
+            await _databaseReference.Child("users").Child(userId).SetRawJsonValueAsync(json);
             _errorMessage.text = "User signed up and nickname saved!";
         }
         catch (System.Exception e)
@@ -76,15 +70,6 @@ public class RegisterManager : MonoBehaviour
             _errorMessage.text = "Sign up error: " + e.Message;
         }
     }
-
-    private string EncodeEmail(string email)
-    {
-        return email.Replace(".", ",");
-    }
-
-
-
-    
 }
 
 [System.Serializable]

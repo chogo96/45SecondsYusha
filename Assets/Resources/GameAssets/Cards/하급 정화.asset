@@ -19,13 +19,13 @@ MonoBehaviour:
     \uC720\uC6A9\uD560\uC9C0\uB77C"
   Tags: Healer
   Rarity: 0
-  CardImage: {fileID: 21300000, guid: 7ccd80b1ffc23e746b25e17be2fcf54b, type: 3}
+  CardImage: {fileID: 21300000, guid: c7623695e23c1b34eace24116f1c691a, type: 3}
   TokenCard: 0
   LimitOfThisCardInDeck: 3
   IsVanishCard: 0
   TypeOfCard: 0
   SwordAttack: 0
-  MagicAttack: 0
+  MagicAttack: 1
   ShieldAttack: 0
   RandomAttack: 0
   RandomRestoreDeck: 0

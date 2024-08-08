@@ -125,19 +125,28 @@ public class HandVisual : MonoBehaviour
 
         if (cardAsset.TypeOfCard == TypesOfCards.Attacks)
         {
-          
+            if (GlobalSettings.instance.CreatureCardPrefab == null)
+            {
+                Debug.LogError("CreatureCardPrefab is not assigned in GlobalSettings.");
+            }
             card = Instantiate(GlobalSettings.instance.CreatureCardPrefab, position, Quaternion.Euler(eulerAngles));
         }
         else
         {
             if (cardAsset.Targets == TargetingOptions.Nothing)
             {
-            
+                if (GlobalSettings.instance.NoTargetSpellCardPrefab == null)
+                {
+                    Debug.LogError("NoTargetSpellCardPrefab is not assigned in GlobalSettings.");
+                }
                 card = Instantiate(GlobalSettings.instance.NoTargetSpellCardPrefab, position, Quaternion.Euler(eulerAngles));
             }
             else
             {
-          
+                if (GlobalSettings.instance.TargetedSpellCardPrefab == null)
+                {
+                    Debug.LogError("TargetedSpellCardPrefab is not assigned in GlobalSettings.");
+                }
                 card = Instantiate(GlobalSettings.instance.TargetedSpellCardPrefab, position, Quaternion.Euler(eulerAngles));
                 DragSpellOnTarget dragSpell = card.GetComponentInChildren<DragSpellOnTarget>();
                 dragSpell.Targets = cardAsset.Targets;
@@ -152,6 +161,7 @@ public class HandVisual : MonoBehaviour
         }
         else
         {
+            Debug.LogError("Failed to create card: " + cardAsset.name);
         }
 
         return card;
@@ -181,6 +191,7 @@ public class HandVisual : MonoBehaviour
                 tag = "4Card";
                 break;
             default:
+                Debug.LogError("Invalid player position!");
                 break;
         }
 
@@ -191,6 +202,7 @@ public class HandVisual : MonoBehaviour
         }
         else
         {
+            Debug.LogError("Tag name is null or empty!");
         }
 
         // 카드 위치 설정 및 애니메이션 실행
@@ -335,6 +347,7 @@ public class HandVisual : MonoBehaviour
             case PlayerPosition.Player4:
                 return player4Left;
             default:
+                Debug.LogError("Invalid player position in GetLeftTransform!");
                 return player1Left;
         }
     }
@@ -352,6 +365,7 @@ public class HandVisual : MonoBehaviour
             case PlayerPosition.Player4:
                 return player4Right;
             default:
+                Debug.LogError("Invalid player position in GetRightTransform!");
                 return player1Right;
         }
     }

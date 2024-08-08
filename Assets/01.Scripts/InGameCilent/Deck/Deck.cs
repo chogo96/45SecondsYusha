@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Photon.Pun;
+using UnityEngine.XR;
 
 public class Deck : MonoBehaviour
 {
@@ -10,12 +11,18 @@ public class Deck : MonoBehaviour
     private BuffManager _buffManager;
 
     private int actorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
-    PlayerSetManager playerSetManager;
+    UI_PlayerCount ui_PlayerCount;
+    PlayerScripts playerScripts;
+
+    // 플레이어 셋 매니저에서 쓸 값들
+    private int _deckCardCount;
+    private int _handCardCount;
 
 
     private void Start()
     {
-        playerSetManager = FindObjectOfType<PlayerSetManager>();
+        ui_PlayerCount = FindObjectOfType<UI_PlayerCount>();
+        playerScripts = FindObjectOfType<PlayerScripts>();
         // 덱을 섞습니다.
         ShuffleDeck();
         _buffManager = GetComponent<BuffManager>();
@@ -53,7 +60,11 @@ public class Deck : MonoBehaviour
         if (_buffManager.BleedDebuff && _buffManager != null && Cards.Count > 0)
         {
             _buffManager.ApplyBleedEffect();
-            playerSetManager.photonView.RPC("HandCardCount", RpcTarget.All, actorNumber,"Minus");
+
+            _deckCardCount = Cards.Count;
+            _handCardCount = playerScripts.hand.CardsInHand.Count;
+            ui_PlayerCount.HandCardCount("Minus", _deckCardCount, _handCardCount);
+
         }
     }
 

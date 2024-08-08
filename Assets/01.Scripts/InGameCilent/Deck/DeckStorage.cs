@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 public class DecksStorage : MonoBehaviour
 {
-
     public static DecksStorage instance;
     public List<DeckInfo> AllDecks { get; set; }
-
     private bool alreadyLoadedDecks = false;
 
     void Awake()
@@ -42,24 +41,21 @@ public class DecksStorage : MonoBehaviour
             string characterKey = "DeckHero" + i.ToString();
             string deckNameKey = "DeckName" + i.ToString();
             string[] DeckAsCardNames = PlayerPrefsX.GetStringArray(deckListKey);
-
-        
-
+            Debug.Log("Has character key: " + PlayerPrefs.HasKey(characterKey));
+            Debug.Log("Has Deckname key: " + PlayerPrefs.HasKey(deckNameKey));
+            Debug.Log("Length of DeckAsCardNames: " + DeckAsCardNames.Length);
             if (DeckAsCardNames.Length > 0 && PlayerPrefs.HasKey(characterKey) && PlayerPrefs.HasKey(deckNameKey))
             {
                 string characterName = PlayerPrefs.GetString(characterKey);
                 string deckName = PlayerPrefs.GetString(deckNameKey);
-
                 List<CardAsset> deckList = new List<CardAsset>();
                 foreach (string name in DeckAsCardNames)
                 {
                     deckList.Add(CardCollection.instance.GetCardAssetByName(name));
                 }
-
                 DecksFound.Add(new DeckInfo(deckList, deckName, CharacterAssetsByName.instance.GetCharacterByName(characterName)));
             }
         }
-
         AllDecks = DecksFound;
     }
 
@@ -105,7 +101,6 @@ public class DecksStorage : MonoBehaviour
     }
 }
 
-
 [System.Serializable]
 public class DeckInfo
 {
@@ -127,7 +122,7 @@ public class DeckInfo
         return (AmountOfCardsInDeck == Cards.Count);
     }
 
-    public int NumberOfThisCardInDeck (CardAsset asset)
+    public int NumberOfThisCardInDeck(CardAsset asset)
     {
         int count = 0;
         foreach (CardAsset ca in Cards)

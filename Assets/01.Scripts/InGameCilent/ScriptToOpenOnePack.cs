@@ -65,6 +65,8 @@ public class ScriptToOpenOnePack : MonoBehaviour
     {
         if (_allowedToOpen)
         {
+            //팩 오픈할 때 나오는 사운드
+            SoundManager.instance.PlaySfx(SoundManager.Sfx.CardPackOpen);
             //다시 여는 걸 방지해주고 시작
             _allowedToOpen = false;
             //두트윈 시퀀스 시작
@@ -76,7 +78,6 @@ public class ScriptToOpenOnePack : MonoBehaviour
             sequence.OnComplete(() =>
             {
                 //여기에 glow 와 파티클 시스템을 넣으면 됩니다.
-
                 //팩 개수 체크 및 지우기
                 ShopManager.instance.OpeningArea.ShowPackOpening(transform.position);
                 if (ShopManager.instance.PacksCreated > 0)

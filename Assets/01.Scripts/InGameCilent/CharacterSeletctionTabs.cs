@@ -14,6 +14,7 @@ public class CharacterSelectionTabs : MonoBehaviour
     {
         if (tab == null || !Tabs.Contains(tab))
         {
+            Debug.LogWarning("Invalid tab selected.");
             return;
         }
 
@@ -48,14 +49,17 @@ public class CharacterSelectionTabs : MonoBehaviour
                 }
                 else
                 {
+                    Debug.LogWarning("FirebaseCardManager instance is null.");
                 }
             }
             else
             {
+                Debug.LogWarning("CollectionBrowser instance is null.");
             }
         }
         else
         {
+            Debug.LogWarning("DeckBuildingScreen instance is null.");
         }
     }
 
@@ -63,6 +67,7 @@ public class CharacterSelectionTabs : MonoBehaviour
     {
         if (ClassTab == null || asset == null)
         {
+            Debug.LogWarning("ClassTab or asset is null.");
             return;
         }
 
@@ -75,6 +80,7 @@ public class CharacterSelectionTabs : MonoBehaviour
         }
         else
         {
+            Debug.LogWarning("TMP_Text component is not found in ClassTab.");
         }
     }
 }

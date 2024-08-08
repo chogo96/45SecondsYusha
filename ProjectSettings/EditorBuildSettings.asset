@@ -6,24 +6,24 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/00.Scenes/Jinhos Scenes/00.LoginScene.unity
+    path: Assets/00.Scenes/00.LoginScene.unity
     guid: 4fadaa3b5af9df64c83673455f6118df
   - enabled: 1
-    path: Assets/00.Scenes/MainScene.unity
+    path: Assets/00.Scenes/01.MainScene.unity
     guid: 2ba91e56543b99742bbce7859e7778fd
-  - enabled: 1
+  - enabled: 0
     path: Assets/00.Scenes/Jinhos Scenes/01.Start Scene.unity
     guid: b765898f5cd35a7448a83818ad13c4eb
-  - enabled: 1
+  - enabled: 0
     path: Assets/00.Scenes/Jinhos Scenes/02.Store Scene.unity
     guid: 86891b0f4397be24fafb989de0d4c94b
-  - enabled: 1
+  - enabled: 0
     path: Assets/00.Scenes/Jinhos Scenes/03.Card Scene.unity
     guid: eb042d17c539def4988845a9206bf6f7
   - enabled: 1
-    path: Assets/00.Scenes/Jinhos Scenes/04.Lobby Scene.unity
+    path: Assets/00.Scenes/02.Lobby Scene.unity
     guid: d1a65cf934ce9d7498d568105d2d2045
   - enabled: 1
-    path: Assets/00.Scenes/Jinhos Scenes/05.GamePlay Scene.unity
+    path: Assets/00.Scenes/03.GamePlay Scene.unity
     guid: 4bff710e96b94ec40b95b5476cff2c50
   m_configObjects: {}

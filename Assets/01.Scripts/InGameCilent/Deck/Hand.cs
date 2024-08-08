@@ -16,6 +16,7 @@ public class Hand : MonoBehaviour
         }
         else
         {
+            Debug.Log("¼ÕÆÐ°¡ °¡µæ Ã¡½À´Ï´Ù.");
             return false;
         }
     }

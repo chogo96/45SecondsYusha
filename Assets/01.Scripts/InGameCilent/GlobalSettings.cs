@@ -45,5 +45,6 @@ public class GlobalSettings : MonoBehaviour
     public void AssignLowPlayer(PlayerScripts lowPlayer)
     {
         LowPlayer = lowPlayer;
+        Debug.Log("LowPlayer assigned successfully");
     }
 }

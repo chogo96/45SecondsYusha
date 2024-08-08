@@ -23,16 +23,42 @@ public class Enemy : MonoBehaviourPunCallbacks
     private PlayerSetManager playerSetManager;
     private GameOverManager _gameOverManager;
 
+    private Animator _animator; // 애니메이터 참조용
+
     private void Awake()
     {
         playerSetManager = FindObjectOfType<PlayerSetManager>();
         _gameOverManager = FindObjectOfType<GameOverManager>();
+
+        // 자식 오브젝트에서 애니메이터 찾기
+        Transform unitRoot = transform.Find("UnitRoot");
+        if (unitRoot != null)
+        {
+            _animator = unitRoot.GetComponent<Animator>();
+            
+        }
+        else
+        {
+            Transform HorseRoot = transform.Find("HorseRoot");
+            if (HorseRoot != null)
+            {
+                _animator = HorseRoot.GetComponent<Animator>();
+            }
+            else
+            {
+                if (_animator == null)
+                {
+                    Utils.LogRed("UnitRoot도 horseRoot도 애니메이터 컴포넌트가 없습니다.");
+                }
+            }
+        }
     }
 
     public void Initialize(EnemyData data, List<PlayerScripts> players, bool isFinalBoss = false)
     {
         if (players == null || players.Count == 0)
         {
+            Utils.LogRed("플레이어 리스트가 null이거나 비어 있습니다.");
             return;
         }
 
@@ -43,11 +69,11 @@ public class Enemy : MonoBehaviourPunCallbacks
         _specialEffects = data.specialEffects;
         IsFinalBoss = isFinalBoss;
 
-        //// 특수 효과 초기화
-        //foreach (var effect in _specialEffects)
-        //{
-        //    StartCoroutine(HandleSpecialEffect(effect));
-        //}
+        // 특수 효과 초기화
+        foreach (var effect in _specialEffects)
+        {
+            StartCoroutine(HandleSpecialEffect(effect));
+        }
 
         // 디버프 적용
         foreach (var debuff in _debuffs)
@@ -97,6 +123,7 @@ public class Enemy : MonoBehaviourPunCallbacks
         }
         else
         {
+            Utils.LogRed("플레이어 리스트가 null이거나 비어 있습니다. 출혈 디버프를 적용할 수 없습니다.");
         }
     }
 
@@ -114,6 +141,7 @@ public class Enemy : MonoBehaviourPunCallbacks
         }
         else
         {
+            Utils.LogRed("플레이어 리스트가 null이거나 비어 있습니다. 실명 디버프를 적용할 수 없습니다.");
         }
     }
 
@@ -131,6 +159,7 @@ public class Enemy : MonoBehaviourPunCallbacks
         }
         else
         {
+            Utils.LogRed("플레이어 리스트가 null이거나 비어 있습니다. 혼란 디버프를 적용할 수 없습니다.");
         }
     }
 
@@ -141,10 +170,23 @@ public class Enemy : MonoBehaviourPunCallbacks
 
     public void Die()
     {
+        if (_animator != null)
+        {
+            _animator.SetTrigger("DieTrigger"); // 애니메이션 트리거 설정
+        }
+        else
+        {
+            Utils.LogRed("애니메이터가 null입니다. 사망 애니메이션을 재생할 수 없습니다.");
+        }
+
+        SoundManager.instance.PlaySfx(SoundManager.Sfx.EnemyDown);
+
         if (IsFinalBoss)
         {
+            Utils.Log("승리!");
             _gameOverManager.DisplayWin();
         }
+        Utils.Log("사망!");
 
         // 플레이어의 _currentEnemy 참조를 해제
         if (_playerScripts != null)
@@ -153,11 +195,23 @@ public class Enemy : MonoBehaviourPunCallbacks
         }
 
         OnEnemyDeath?.Invoke();
+
+        // 애니메이션 재생 후 오브젝트 제거를 위한 코루틴 실행
+        StartCoroutine(DestroyAfterAnimation());
+    }
+
+    private IEnumerator DestroyAfterAnimation()
+    {
+        // 애니메이션의 길이를 기다림
+        yield return new WaitForSeconds(_animator.GetCurrentAnimatorStateInfo(0).length);
+
+        // 오브젝트 파괴
         Destroy(gameObject);
     }
 
     public void CheckDeathCondition(int sword, int magic, int shield)
     {
+        Utils.Log("죽었음? 혹은 넘어감?");
         if ((requiredSword == 0 || sword >= requiredSword) &&
             (requiredMagic == 0 || magic >= requiredMagic) &&
             (requiredShield == 0 || shield >= requiredShield))
@@ -174,6 +228,8 @@ public class Enemy : MonoBehaviourPunCallbacks
         while (true)
         {
             yield return new WaitForSeconds(effect.Cooldown);
+
+            // 특수 효과 적용 로직 (예: 다른 디버프 적용)
         }
     }
 }

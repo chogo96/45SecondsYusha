@@ -27,11 +27,13 @@ public class GameOverManager : MonoBehaviour
     public void DisplayWin()
     {
         StartCoroutine(ShowPanel(winPanel));
+        SoundManager.instance.ChangeBgm("Win");
     }
 
     public void DisplayLose()
     {
         StartCoroutine(ShowPanel(losePanel));
+        SoundManager.instance.ChangeBgm("Lose");
     }
 
     private IEnumerator ShowPanel(GameObject panel)
@@ -43,7 +45,15 @@ public class GameOverManager : MonoBehaviour
 
     private void ReturnToLobby()
     {
-        PhotonNetwork.LeaveRoom();
-        SceneManager.LoadScene("04.Lobby Scene"); // 로비 씬의 이름으로 변경
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            returnToLobbyButton.interactable = true;
+            PhotonNetwork.LoadLevel("02.Lobby Scene"); // 로비 씬의 이름으로 변경
+        }
+        else
+        {
+            returnToLobbyButton.interactable = false;
+        }
     }
 }

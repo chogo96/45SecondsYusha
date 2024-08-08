@@ -32,7 +32,7 @@ public class GameStart : MonoBehaviour
         switch (index)
         {
             case 0:
-                SceneManager.LoadScene("04.Lobby Scene");
+                SceneManager.LoadScene("02.Lobby Scene");
                 break;
             case 1:
                 SceneManager.LoadScene("02.Store Scene");

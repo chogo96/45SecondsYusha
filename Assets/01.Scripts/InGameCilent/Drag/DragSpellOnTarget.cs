@@ -195,6 +195,7 @@ public class DragSpellOnTarget : DraggingActions
                     }
                     break;
                 default:
+                    Debug.LogWarning("Reached default case in DragSpellOnTarget! Suspicious behaviour!!");
                     break;
             }
         }

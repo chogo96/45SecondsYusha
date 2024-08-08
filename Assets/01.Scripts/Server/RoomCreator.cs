@@ -1,24 +1,24 @@
+using Photon.Chat;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class RoomCreator : MonoBehaviourPunCallbacks
 {
     private Button _createRoomButton;
-    private Button[] _maxPlayer;
+    private Button _cancelCreateRoomButton;
 
     private TMP_InputField _inputFieldRoomName;
-    private TMP_Text _textRoomName;
 
     public RoomListDisplay roomListDisplay;
     public PlayerListDisplay playerListDisplay;
 
     private Button _newRoom;
-    private Button _reSearch;
     private GameObject _roomOptionPanel;
     private GameObject _inRoomPanel;
     private Button _roomExit;
@@ -42,26 +42,29 @@ public class RoomCreator : MonoBehaviourPunCallbacks
 
     // PunChat 기능추가
     private GameObject _punChatPanel;
+    private PunChatManager punChatManager;
 
     // 메인로비 버튼 추가
     private Button _mainLobby;
 
+    // 방생성시 버튼비활성화 처리할 게임오브젝트
+    private GameObject _buttons;
+
+    // 레디 했는지 안했는지 확인하는거 만듬
+    private Button _roomReady;
+    private bool _isRoomReady = false;
+    private TMP_Text _playerNickName;
+    private GameObject _notReady;
+    private Button _checkButton;
+    
 
     private void Awake()
     {
-        _maxPlayer = new Button[4];
-        // 버튼 찾기 및 배열에 추가
-        for (int i = 0; i < _maxPlayer.Length; i++)
-        {
-            string buttonName = $"Panel - BG/RoomOption/MaxPlayer/MaxPlayer_Button/Button - {i + 1}";
-            _maxPlayer[i] = transform.Find(buttonName).GetComponent<Button>();
-            int index = i;
-            _maxPlayer[i].onClick.AddListener(() => OnClickButton(index));
-        }
 
         _createRoomButton = transform.Find("Panel - BG/RoomOption/Button - RoomCreate").GetComponent<Button>();
+        _cancelCreateRoomButton = transform.Find("Panel - BG/RoomOption/Button - Cancel").GetComponent<Button>();
+
         _inputFieldRoomName = transform.Find("Panel - BG/RoomOption/RoomName/InputField (TMP) - RoomName").GetComponent<TMP_InputField>();
-        _textRoomName = transform.Find("Panel - BG/RoomOption/MaxPlayer/Text (TMP) - SelectPlayer").GetComponent<TMP_Text>();
 
         _roomOptionPanel = transform.Find("Panel - BG/RoomOption").gameObject;
         _inRoomPanel = transform.Find("Panel - BG/InRoom").gameObject;
@@ -69,9 +72,9 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         _roomExit = transform.Find("Panel - BG/InRoom/Button - Exit").GetComponent<Button>();
         _roomStart = transform.Find("Panel - BG/InRoom/Button - Start").GetComponent<Button>();
         _selectDeck = transform.Find("Panel - BG/InRoom/Button - DeckSelect").GetComponent<Button>();
+        _roomReady = transform.Find("Panel - BG/InRoom/Button - Ready").GetComponent<Button>();
 
         _newRoom = transform.Find("Panel - BG/Buttons/Button - NewRoom").GetComponent<Button>();
-        _reSearch = transform.Find("Panel - BG/Buttons/Button - ReSearch").GetComponent<Button>();
         _matchmaking = transform.Find("Panel - BG/Buttons/Button - Matchmaking").GetComponent<Button>();
         _mainLobby = transform.Find("Panel - BG/Buttons/Button - MainLobby").GetComponent<Button>();
 
@@ -83,15 +86,26 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         _matchmakingStart = transform.Find("Panel - BG/InRoom/Button - MatchingStart").GetComponent<Button>();
 
         _punChatPanel = transform.Find("Panel - BG/PunChat").gameObject;
+
+        _buttons = transform.Find("Panel - BG/Buttons").gameObject;
+
+        punChatManager = FindObjectOfType<PunChatManager>();
+
+        _notReady = transform.Find("Panel - BG/Panel - PlayerIsNotReady").gameObject;
+        _checkButton = transform.Find("Panel - BG/Panel - PlayerIsNotReady/Button - Check").GetComponent<Button>();
+
     }
 
     void Start()
     {
         _createRoomButton.onClick.AddListener(CreateCustomRoom);
+        _cancelCreateRoomButton.onClick.AddListener(CancelCreateCustomRoom);
+
         _newRoom.onClick.AddListener(OnClickNewRoomButton);
         _roomExit.onClick.AddListener(OnClickRoomExit);
         _roomStart.onClick.AddListener(OnClickRoomStart);
         _selectDeck.onClick.AddListener(OnClickSelectDeck);
+        _roomReady.onClick.AddListener(OnClickRoomReady);
 
         _matchmaking.onClick.AddListener(OnClickMatchmake);
         _mainLobby.onClick.AddListener(OnClickMainLobby);
@@ -99,6 +113,9 @@ public class RoomCreator : MonoBehaviourPunCallbacks
 
 
         _matchmakingStart.onClick.AddListener(UpdateFromCustomToMatching);
+
+        _checkButton.onClick.AddListener(OnClickNotReadyCheckButton);
+
 
         if (PhotonNetwork.IsConnected)
         {
@@ -112,6 +129,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         PhotonNetwork.AutomaticallySyncScene = true;
 
         _punChatPanel.SetActive(false);
+        _notReady.SetActive(false);
 
         if (PhotonNetwork.InRoom)
         {
@@ -145,7 +163,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         }
         else
         {
-            Debug.LogError("Photon is not connected!");
+            Utils.LogRed("Photon is not connected!");
         }
     }
 
@@ -168,13 +186,13 @@ public class RoomCreator : MonoBehaviourPunCallbacks
                 MaxPlayers = 4,
                 CustomRoomProperties = new ExitGames.Client.Photon.Hashtable { { "roomType", _matchmakingRoomType } },
                 CustomRoomPropertiesForLobby = new string[] { "roomType" },
-                //IsVisible = false // ~~매치메이킹 방은 방 목록에 안 나오게 설정~~  X발 이거때문에 계속 매칭안되는거였네 사람은 정보를 정확히 알아야 합니다.
+                //IsVisible = false 
             });
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
-        Debug.Log("Failed to join a random room, creating a new room");
+        Utils.Log("Failed to join a random room, creating a new room");
         CreateMatchmakingRoom();
     }
 
@@ -205,6 +223,9 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         }
         else
         {
+            // 버튼 활성화
+            _buttons.SetActive(true);
+            _matchmaking.gameObject.SetActive(true);
             _punChatPanel.SetActive(false);
         }
     }
@@ -218,11 +239,11 @@ public class RoomCreator : MonoBehaviourPunCallbacks
     {
         while (!PhotonNetwork.IsConnectedAndReady || (PhotonNetwork.NetworkClientState != ClientState.ConnectedToMasterServer && PhotonNetwork.NetworkClientState != ClientState.JoinedLobby))
         {
-            Debug.Log($"Waiting for connection to Master server... IsConnectedAndReady: {PhotonNetwork.IsConnectedAndReady}, NetworkClientState: {PhotonNetwork.NetworkClientState}");
+            Utils.Log($"Waiting for connection to Master server... IsConnectedAndReady: {PhotonNetwork.IsConnectedAndReady}, NetworkClientState: {PhotonNetwork.NetworkClientState}");
             yield return null; // 다음 프레임까지 대기
         }
 
-        Debug.Log("Connected and ready. Joining random room...");
+        Utils.Log("Connected and ready. Joining random room...");
         JoinRandomRoom();
     }
 
@@ -253,34 +274,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
     /// </summary>
     public void UpdateFromCustomToMatching()
     {
-        // 방에 입장한 상태인지 확인 + 방장만 변경 가능
-        if (PhotonNetwork.InRoom && PhotonNetwork.IsMasterClient)
-        {
-
-            ExitGames.Client.Photon.Hashtable newProperties = new ExitGames.Client.Photon.Hashtable
-            {
-                { "roomType", _matchmakingRoomType }
-            };
-            PhotonNetwork.CurrentRoom.SetCustomProperties(newProperties);
-            Debug.Log("방 정보가 업데이트되었습니다.");
-            isChangedRoom = true;
-            _matchmakingPlayer.text = $"Matching ( {PhotonNetwork.CurrentRoom.PlayerCount} / {PhotonNetwork.CurrentRoom.MaxPlayers} )";
-            _panelMatchmaking.SetActive(true);
-
-            // 플레이어가 처음부터 커스텀방에 있던 유저인지 체크
-            foreach (Player player in PhotonNetwork.PlayerList)
-            {
-                ExitGames.Client.Photon.Hashtable playerProperties = new ExitGames.Client.Photon.Hashtable
-                {
-                    { "isChangedRoom", true }
-                };
-                player.SetCustomProperties(playerProperties);
-            }
-        }
-        else
-        {
-            Debug.LogError("방에 입장한 상태가 아닙니다.");
-        }
+        CheckAllPlayersReady(1);
     }/// <summary>
      /// 매칭 방 정보를 커스텀 방으로 변경하는 함수
      /// </summary>
@@ -295,7 +289,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
                 { "roomType", _customRoomType }
             };
             PhotonNetwork.CurrentRoom.SetCustomProperties(newProperties);
-            Debug.Log("방 정보가 업데이트되었습니다.");
+            Utils.Log("방 정보가 업데이트되었습니다.");
             KickNonChangedRoomPlayers(); //같은방 유저였던 유저 제외 강퇴 함수.
             isChangedRoom = false;
             _panelMatchmaking.SetActive(false);
@@ -312,7 +306,7 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         }
         else
         {
-            Debug.LogError("방에 입장한 상태가 아닙니다.");
+            Utils.LogRed("방에 입장한 상태가 아닙니다.");
         }
     }
 
@@ -335,13 +329,13 @@ public class RoomCreator : MonoBehaviourPunCallbacks
                 if (!isChangedRoom)
                 {
                     photonView.RPC("KickPlayer", player);
-                    Debug.Log($"{player.NickName} has been kicked.");
+                    Utils.Log($"{player.NickName} has been kicked.");
                 }
             }
             else
             {
                 photonView.RPC("KickPlayer", player);
-                Debug.Log($"{player.NickName} has been kicked (property not set).");
+                Utils.Log($"{player.NickName} has been kicked (property not set).");
             }
         }
     }
@@ -358,54 +352,82 @@ public class RoomCreator : MonoBehaviourPunCallbacks
     /// </summary>
     void CreateCustomRoom()
     {
-        if (int.Parse(_textRoomName.text) >= 5)
-        {
-            Debug.LogError("Max players should be less than 5");
-        }
-        else if (PhotonNetwork.IsConnected)
+        if (PhotonNetwork.IsConnected)
         {
             RoomOptions roomOptions = new RoomOptions();
-            roomOptions.MaxPlayers = byte.Parse(_textRoomName.text);
+            roomOptions.MaxPlayers = 4;
             roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable { { "roomType", _customRoomType } };
             roomOptions.CustomRoomPropertiesForLobby = new string[] { "roomType" };
             PhotonNetwork.CreateRoom(_inputFieldRoomName.text, roomOptions, null);
         }
         else
         {
-            Debug.LogError("Photon is not connected!");
+            Utils.LogRed("Photon is not connected!");
         }
+        // 버튼 비활성화
+        _buttons.SetActive(false);
+
         _roomOptionPanel.SetActive(false);
         _inRoomPanel.SetActive(true);
+    }
+    void CancelCreateCustomRoom()
+    {
+        _roomOptionPanel.SetActive(false);
     }
 
     public override void OnCreatedRoom()
     {
-        Debug.Log("Room created successfully!");
+        Utils.Log("Room created successfully!");
         PhotonNetwork.JoinLobby(); // 방을 생성한 후 로비에 다시 입장하여 방 목록을 갱신합니다.
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
-        Debug.LogError("Room creation failed: " + message);
+        Utils.LogRed("Room creation failed: " + message);
     }
 
     public override void OnJoinedRoom()
     {
-        Debug.Log("Joined room successfully!");
+        Utils.Log("Joined room successfully!");
 
         string roomType = (string)PhotonNetwork.CurrentRoom.CustomProperties["roomType"];
 
         if (roomType == _matchmakingRoomType)
         {
             playerListDisplay.UpdatePlayerList();
-            _matchmakingPlayer.text = $"Matching ( {PhotonNetwork.CurrentRoom.PlayerCount} / {PhotonNetwork.CurrentRoom.MaxPlayers} )";
-            int playerNumber = PhotonNetwork.CurrentRoom.PlayerCount;
+            _matchmakingPlayer.text = $"Matching ( {PhotonNetwork.CurrentRoom.PlayerCount} / 4 )";
             playerListDisplay.UpdatePlayerList();
 
             // 현재 방의 인원이 4명인지 확인
-            if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
+            if (PhotonNetwork.CurrentRoom.PlayerCount == 4)
             {
-                StartGame();
+                isMatchmaking = false;
+                _panelMatchmaking.SetActive(false);
+                // 방에 입장한 플레이어 수에 따라 닉네임 설정
+                _inRoomPanel.SetActive(true);
+                int playerNumber = PhotonNetwork.CurrentRoom.PlayerCount;
+                playerListDisplay.UpdatePlayerList(); // 방에 입장한 후 플레이어 목록 갱신
+                _punChatPanel.SetActive(true);
+                _buttons.SetActive(false);
+
+                _playerNickName = transform.Find($"Panel - BG/InRoom/Panel - PlayerImageView/{PhotonNetwork.LocalPlayer.NickName}/Text (TMP)").GetComponent<TMP_Text>();
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    // 마스터클라이언트(방장) 이라면 닉네임을 파랑으로
+                    _playerNickName.color = Color.blue;
+
+                    // 그리고 마스터클라이언트 니까 바로 레디상태 박아버림
+                    ExitGames.Client.Photon.Hashtable customPropertiess = new ExitGames.Client.Photon.Hashtable();
+                    customPropertiess["Ready"] = true;
+                    PhotonNetwork.LocalPlayer.SetCustomProperties(customPropertiess);
+                }
+                else
+                {
+                    // 다른플레이어는 기본상태가 준비X 니까 닉네임을 빨강으로 변경
+                    _playerNickName.color = Color.red;
+                }
+                photonView.RPC("UpdatePlayerReadyState", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber, _isRoomReady);
+                UpdateStartButtonVisibility();
             }
         }
         else if (roomType == _customRoomType)
@@ -415,6 +437,26 @@ public class RoomCreator : MonoBehaviourPunCallbacks
             int playerNumber = PhotonNetwork.CurrentRoom.PlayerCount;
             playerListDisplay.UpdatePlayerList(); // 방에 입장한 후 플레이어 목록 갱신
             _punChatPanel.SetActive(true);
+            _buttons.SetActive(false);
+
+            _playerNickName = transform.Find($"Panel - BG/InRoom/Panel - PlayerImageView/{PhotonNetwork.LocalPlayer.NickName}/Text (TMP)").GetComponent<TMP_Text>();
+            if (PhotonNetwork.IsMasterClient)
+            {
+                // 마스터클라이언트(방장) 이라면 닉네임을 파랑으로
+                _playerNickName.color = Color.blue;
+
+                // 그리고 마스터클라이언트 니까 바로 레디상태 박아버림
+                ExitGames.Client.Photon.Hashtable customPropertiess = new ExitGames.Client.Photon.Hashtable();
+                customPropertiess["Ready"] = true;
+                PhotonNetwork.LocalPlayer.SetCustomProperties(customPropertiess);
+            }
+            else
+            {
+                // 다른플레이어는 기본상태가 준비X 니까 닉네임을 빨강으로 변경
+                _playerNickName.color = Color.red;
+            }
+            photonView.RPC("UpdatePlayerReadyState", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber, _isRoomReady);
+            UpdateStartButtonVisibility();
         }
     }
 
@@ -424,39 +466,46 @@ public class RoomCreator : MonoBehaviourPunCallbacks
 
         if (roomType == _matchmakingRoomType)
         {
-            _matchmakingPlayer.text = $"Matching ( {PhotonNetwork.CurrentRoom.PlayerCount} / {PhotonNetwork.CurrentRoom.MaxPlayers} )";
+            _matchmakingPlayer.text = $"Matching ( {PhotonNetwork.CurrentRoom.PlayerCount} / 4)";
             playerListDisplay.UpdatePlayerList();
 
-            if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
+            if (PhotonNetwork.CurrentRoom.PlayerCount == 4)
             {
-                StartGame();
+                isMatchmaking = false;
+                _panelMatchmaking.SetActive(false);
+                // 방에 입장한 플레이어 수에 따라 닉네임 설정
+                _inRoomPanel.SetActive(true);
+                int playerNumber = PhotonNetwork.CurrentRoom.PlayerCount;
+                playerListDisplay.UpdatePlayerList(); // 방에 입장한 후 플레이어 목록 갱신
+                _punChatPanel.SetActive(true);
+                _buttons.SetActive(false);
+
+                _playerNickName = transform.Find($"Panel - BG/InRoom/Panel - PlayerImageView/{PhotonNetwork.LocalPlayer.NickName}/Text (TMP)").GetComponent<TMP_Text>();
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    // 마스터클라이언트(방장) 이라면 닉네임을 파랑으로
+                    _playerNickName.color = Color.blue;
+
+                    // 그리고 마스터클라이언트 니까 바로 레디상태 박아버림
+                    ExitGames.Client.Photon.Hashtable customPropertiess = new ExitGames.Client.Photon.Hashtable();
+                    customPropertiess["Ready"] = true;
+                    PhotonNetwork.LocalPlayer.SetCustomProperties(customPropertiess);
+                }
+                else
+                {
+                    // 다른플레이어는 기본상태가 준비X 니까 닉네임을 빨강으로 변경
+                    _playerNickName.color = Color.red;
+                }
+                photonView.RPC("UpdatePlayerReadyState", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber, _isRoomReady);
+                UpdateStartButtonVisibility();
             }
         }
     }
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        Debug.Log("Room list updated");
+        Utils.Log("Room list updated");
         roomListDisplay.OnRoomListUpdate(roomList);
-    }
-
-    private void OnClickButton(int index)
-    {
-        switch (index)
-        {
-            case 0:
-                _textRoomName.text = "1";
-                break;
-            case 1:
-                _textRoomName.text = "2";
-                break;
-            case 2:
-                _textRoomName.text = "3";
-                break;
-            case 3:
-                _textRoomName.text = "4";
-                break;
-        }
     }
 
     private void OnClickNewRoomButton()
@@ -467,16 +516,20 @@ public class RoomCreator : MonoBehaviourPunCallbacks
 
     private void OnClickRoomExit()
     {
+        ExitGames.Client.Photon.Hashtable customProperties = new ExitGames.Client.Photon.Hashtable();
+        customProperties["Ready"] = false;
+        customProperties["PlayerImage"] = "디폴트";
+        PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
+
         _inRoomPanel.SetActive(false);
         PhotonNetwork.LeaveRoom();
     }
 
     private void OnClickRoomStart()
     {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            PhotonNetwork.LoadLevel("05.GamePlay Scene");
-        }
+        
+        CheckAllPlayersReady(0);
+
     }
 
 
@@ -503,22 +556,233 @@ public class RoomCreator : MonoBehaviourPunCallbacks
         }
         else
         {
-            Debug.LogError("DeckSelectionUI 인스턴스를 찾을 수 없습니다.");
+            Utils.LogRed("DeckSelectionUI 인스턴스를 찾을 수 없습니다.");
         }
-    }
-
-    private void StartGame()
-    {
-        Debug.Log("All players joined. Starting the game...");
-        isMatchmaking = false;
-        PhotonNetwork.CurrentRoom.IsOpen = false;
-        PhotonNetwork.CurrentRoom.IsVisible = false;
-        PhotonNetwork.LoadLevel("05.GamePlay Scene");
     }
 
     private void OnClickMainLobby()
     {
-        PhotonNetwork.LoadLevel("MainScene");
+        SceneManager.LoadScene("01.MainScene");
 
     }
+
+
+    /// <summary>
+    /// 모든 유저의 "Ready" 상태를 확인하는 메서드
+    /// </summary>
+    /// <param name="num">0 = 커스텀방 / 1 = 커스텀 -> 매칭방</param>
+    public void CheckAllPlayersReady(int num)
+    {
+        bool allReady = true;
+        foreach (Player player in PhotonNetwork.PlayerList)
+        {
+            if (player.CustomProperties.TryGetValue("Ready", out object isReady))
+            {
+                if (!(bool)isReady)
+                {
+                    allReady = false;
+                    break;
+                }
+            }
+            else
+            {
+                allReady = false;
+                break;
+            }
+            // PlayerImage가 설정되었는지 확인
+            if (!player.CustomProperties.TryGetValue("PlayerImage", out object playerImage) || playerImage == null)
+            {
+                allReady = false;
+                Utils.LogRed($"Player {player.NickName} has no PlayerImage set.");
+                break;
+            }
+        }
+
+        if (allReady)
+        {
+            switch (num)
+            {
+                case 0:
+                    //if (PhotonNetwork.IsMasterClient && (PhotonNetwork.CurrentRoom.PlayerCount == 4))
+                    //{
+                    //    PhotonNetwork.LoadLevel("03.GamePlay Scene");
+                    //}
+                    //else
+                    //{
+                    //    Utils.LogRed($"플레이어 수가 4명이 아닙니다.\n현재 플레이어 수는 {PhotonNetwork.CurrentRoom.PlayerCount} 입니다.");
+                    //}
+
+                    if (PhotonNetwork.IsMasterClient)
+                    {
+                        // 서버 테스트할때 사용할 내용
+                        PhotonNetwork.LoadLevel("03.GamePlay Scene");
+                    }
+                    break;
+                case 1:
+                    // 방에 입장한 상태인지 확인 + 방장만 변경 가능
+                    if (PhotonNetwork.InRoom && PhotonNetwork.IsMasterClient)
+                    {
+
+                        ExitGames.Client.Photon.Hashtable newProperties = new ExitGames.Client.Photon.Hashtable
+                    {
+                    { "roomType", _matchmakingRoomType }
+                    };
+                        PhotonNetwork.CurrentRoom.SetCustomProperties(newProperties);
+                        Utils.Log("방 정보가 업데이트되었습니다.");
+                        isChangedRoom = true;
+                        _matchmakingPlayer.text = $"Matching ( {PhotonNetwork.CurrentRoom.PlayerCount} / {PhotonNetwork.CurrentRoom.MaxPlayers} )";
+                        _panelMatchmaking.SetActive(true);
+
+                        // 플레이어가 처음부터 커스텀방에 있던 유저인지 체크
+                        foreach (Player player in PhotonNetwork.PlayerList)
+                        {
+                            ExitGames.Client.Photon.Hashtable playerProperties = new ExitGames.Client.Photon.Hashtable
+                        {
+                        { "isChangedRoom", true }
+                        };
+                            player.SetCustomProperties(playerProperties);
+                        }
+                    }
+                    else
+                    {
+                        Utils.LogRed("방에 입장한 상태가 아닙니다.");
+                    }
+                    break;
+                default:
+                    break;
+            }
+            Utils.Log("All players are ready!");
+            // 모든 플레이어가 준비된 상태일 때의 로직
+        }
+        else
+        {
+            Utils.Log("Not all players are ready.");
+            _notReady.SetActive(true);
+        }
+    }
+
+    public void OnClickRoomReady()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            return;
+        }
+
+        _isRoomReady = !_isRoomReady;
+
+        ExitGames.Client.Photon.Hashtable customPropertiess = new ExitGames.Client.Photon.Hashtable();
+        customPropertiess["Ready"] = _isRoomReady;
+        PhotonNetwork.LocalPlayer.SetCustomProperties(customPropertiess);
+
+        // RPC 호출로 모든 클라이언트에게 상태 변경 전파
+        photonView.RPC("UpdatePlayerReadyState", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber, _isRoomReady);
+    }
+
+    /// <summary>
+    /// 방에들어올때, 레디 박을때, 레디 취소할때 이름색 변경 함수
+    /// </summary>
+    /// <param name="playerID">대상</param>
+    /// <param name="isReady">레디 했는지?</param>
+    [PunRPC]
+    public void UpdatePlayerReadyState(int playerID, bool isReady)
+    {
+        Player player = PhotonNetwork.CurrentRoom.GetPlayer(playerID);
+        if (player == null)
+        {
+            Utils.LogRed("Player not found.");
+            return;
+        }
+
+        GameObject playerObject = GameObject.Find($"{player.NickName}");
+        if (playerObject == null)
+        {
+            Utils.LogRed("Player object not found.");
+            return;
+        }
+
+        TMP_Text playerNickName = playerObject.GetComponentInChildren<TMP_Text>();
+        if (playerNickName != null)
+        {
+            if (player.IsMasterClient)
+            {
+                playerNickName.color = Color.blue; // 방장의 닉네임 색상을 파란색으로 설정
+            }
+            else
+            {
+                playerNickName.color = isReady ? Color.green : Color.red; // 다른 플레이어의 준비 상태에 따라 색상 설정
+            }
+        }
+        else
+        {
+            Utils.LogRed("Player's NickName component is null.");
+        }
+
+        // 방에 있는 모든 플레이어의 상태 업데이트
+        foreach (Player otherPlayer in PhotonNetwork.PlayerList)
+        {
+            GameObject otherPlayerObject = GameObject.Find($"{otherPlayer.NickName}");
+            if (otherPlayerObject != null)
+            {
+                TMP_Text otherPlayerNickName = otherPlayerObject.GetComponentInChildren<TMP_Text>();
+                if (otherPlayerNickName != null)
+                {
+                    if (otherPlayer.IsMasterClient)
+                    {
+                        otherPlayerNickName.color = Color.blue; // 방장의 닉네임 색상을 파란색으로 설정
+                    }
+                    else if (otherPlayer.CustomProperties.TryGetValue("Ready", out object otherIsReady))
+                    {
+                        otherPlayerNickName.color = (bool)otherIsReady ? Color.green : Color.red; // 다른 플레이어의 준비 상태에 따라 색상 설정
+                    }
+                    else
+                    {
+                        otherPlayerNickName.color = Color.red; // 기본적으로 빨간색으로 설정
+                    }
+                }
+                else
+                {
+                    Utils.LogRed("Other player's NickName component is null.");
+                }
+            }
+            else
+            {
+                Utils.LogRed("Other player object not found.");
+            }
+        }
+    }
+
+
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    {
+        if (changedProps.ContainsKey("Ready"))
+        {
+            bool isReady = (bool)changedProps["Ready"];
+            UpdatePlayerReadyState(targetPlayer.ActorNumber, isReady);
+        }
+    }
+
+    public void OnClickNotReadyCheckButton()
+    {
+        _notReady.SetActive(false);
+    }
+
+
+    /// <summary>
+    /// 방장만 버튼 보이게 만드는 함수
+    /// </summary>
+    private void UpdateStartButtonVisibility()
+    {
+        if (PhotonNetwork.LocalPlayer.IsMasterClient)
+        {
+            _roomStart.gameObject.SetActive(true); // 방장이라면 Start 버튼 활성화
+            _matchmakingStart.gameObject.SetActive(true); // 방장이라면 Start 버튼 활성화
+            _roomReady.gameObject.SetActive(false);  // 방장은 Ready 누를 필요가 없음
+        }
+        else
+        {
+            _roomStart.gameObject.SetActive(false); // 방장이 아니라면 Start 버튼 비활성화
+            _matchmakingStart.gameObject.SetActive(false); // 방장이 아니라면 Start 버튼 비활성화
+        }
+    }
 }
+

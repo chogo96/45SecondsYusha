@@ -18,6 +18,7 @@ public class TurnOverPack : MonoBehaviour
     }
     private void OnMouseDown()
     {
+        SoundManager.instance.PlaySfx(SoundManager.Sfx.CardGrab);
         transform.DORotate(Vector3.zero, 0.5f);
         ShopManager.instance.OpeningArea.NumberOfCardsOpenedFromPack++;
     }

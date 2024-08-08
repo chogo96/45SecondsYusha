@@ -1085,11 +1085,14 @@ MonoBehaviour:
   Shield: 0
   RandomValue: 0
   PlayerID: 0
-  charAsset: {fileID: 11400000, guid: 4212422ae3113844da10b942807dd8f2, type: 2}
+  charAsset: {fileID: 0}
   PArea: {fileID: 0}
   usedHeroPowerThisGame: 0
   _deck: {fileID: 0}
   hand: {fileID: 0}
+  _swordPoint: 0
+  _magicPoint: 0
+  _shieldPoint: 0
 --- !u!114 &-2987996418610727043
 MonoBehaviour:
   m_ObjectHideFlags: 0

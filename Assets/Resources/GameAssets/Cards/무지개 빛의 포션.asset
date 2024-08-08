@@ -17,14 +17,14 @@ MonoBehaviour:
     \uC5F0\uAE08\uC220\uC0AC \uD559\uC790\uC758 \uBA54\uBAA8 -"
   Tags: Buffer
   Rarity: 3
-  CardImage: {fileID: 21300000, guid: 3f9098645934c9e4da774284c3b6dd12, type: 3}
+  CardImage: {fileID: 21300000, guid: 04ee49417201dbb429f0305ca217a3c3, type: 3}
   TokenCard: 0
   LimitOfThisCardInDeck: 3
   IsVanishCard: 0
   TypeOfCard: 0
-  SwordAttack: 0
-  MagicAttack: 0
-  ShieldAttack: 0
+  SwordAttack: 1
+  MagicAttack: 1
+  ShieldAttack: 1
   RandomAttack: 0
   RandomRestoreDeck: 0
   AdditionalSwordAttack: 0

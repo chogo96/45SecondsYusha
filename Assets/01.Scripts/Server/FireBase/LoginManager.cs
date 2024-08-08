@@ -22,7 +22,6 @@ public class LoginManager : MonoBehaviour
     private Button _Test3;
     private Button _Test4;
 
-
     private GameObject _registerPopUp;
     private bool isHide = true;
 
@@ -31,12 +30,7 @@ public class LoginManager : MonoBehaviour
 
     private TMP_Text _errorMessage;
 
-    public static string Email
-    {
-        get; private set;
-    }
-
-
+    public static string UserId { get; private set; }
 
     private void Awake()
     {
@@ -47,15 +41,10 @@ public class LoginManager : MonoBehaviour
         _register = transform.Find("Panel - Login/Button - Register").GetComponent<Button>();
         _cancel = transform.Find("Panel - Register/Button - Cancel").GetComponent<Button>();
 
-
-
         _Test1 = transform.Find("Button - Test1").GetComponent<Button>();
         _Test2 = transform.Find("Button - Test2").GetComponent<Button>();
         _Test3 = transform.Find("Button - Test3").GetComponent<Button>();
         _Test4 = transform.Find("Button - Test4").GetComponent<Button>();
-
-
-
 
         _registerPopUp = transform.Find("Panel - Register").gameObject;
 
@@ -72,38 +61,34 @@ public class LoginManager : MonoBehaviour
         _register.onClick.AddListener(OnClickRegisterButton);
         _cancel.onClick.AddListener(OnClickRegisterButton);
 
-
         _Test1.onClick.AddListener(() => TestLogin(1));
         _Test2.onClick.AddListener(() => TestLogin(2));
         _Test3.onClick.AddListener(() => TestLogin(3));
         _Test4.onClick.AddListener(() => TestLogin(4));
-
-
     }
-
 
     public void TestLogin(int num)
     {
         switch (num)
         {
             case 1:
-                _id.text = "jinodumok@naver.com";
+                _id.text = "jinodumok";
                 _pw.text = "jino1364";
                 Login();
                 break;
             case 2:
-                _id.text = "1@1.1";
+                _id.text = "jino1364";
                 _pw.text = "jino1364";
                 Login();
                 break;
             case 3:
-                _id.text = "a@a.kr";
-                _pw.text = "123456";
+                _id.text = "user3";
+                _pw.text = "password3";
                 Login();
                 break;
             case 4:
-                _id.text = "ab@ab.kr";
-                _pw.text = "abcdef";
+                _id.text = "user4";
+                _pw.text = "password4";
                 Login();
                 break;
             default:
@@ -111,62 +96,43 @@ public class LoginManager : MonoBehaviour
         }
     }
 
-
-
     private void OnDestroy()
     {
-        // 이벤트 구독 해제
         FirebaseInit.OnFirebaseInitialized -= OnFirebaseInitialized;
     }
 
     private void OnFirebaseInitialized()
     {
-        Debug.Log("Firebase initialized, setting auth and databaseReference");
-
-        auth = FirebaseInit.auth; // 아픈 손가락
+        auth = FirebaseInit.auth;
         databaseReference = FirebaseInit.database.RootReference;
-
-        if (auth == null)
-        {
-        }
-        else
-        {
-        }
-
-        if (databaseReference == null)
-        {
-        }
-        else
-        {
-        }
     }
-
-
-
 
     public async void Login()
     {
-        string email = _id.text;
+        string userId = _id.text;
         string password = _pw.text;
 
-        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+        if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(password))
         {
-            _errorMessage.text = "Email and Password must be filled!";
+            _errorMessage.text = "ID and Password must be filled!";
             return;
         }
 
+        // Firebase 인증을 위해 가상의 이메일 주소 생성
+        string email = $"{userId}@example.com";
+
         try
         {
-            // Sign in the user
             AuthResult authResult = await auth.SignInWithEmailAndPasswordAsync(email, password);
             FirebaseUser user = authResult.User;
-            Email = user.Email;
+            UserId = userId;
 
             _errorMessage.text = "User signed in successfully!";
 
-            await NickNameSetting(user);
+            await NickNameSetting(userId);
 
-            StartCoroutine(C_Loding());
+            // 튜토리얼 상태 확인 후 메인 씬으로 이동
+            await CheckTutorialStatus(userId);
         }
         catch (System.Exception e)
         {
@@ -174,21 +140,16 @@ public class LoginManager : MonoBehaviour
         }
     }
 
-    public async Task NickNameSetting(FirebaseUser user)
+    public async Task NickNameSetting(string userId)
     {
-        string email = user.Email;
-
-        // 이메일을 키로 사용하기 위해 인코딩
-        string encodedEmail = EncodeEmail(email);
-        var nicknameTask = databaseReference.Child("users").Child(encodedEmail).Child("nickname").GetValueAsync();
+        var nicknameTask = databaseReference.Child("users").Child(userId).Child("nickname").GetValueAsync();
         await nicknameTask;
 
-
-        //if (nicknameTask.Exception != null)
-        //{
-        //    Debug.LogError("Failed to retrieve nickname from Firebase: " + nicknameTask.Exception);
-        //    return;
-        //}
+        if (nicknameTask.Exception != null)
+        {
+            Utils.LogRed("Failed to retrieve nickname from Firebase: " + nicknameTask.Exception);
+            return;
+        }
 
         DataSnapshot snapshot = nicknameTask.Result;
         if (snapshot.Exists)
@@ -196,30 +157,45 @@ public class LoginManager : MonoBehaviour
             string nickname = snapshot.Value.ToString();
             PhotonNetwork.NickName = nickname;
         }
+        else
+        {
+            Utils.LogRed("Nickname does not exist in Firebase.");
+        }
     }
 
-    private string EncodeEmail(string email)
+    private async Task CheckTutorialStatus(string userId)
     {
-        return email.Replace(".", ",");
+        var tutorialStatusTask = databaseReference.Child("users").Child(userId).Child("TutorialCompleted").GetValueAsync();
+        await tutorialStatusTask;
+
+        if (tutorialStatusTask.Exception != null)
+        {
+            Utils.LogRed("Failed to check tutorial status from Firebase: " + tutorialStatusTask.Exception);
+            return;
+        }
+
+        DataSnapshot snapshot = tutorialStatusTask.Result;
+        bool tutorialCompleted = snapshot.Exists && snapshot.Value.ToString() == "true";
+        PlayerPrefs.SetInt("TutorialCompleted", tutorialCompleted ? 1 : 0);
+
+        StartCoroutine(C_LoadMainScene());
     }
 
-    private IEnumerator C_Loding()
+    private IEnumerator C_LoadMainScene()
     {
-        // 포톤 서버 연결 확인
         if (PhotonNetwork.IsConnected)
         {
-
-            // 씬 이동
-            //AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("01.Start Scene");
-            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("MainScene");
-
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("01.MainScene");
             while (!asyncLoad.isDone)
             {
                 yield return null;
             }
         }
+        else
+        {
+            Utils.Log("Not connected to Photon Server!");
+        }
     }
-
 
     public void OnClickRegisterButton()
     {
@@ -233,5 +209,4 @@ public class LoginManager : MonoBehaviour
         }
         isHide = !isHide;
     }
-
 }

@@ -13,18 +13,25 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public static Action AllPlayersSpawned;
 
+    private int _cardCount;
+    private int _timeCount;
+    private int _sumCount;
+
+    private InGameShop inGameShop;
+
+
     private void Start()
     {
         // Find the Canvas - PlayerSpawn object
         canvasTransform = GameObject.Find("Canvas - PlayerSpawn").transform;
         if (canvasTransform == null)
         {
-            Debug.LogError("Canvas - PlayerSpawn object not found in Start.");
+            Utils.LogRed("Canvas - PlayerSpawn object not found in Start.");
             return;
         }
         else
         {
-            Debug.Log("Canvas - PlayerSpawn found in Start: " + canvasTransform.name);
+            Utils.Log("Canvas - PlayerSpawn found in Start: " + canvasTransform.name);
         }
 
         otherPlayerPositions = new Vector3[]
@@ -40,7 +47,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            Debug.LogError("PhotonNetwork is not connected and ready.");
+            Utils.LogRed("PhotonNetwork is not connected and ready.");
         }
     }
 
@@ -76,7 +83,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (playerObject != null)
         {
             // Set a custom name to the player object
-            playerObject.name = "Player_" + player.ActorNumber;
+            playerObject.name = $"{player.NickName}";
 
             // Set the player as a child of the Canvas - PlayerSpawn object
             playerObject.transform.SetParent(canvasTransform, false);
@@ -90,12 +97,12 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
 
             // Debugging information
-            Debug.Log("Player parent after setting: " + playerObject.transform.parent.name);
-            Debug.Log("Player local position after setting: " + playerObject.transform.localPosition);
+            Utils.Log("Player parent after setting: " + playerObject.transform.parent.name);
+            Utils.Log("Player local position after setting: " + playerObject.transform.localPosition);
         }
         else
         {
-            Debug.LogError("Player instantiation failed.");
+            Utils.LogRed("Player instantiation failed.");
         }
     }
 
@@ -105,5 +112,45 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             AllPlayersSpawned?.Invoke();
         }
+    }
+
+
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            // 마스터 클라이언트가 아니면
+            PhotonNetwork.LoadLevel("02.Lobby Scene");
+        }
+    }
+
+    [PunRPC]
+    public void OnAddTimeOrCardButton(int plusTime, int plusCard)
+    {
+        inGameShop = FindObjectOfType<InGameShop>();
+
+        Utils.LogGreen($"plusTime {plusTime}");
+        Utils.LogGreen($"plusCard {plusCard}");
+
+        _cardCount = _cardCount + plusCard;
+        _timeCount = _timeCount + plusTime;
+
+        inGameShop._plusTimeCount = plusTime;
+        inGameShop._plusCardCount = plusCard;
+
+        Utils.LogGreen($"_cardCount {_cardCount}");
+        Utils.LogGreen($"_timeCount {_timeCount}");
+        _sumCount = _cardCount + _timeCount;
+
+        inGameShop._timeText.text = $"AddTime\nVote : {_timeCount}";
+        inGameShop._cardText.text = $"AddCard\nVote : {_cardCount}";
+
+        Debug.Log($"Votes updated on {PhotonNetwork.LocalPlayer.NickName}: AddTime: {_timeCount}, AddCard: {_cardCount}");
+
+        if (_sumCount == PhotonNetwork.PlayerList.Length)
+        {
+            inGameShop.ExecuteVotingResult(_cardCount, _timeCount);
+        }
+
     }
 }

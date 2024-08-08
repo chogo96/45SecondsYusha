@@ -113,6 +113,7 @@ public class DragSpellNoTarget : DraggingActions
             }
             else
             {
+                Debug.LogError("태그가 없는 카드 입니다." + transform.parent.name);
                 return null;
             }
         }

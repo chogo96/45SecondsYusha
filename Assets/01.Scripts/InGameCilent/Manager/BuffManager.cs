@@ -61,12 +61,14 @@ public class BuffManager : MonoBehaviourPun
         GameObject deckObject = GameObject.Find("Deck1");
         if (deckObject == null)
         {
+            Debug.LogError("Deck1 오브젝트를 찾을 수 없습니다.");
         }
         else
         {
             _deck = deckObject.GetComponent<Deck>();
             if (_deck == null)
             {
+                Debug.LogError("Deck1 오브젝트에서 Deck 컴포넌트를 찾을 수 없습니다.");
             }
         }
     }
@@ -134,6 +136,7 @@ public class BuffManager : MonoBehaviourPun
                 if (cardAsset != null)
                 {
                     _deck.DiscardDeck.Add(cardAsset);
+                    Debug.Log("출혈로 카드 버려짐: " + cardAsset.CardScriptName);
                 }
             }
             yield return new WaitForSeconds(BleedInterval);

@@ -9,16 +9,25 @@ public class EmoteManager : MonoBehaviourPun
     private Button _emotePanelOnOffButton; // 패널 온오프 버튼 
     private bool _emotePanelOnOff = false; // 패널 온오프 상황 초기값 false(비활성화)
     private Button[] _emoteButtons;  // 이모티콘 버튼 배열화
+
     public static PlayerManager LocalPlayerInstance;
+
+    private Canvas _canvas;
+
     private void Awake()
     {
         _emotePanel = transform.Find("Panel - Emote").gameObject;
         _emotePanelOnOffButton = transform.Find("Button - Emote").GetComponent<Button>();
+
+        _canvas = GetComponentInParent<Canvas>();
+        if (_canvas == null)
+        {
+            Utils.LogRed("Canvas not found in parent hierarchy.");
+        }
     }
 
     private void Start()
     {
-
         _emotePanelOnOffButton.onClick.AddListener(OnClickOnOffPanelButton);
 
         // 버튼 배열 초기화
@@ -36,65 +45,97 @@ public class EmoteManager : MonoBehaviourPun
         _emotePanel.SetActive(false);
     }
 
-    /// <summary>
-    /// 각 이모티콘 버튼을 누를 때 호출되는 함수
-    /// </summary>
-    /// <param name="emoteIndex">이모티콘 인덱스 값</param>
     private void OnEmoteButtonClicked(int emoteIndex)
     {
-        Debug.Log("Emote button clicked, index: " + emoteIndex);
+        Utils.Log("Emote button clicked, index: " + emoteIndex);
 
         // Ensure photonView is properly assigned
         if (photonView == null)
         {
-            Debug.LogError("PhotonView component is missing on EmoteManager object.");
+            Utils.LogRed("PhotonView component is missing on EmoteManager object.");
             return;
         }
 
         if (PhotonNetwork.LocalPlayer == null)
         {
-            Debug.LogError("Local player is not yet connected to Photon Network.");
+            Utils.LogRed("Local player is not yet connected to Photon Network.");
             return;
         }
 
         // RPC 호출로 모든 클라이언트에 이모티콘 표시
-        photonView.RPC("ShowEmote", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber, emoteIndex);
+        photonView.RPC("ShowEmote", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName, emoteIndex, PhotonNetwork.LocalPlayer.ActorNumber);
         _emotePanelOnOff = false;
         _emotePanel.SetActive(false);
     }
 
-    /// <summary>
-    /// 이모티콘 소환 함수
-    /// </summary>
-    /// <param name="actorNumber">어떤 버튼을 눌렀는지</param>
-    /// <param name="emoteIndex"> 이모티콘 인덱스 값</param>
     [PunRPC]
-    void ShowEmote(int actorNumber, int emoteIndex)
+    void ShowEmote(string userNickname, int emoteIndex, int acterNumber)
     {
-        Debug.Log("ShowEmote RPC called, actorNumber: " + actorNumber + ", emoteIndex: " + emoteIndex);
+        Utils.Log("ShowEmote RPC called, userId: " + userNickname + ", emoteIndex: " + emoteIndex);
 
         if (emoteIndex < 0 || emoteIndex >= emotePrefabs.Length)
         {
-            Debug.LogError("Invalid emote index");
+            Utils.LogRed("Invalid emote index");
             return;
         }
 
-        // 현재 방의 모든 플레이어들을 검색
-        foreach (var player in FindObjectsOfType<PlayerManager>())
+        string objectName = $"{userNickname}_{acterNumber}";
+        GameObject targetObject = GameObject.Find(objectName);
+
+        if (targetObject == null)
         {
-            if (player.photonView.Owner.ActorNumber == actorNumber)
-            {
-                // 플레이어의 머리 위에 이모티콘 생성
-                Vector3 emotePosition = player.transform.position + Vector3.up * 2; // 머리 위의 위치
-                GameObject emote = Instantiate(emotePrefabs[emoteIndex], emotePosition, Quaternion.identity);
-
-                Debug.Log("Emote instantiated at position: " + emotePosition);
-
-                // 일정 시간 후 이모티콘 삭제
-                Destroy(emote, 3f);
-                break;
-            }
+            Utils.LogRed("Target object not found: " + objectName);
+            return;
         }
+
+        Vector3 playerPosition = targetObject.transform.localPosition; // 로컬 좌표 사용
+        Vector3 emotePosition = GetEmotePosition(playerPosition);
+
+        GameObject emote = Instantiate(emotePrefabs[emoteIndex], emotePosition, Quaternion.identity, _canvas.transform);
+        emote.transform.localPosition = emotePosition;
+
+        //RectTransform emoteRectTransform = emote.GetComponent<RectTransform>();
+        //if (emoteRectTransform != null)
+        //{
+        //    emoteRectTransform.localScale = Vector3.one; // 스케일을 1로 설정
+        //    emoteRectTransform.anchoredPosition = emotePosition; // anchoredPosition 사용
+        //}
+
+        Utils.LogGreen("objectName: " + objectName);
+        Utils.LogGreen("targetObject: " + targetObject);
+        Utils.LogGreen("playerPosition: " + playerPosition);
+        Utils.LogGreen("emotePosition: " + emotePosition);
+
+        // 일정 시간 후 이모티콘 삭제
+        Destroy(emote, 3f);
+    }
+
+    private Vector3 GetEmotePosition(Vector3 playerPosition)
+    {
+        if (playerPosition == new Vector3(-961, -536, 0))
+        {
+            Utils.LogGreen("playerPosition: 1");
+            return new Vector3(-601, -99, -256); // 특정 위치
+        }
+        else if (playerPosition == new Vector3(-961, 16, 0))
+        {
+            Utils.LogGreen("playerPosition: 2");
+            return new Vector3(-363, 171, -256); // 특정 위치
+        }
+        else if (playerPosition == new Vector3(91, 218, 0))
+        {
+            Utils.LogGreen("playerPosition: 3");
+            return new Vector3(401, 304, -256); // 특정 위치
+        }
+        else if (playerPosition == new Vector3(597, -167, 0))
+        {
+            Utils.LogGreen("playerPosition: 4");
+            return new Vector3(389, 28, -256); // 특정 위치
+        }
+
+        // 기본 위치 (필요한 경우 다른 기본값 설정)
+        Utils.LogGreen("playerPosition: XXXXXXXXXX");
+        return Vector3.zero;
     }
 
     private void OnClickOnOffPanelButton()
