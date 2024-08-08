@@ -174,10 +174,21 @@ public class CollectionBrowser : MonoBehaviour
 
     public void UpdateQuantitiesOnPage()
     {
-        foreach (GameObject card in CreatedCards)
+        for (int i = CreatedCards.Count - 1; i >= 0; i--)
         {
-            AddCardToDeck addCardComponent = card.GetComponent<AddCardToDeck>();
-            addCardComponent.UpdateQuantity();
+            GameObject card = CreatedCards[i];
+            if (card != null)  // 오브젝트가 존재하는지 확인
+            {
+                AddCardToDeck addCardComponent = card.GetComponent<AddCardToDeck>();
+                if (addCardComponent != null)  // 컴포넌트가 존재하는지 확인
+                {
+                    addCardComponent.UpdateQuantity();
+                }
+            }
+            else
+            {
+                CreatedCards.RemoveAt(i);  // 리스트에서 삭제
+            }
         }
     }
 
