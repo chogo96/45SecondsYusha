@@ -289,7 +289,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
     }
 
     // 덱과 손패 카드 수를 업데이트하는 메서드
-    private void UpdateCardCounts(string plusMinus)
+    public void UpdateCardCounts(string plusMinus)
     {
         _deckCardCount = _deck.Cards.Count;
         _handCardCount = hand.CardsInHand.Count;

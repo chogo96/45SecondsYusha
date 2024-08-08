@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.UI;
+using UnityEngine.XR;
 
 public class BuffManager : MonoBehaviourPun
 {
@@ -19,6 +20,11 @@ public class BuffManager : MonoBehaviourPun
     private Deck _deck;
     private Coroutine _bleedCoroutine;
 
+    // 플레이어 셋 매니저에서 쓸 값들
+    PlayerScripts playerScripts;
+    PlayerSetManager playerSetManager;
+    private int _playerID = PhotonNetwork.LocalPlayer.ActorNumber;
+
     // 디버프 이미지
     //[SerializeField] private GameObject bleedDebuffImage;
     //[SerializeField] private GameObject blindDebuffImage;
@@ -27,6 +33,19 @@ public class BuffManager : MonoBehaviourPun
     private void Awake()
     {
         instance = this;
+        playerSetManager = FindObjectOfType<PlayerSetManager>();
+        GameManager.AllPlayersSpawned += PlayerScriptsSetStart;
+
+    }
+
+    public void PlayerScriptsSetStart()
+    {
+        playerScripts = FindObjectOfType<PlayerScripts>();
+    }
+    private void OnDestroy()
+    {
+        // 이벤트 구독 해제
+        GameManager.AllPlayersSpawned -= PlayerScriptsSetStart;
     }
 
     private void OnEnable()
@@ -90,6 +109,8 @@ public class BuffManager : MonoBehaviourPun
             if (_bleedCoroutine != null)
             {
                 StopCoroutine(_bleedCoroutine);
+                playerSetManager.photonView.RPC("DeBuffImageOff", RpcTarget.All, _playerID, "bleed");
+
             }
         }
     }
@@ -107,6 +128,7 @@ public class BuffManager : MonoBehaviourPun
         if (BlindDebuff)
         {
             BlindDebuff = false;
+            playerSetManager.photonView.RPC("DeBuffImageOff", RpcTarget.All, _playerID, "blind");
         }
     }
 
@@ -123,6 +145,7 @@ public class BuffManager : MonoBehaviourPun
         if (ConfusionDebuff)
         {
             ConfusionDebuff = false;
+            playerSetManager.photonView.RPC("DeBuffImageOff", RpcTarget.All, _playerID, "confusion");
         }
     }
 
@@ -137,6 +160,8 @@ public class BuffManager : MonoBehaviourPun
                 {
                     _deck.DiscardDeck.Add(cardAsset);
                     Debug.Log("출혈로 카드 버려짐: " + cardAsset.CardScriptName);
+
+                    playerScripts.UpdateCardCounts("Plus");
                 }
             }
             yield return new WaitForSeconds(BleedInterval);

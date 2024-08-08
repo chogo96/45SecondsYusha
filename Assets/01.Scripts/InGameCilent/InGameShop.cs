@@ -20,6 +20,7 @@ public class InGameShop : MonoBehaviourPunCallbacks
     private EnemySpawner _enemySpawner;
     private UI_Timer uI_Timer;
     private GameManager gameManager;
+    private PlayerScripts playerScripts;
 
     private void Awake()
     {
@@ -74,7 +75,7 @@ public class InGameShop : MonoBehaviourPunCallbacks
 
     public void ExecuteVotingResult(int plusCardVotes, int plusTimeVotes)
     {
-
+        playerScripts = FindObjectOfType<PlayerScripts>();
         if (plusCardVotes > plusTimeVotes)
         {
             // 카드추가 투표가 더 많거나
@@ -121,14 +122,14 @@ public class InGameShop : MonoBehaviourPunCallbacks
     private void AddRandomCardToDeck()
     {
         //덱이 안뽑힌다? 이거 참조를 바꿔야함!!!!!!!!!!!
-        Deck playerDeck = FindObjectOfType<Deck>();
-        if (playerDeck != null)
+        //Deck playerDeck = FindObjectOfType<Deck>();
+        if (playerScripts != null)
         {
-            playerDeck.ReturnRandomCardsFromDiscard(10);
+            playerScripts._deck.ReturnRandomCardsFromDiscard(10);
         }
         else
         {
-            Debug.LogError("Player deck not found.");
+            Debug.LogError("PlayerScripts not found.");
         }
     }
 }

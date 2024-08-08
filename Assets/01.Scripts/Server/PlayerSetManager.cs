@@ -228,6 +228,7 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
         {
             case "Minus":
                 _playerHandCount[playerIndex].text = $"{_baseHandCards}";
+                _playerDeckCount[playerIndex].text = $"{_baseDeckCards}";
                 break;
             case "Plus":
                 _playerHandCount[playerIndex].text = $"{_baseHandCards}";

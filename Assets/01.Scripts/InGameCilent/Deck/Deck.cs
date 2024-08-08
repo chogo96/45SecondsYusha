@@ -11,17 +11,11 @@ public class Deck : MonoBehaviour
     private BuffManager _buffManager;
 
     private int actorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
-    UI_PlayerCount ui_PlayerCount;
     PlayerScripts playerScripts;
-
-    // 플레이어 셋 매니저에서 쓸 값들
-    private int _deckCardCount;
-    private int _handCardCount;
 
 
     private void Start()
     {
-        ui_PlayerCount = FindObjectOfType<UI_PlayerCount>();
         playerScripts = FindObjectOfType<PlayerScripts>();
         // 덱을 섞습니다.
         ShuffleDeck();
@@ -60,11 +54,6 @@ public class Deck : MonoBehaviour
         if (_buffManager.BleedDebuff && _buffManager != null && Cards.Count > 0)
         {
             _buffManager.ApplyBleedEffect();
-
-            _deckCardCount = Cards.Count;
-            _handCardCount = playerScripts.hand.CardsInHand.Count;
-            ui_PlayerCount.HandCardCount("Minus", _deckCardCount, _handCardCount);
-
         }
     }
 
@@ -105,5 +94,6 @@ public class Deck : MonoBehaviour
         }
         // 덱을 다시 섞습니다.
         ShuffleDeck();
+        playerScripts.UpdateCardCounts("Plus");
     }
 }
