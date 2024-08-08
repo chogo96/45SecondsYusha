@@ -110,13 +110,20 @@ public class Enemy : MonoBehaviourPunCallbacks
         OnEnemySpawned?.Invoke(this);
     }
     [PunRPC]
-    private void ApplyRandomDebuff(List<PlayerScripts> players, int randomIndex, string debuffName)
+    private void ApplyRandomDebuff(string playerName, int randomIndex, string debuffName)
     {
-        string nickName = players[randomIndex].name;
-        if(nickName == PhotonNetwork.LocalPlayer.NickName)
+        if (playerName == PhotonNetwork.LocalPlayer.NickName)
         {
-            players[randomIndex].ApplyBleedToPlayer();
-            playerSetManager.photonView.RPC("DeBuffImageOn", RpcTarget.All, randomIndex, debuffName);
+            GameObject playerObject = GameObject.Find(playerName);
+            if (playerObject != null)
+            {
+                PlayerScripts playerScripts = playerObject.GetComponent<PlayerScripts>();
+                if (playerScripts != null)
+                {
+                    playerScripts.ApplyBleedToPlayer();
+                    playerSetManager.photonView.RPC("DeBuffImageOn", RpcTarget.All, randomIndex, debuffName);
+                }
+            }
         }
     }
 
@@ -126,8 +133,9 @@ public class Enemy : MonoBehaviourPunCallbacks
         {
             if (PhotonNetwork.IsMasterClient)
             {
-                int randomIndex = Random.Range(0, PhotonNetwork.PlayerList.Length);
-                photonView.RPC("ApplyRandomDebuff", RpcTarget.All, players, randomIndex, "bleed");
+                int randomIndex = Random.Range(0, players.Count);
+                string playerName = players[randomIndex].name;
+                photonView.RPC("ApplyRandomDebuff", RpcTarget.All, playerName, randomIndex, "bleed");
             }
         }
         else
@@ -171,8 +179,9 @@ public class Enemy : MonoBehaviourPunCallbacks
         {
             if (PhotonNetwork.IsMasterClient)
             {
-                int randomIndex = Random.Range(0, PhotonNetwork.PlayerList.Length);
-                photonView.RPC("ApplyRandomDebuff", RpcTarget.All, players, randomIndex, "blind");
+                int randomIndex = Random.Range(0, players.Count);
+                string playerName = players[randomIndex].name;
+                photonView.RPC("ApplyRandomDebuff", RpcTarget.All, playerName, randomIndex, "blind");
             }
         }
         else
@@ -187,8 +196,9 @@ public class Enemy : MonoBehaviourPunCallbacks
         {
             if (PhotonNetwork.IsMasterClient)
             {
-                int randomIndex = Random.Range(0, PhotonNetwork.PlayerList.Length);
-                photonView.RPC("ApplyRandomDebuff", RpcTarget.All, players, randomIndex, "confusion");
+                int randomIndex = Random.Range(0, players.Count);
+                string playerName = players[randomIndex].name;
+                photonView.RPC("ApplyRandomDebuff", RpcTarget.All, playerName, randomIndex, "confusion");
             }
         }
         else
