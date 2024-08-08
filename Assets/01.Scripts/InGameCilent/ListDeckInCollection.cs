@@ -9,6 +9,12 @@ public class ListOfDecksInCollection : MonoBehaviour
     //프리팹 요구 항목들
     public GameObject DeckInListPrefab;
     public GameObject NewDeckButtonPrefab;
+    private GameObject _scrollView;
+
+    private void Awake()
+    {
+        _scrollView = transform.Find("Scroll View").gameObject;
+    }
 
     public void UpdateList()
     {
@@ -34,6 +40,11 @@ public class ListOfDecksInCollection : MonoBehaviour
             GameObject g = Instantiate(NewDeckButtonPrefab, Content);
             g.transform.localScale = Vector3.one;
         }
+    }
+    
+    public void ScrollViewSetActiveTrue()
+    {
+        _scrollView.SetActive(true);
     }
 
 }

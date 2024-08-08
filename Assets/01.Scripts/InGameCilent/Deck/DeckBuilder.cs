@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Xml.Serialization;
 public class DeckBuilder : MonoBehaviour
 {
     public GameObject CardNamePrefab;
@@ -21,9 +22,24 @@ public class DeckBuilder : MonoBehaviour
 
     private CharacterAsset buildingForCharacter;
 
+    /// <summary>
+    /// 버튼 텍스트에 카드 넣은수 나오게 하면서 만든것들
+    /// </summary>
+    private Button _deckBuilderDoneButton;
+    private TMP_Text _deckBuilderDoneButtonText;
+    private ListOfDecksInCollection listOfDecksInCollection;
+
     void Awake()
     {
         DeckCompleteFrame.GetComponent<Image>().raycastTarget = false;
+        _deckBuilderDoneButton = transform.Find("DoneButton").GetComponent<Button>();
+        _deckBuilderDoneButtonText = transform.Find("DoneButton/Text (TMP)").GetComponent<TMP_Text>();
+        listOfDecksInCollection = FindObjectOfType<ListOfDecksInCollection>();
+    }
+
+    private void Start()
+    {
+        _deckBuilderDoneButton.onClick.AddListener(OnClickDoneButton);
     }
 
     public void AddCard(CardAsset asset)
@@ -79,7 +95,16 @@ public class DeckBuilder : MonoBehaviour
 
     void CheckDeckCompleteFrame()
     {
+        _deckBuilderDoneButtonText.text = $"{deckList.Count} / {AmountOfCardsInDeck}\nDone";
         DeckCompleteFrame.SetActive(deckList.Count == AmountOfCardsInDeck);
+        if(deckList.Count == AmountOfCardsInDeck)
+        {
+            _deckBuilderDoneButton.interactable = true;
+        }
+        else
+        {
+            _deckBuilderDoneButton.interactable = false;
+        }
     }
 
     public int NumberOfThisCardInDeck(CardAsset asset)
@@ -147,5 +172,16 @@ public class DeckBuilder : MonoBehaviour
     {
         // 덱 고치다가 게임을 끈다 하더라도 어쨌든 덱을 저장해야함
         DoneButtonHandler();
+    }
+
+    private void OnClickDoneButton()
+    {
+        if(deckList.Count == AmountOfCardsInDeck)
+        {
+            DoneButtonHandler();
+            gameObject.SetActive(false);
+            listOfDecksInCollection.ScrollViewSetActiveTrue();
+            listOfDecksInCollection.UpdateList();
+        }
     }
 }
