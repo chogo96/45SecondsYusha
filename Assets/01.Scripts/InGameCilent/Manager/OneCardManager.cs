@@ -247,8 +247,9 @@ public class OneCardManager : MonoBehaviour
         }
         // 2) 카드 이름 추가
         NameText.text = cardAsset.name;
-        // 3) 설명 추가
-        DescriptionText.text = cardAsset.Description;
+        // 3) 설명 추가 가독성을 위해 첨삭처리 필요 시 첨삭 해제하고 하면됨
+        //DescriptionText.text = cardAsset.Description;
+        DescriptionText.text = null;
         // 4) 그래픽 이미지 변경
         CardGraphicImage.sprite = cardAsset.CardImage;
 
