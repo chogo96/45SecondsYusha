@@ -27,7 +27,7 @@ MonoBehaviour:
     rgba: 0
   ClassCardTint:
     serializedVersion: 2
-    rgba: 0
+    rgba: 4294967295
   ClassRibbonsTint:
     serializedVersion: 2
-    rgba: 0
+    rgba: 4294967295
