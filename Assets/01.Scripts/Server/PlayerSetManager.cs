@@ -78,14 +78,14 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
                 continue;
             }
 
-            _playerImage[i + 1] = playerTransform.Find("Player_Image")?.GetComponent<Image>();
-            _bleedDebuffImage[i + 1] = playerTransform.Find("BleedDebuffImage")?.gameObject;
-            _blindDebuffImage[i + 1] = playerTransform.Find("BlindDebuffImage")?.gameObject;
-            _confusionDebuffImage[i + 1] = playerTransform.Find("ConfusionDebuffImage")?.gameObject;
-            _playerHandArea[i + 1] = playerTransform.Find("HandArea")?.gameObject;
-            _Nickname[i + 1] = player.NickName;
-            _playerDeckCount[i + 1] = playerTransform.Find("DeckImage/DeckCountText (TMP)")?.GetComponent<TMP_Text>();
-            _playerHandCount[i + 1] = playerTransform.Find("HandImage/HandCountText (TMP)")?.GetComponent<TMP_Text>();
+            _playerImage[PhotonNetwork.PlayerList[i].ActorNumber] = playerTransform.Find("Player_Image")?.GetComponent<Image>();
+            _bleedDebuffImage[PhotonNetwork.PlayerList[i].ActorNumber] = playerTransform.Find("BleedDebuffImage")?.gameObject;
+            _blindDebuffImage[PhotonNetwork.PlayerList[i].ActorNumber] = playerTransform.Find("BlindDebuffImage")?.gameObject;
+            _confusionDebuffImage[PhotonNetwork.PlayerList[i].ActorNumber] = playerTransform.Find("ConfusionDebuffImage")?.gameObject;
+            _playerHandArea[PhotonNetwork.PlayerList[i].ActorNumber] = playerTransform.Find("HandArea")?.gameObject;
+            _Nickname[PhotonNetwork.PlayerList[i].ActorNumber] = player.NickName;
+            _playerDeckCount[PhotonNetwork.PlayerList[i].ActorNumber] = playerTransform.Find("DeckImage/DeckCountText (TMP)")?.GetComponent<TMP_Text>();
+            _playerHandCount[PhotonNetwork.PlayerList[i].ActorNumber] = playerTransform.Find("HandImage/HandCountText (TMP)")?.GetComponent<TMP_Text>();
 
             // 여기서 필요한 초기화나 설정 작업을 수행합니다.
         }

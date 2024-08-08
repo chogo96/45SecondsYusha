@@ -121,7 +121,7 @@ public class Enemy : MonoBehaviourPunCallbacks
                 if (playerScripts != null)
                 {
                     playerScripts.ApplyBleedToPlayer();
-                    playerSetManager.photonView.RPC("DeBuffImageOn", RpcTarget.All, randomIndex, debuffName);
+                    playerSetManager.photonView.RPC("DeBuffImageOn", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber, debuffName);
                 }
             }
         }
