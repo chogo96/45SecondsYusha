@@ -35,15 +35,15 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
     {
         _playerCount = PhotonNetwork.PlayerList.Length + 1;
 
-        _playerImage = new Image[_playerCount];
-        _bleedDebuffImage = new GameObject[_playerCount];
-        _blindDebuffImage = new GameObject[_playerCount];
-        _confusionDebuffImage = new GameObject[_playerCount];
-        _playerHandArea = new GameObject[_playerCount];
+        _playerImage = new Image[50];
+        _bleedDebuffImage = new GameObject[50];
+        _blindDebuffImage = new GameObject[50];
+        _confusionDebuffImage = new GameObject[50];
+        _playerHandArea = new GameObject[50];
 
-        _playerDeckCount = new TMP_Text[_playerCount];
-        _playerHandCount = new TMP_Text[_playerCount];
-        _Nickname = new string[_playerCount];
+        _playerDeckCount = new TMP_Text[50];
+        _playerHandCount = new TMP_Text[50];
+        _Nickname = new string[50];
 
         // GameManager의 AllPlayersSpawned 이벤트 구독
         InsertScripts.OnScriptsInserted += Reset;
