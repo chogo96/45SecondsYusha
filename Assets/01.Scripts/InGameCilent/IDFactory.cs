@@ -11,8 +11,9 @@ public static class IDFactory
     public static int GetUniquePlayerID()
     {
         // Count++ has to go first, otherwise - unreachable code.
-        _photonActorNumber = Photon.Pun.PhotonNetwork.LocalPlayer.ActorNumber;
-        return _photonActorNumber;
+        //_photonActorNumber = Photon.Pun.PhotonNetwork.LocalPlayer.ActorNumber;
+        Count++;
+        return Count;
     }
     public static int GetUniqueID()
     {

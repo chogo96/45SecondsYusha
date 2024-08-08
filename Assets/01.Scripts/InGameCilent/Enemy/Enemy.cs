@@ -35,7 +35,7 @@ public class Enemy : MonoBehaviourPunCallbacks
         if (unitRoot != null)
         {
             _animator = unitRoot.GetComponent<Animator>();
-            
+
         }
         else
         {
@@ -108,35 +108,92 @@ public class Enemy : MonoBehaviourPunCallbacks
         // 새로운 적이 생성되었음을 알림
         OnEnemySpawned?.Invoke(this);
     }
+    [PunRPC]
+    private void ApplyRandomDebuff(int randomActorNumber)
+    {
 
+    }
     private void ApplyRandomBleedDebuffToPlayer(List<PlayerScripts> players)
     {
         if (players != null && players.Count > 0)
         {
             if (PhotonNetwork.IsMasterClient)
             {
-                int randomIndex = Random.Range(0, players.Count);
-                players[randomIndex].ApplyBleedToPlayer();
-                int playerID = players[randomIndex].PlayerID;
-                playerSetManager.photonView.RPC("DeBuffImageOn", RpcTarget.All, playerID, "bleed");
+                int randomIndex = Random.Range(0, PhotonNetwork.PlayerList.Length);
+                int randomActorNumber = PhotonNetwork.PlayerList[randomIndex].ActorNumber;
+
+                photonView.RPC("ApplyRandomDebuff", RpcTarget.All, randomActorNumber);
             }
+            
+
+            if (randomActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
+            {
+                players[randomIndex].ApplyBleedToPlayer();
+                playerSetManager.photonView.RPC("DeBuffImageOn", RpcTarget.All, randomActorNumber, "bleed");
+            }
+            else
+            {
+                return;
+            }
+
         }
         else
         {
             Utils.LogRed("플레이어 리스트가 null이거나 비어 있습니다. 출혈 디버프를 적용할 수 없습니다.");
         }
     }
+    //private void ApplyRandomBleedDebuffToPlayer(List<PlayerScripts> players)
+    //{
+    //    if (players != null && players.Count > 0)
+    //    {
+    //        if (PhotonNetwork.IsMasterClient)
+    //        {
+    //            //int randomIndex = Random.Range(0, players.Count);
+    //            int randomIndex = Random.Range(0, PhotonNetwork.PlayerList.Length);
+    //            int randomActorNumber = PhotonNetwork.PlayerList[randomIndex].ActorNumber;
+    //            Utils.LogGreen(randomIndex);
+    //            Utils.LogGreen(randomActorNumber);
+    //            if (randomActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
+    //            {
+    //                players[randomIndex].ApplyBleedToPlayer();
+    //                playerSetManager.photonView.RPC("DeBuffImageOn", RpcTarget.All, randomActorNumber, "bleed");
+    //            }
+    //            else
+    //            {
+    //                return;
+    //            }
+    //            //int playerID = players[randomIndex].PlayerID;
+    //            //playerSetManager.photonView.RPC("DeBuffImageOn", RpcTarget.All, playerID, "bleed");
+    //        }
+    //    }
+    //    else
+    //    {
+    //        Utils.LogRed("플레이어 리스트가 null이거나 비어 있습니다. 출혈 디버프를 적용할 수 없습니다.");
+    //    }
+    //}
 
     private void ApplyRandomBlindDebuffToPlayer(List<PlayerScripts> players)
     {
         if (players != null && players.Count > 0)
         {
-            if (PhotonNetwork.IsMasterClient)
+            int randomIndex = Random.Range(0, PhotonNetwork.PlayerList.Length);
+            int randomActorNumber = PhotonNetwork.PlayerList[randomIndex].ActorNumber;
+
+            Utils.LogGreen($"randomIndex = {randomIndex}");
+            Utils.LogGreen($"randomActorNumber = {randomActorNumber}");
+            Utils.LogGreen($"randomNickName = {PhotonNetwork.PlayerList[randomIndex].NickName}");
+
+            Utils.LogGreen($"players[randomIndex] = {players[randomIndex]}");
+            Utils.LogGreen($"players[randomIndex].name = {players[randomIndex].name}");
+
+            if (randomActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
             {
-                int randomIndex = Random.Range(0, players.Count);
                 players[randomIndex].ApplyBlindToPlayer();
-                int playerID = players[randomIndex].PlayerID;
-                playerSetManager.photonView.RPC("DeBuffImageOn", RpcTarget.All, playerID, "blind");
+                playerSetManager.photonView.RPC("DeBuffImageOn", RpcTarget.All, randomActorNumber, "blind");
+            }
+            else
+            {
+                return;
             }
         }
         else
@@ -149,12 +206,24 @@ public class Enemy : MonoBehaviourPunCallbacks
     {
         if (players != null && players.Count > 0)
         {
-            if (PhotonNetwork.IsMasterClient)
+            int randomIndex = Random.Range(0, PhotonNetwork.PlayerList.Length);
+            int randomActorNumber = PhotonNetwork.PlayerList[randomIndex].ActorNumber;
+
+            Utils.LogGreen($"randomIndex = {randomIndex}");
+            Utils.LogGreen($"randomActorNumber = {randomActorNumber}");
+            Utils.LogGreen($"randomNickName = {PhotonNetwork.PlayerList[randomIndex].NickName}");
+
+            Utils.LogGreen($"players[randomIndex] = {players[randomIndex]}");
+            Utils.LogGreen($"players[randomIndex].name = {players[randomIndex].name}");
+
+            if (randomActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
             {
-                int randomIndex = Random.Range(0, players.Count);
                 players[randomIndex].ApplyConfusionToPlayer();
-                int playerID = players[randomIndex].PlayerID;
-                playerSetManager.photonView.RPC("DeBuffImageOn", RpcTarget.All, playerID, "confusion");
+                playerSetManager.photonView.RPC("DeBuffImageOn", RpcTarget.All, randomActorNumber, "confusion");
+            }
+            else
+            {
+                return;
             }
         }
         else

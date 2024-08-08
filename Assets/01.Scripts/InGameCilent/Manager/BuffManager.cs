@@ -34,7 +34,7 @@ public class BuffManager : MonoBehaviourPun
     {
         instance = this;
         playerSetManager = FindObjectOfType<PlayerSetManager>();
-        GameManager.AllPlayersSpawned += PlayerScriptsSetStart;
+        InsertScripts.OnScriptsInserted += PlayerScriptsSetStart;
 
     }
 
@@ -45,7 +45,7 @@ public class BuffManager : MonoBehaviourPun
     private void OnDestroy()
     {
         // 이벤트 구독 해제
-        GameManager.AllPlayersSpawned -= PlayerScriptsSetStart;
+        InsertScripts.OnScriptsInserted -= PlayerScriptsSetStart;
     }
 
     private void OnEnable()
@@ -59,35 +59,35 @@ public class BuffManager : MonoBehaviourPun
         //bleedDebuffImage = GameObject.Find("BleedDebuffImage");
         //if (bleedDebuffImage == null)
         //{
-        //    Debug.LogError("BleedDebuffImage를 찾을 수 없습니다.");
+        //    Utils.LogRed("BleedDebuffImage를 찾을 수 없습니다.");
         //}
 
         //yield return new WaitUntil(() => GameObject.Find("BlindDebuffImage") != null);
         //blindDebuffImage = GameObject.Find("BlindDebuffImage");
         //if (blindDebuffImage == null)
         //{
-        //    Debug.LogError("BlindDebuffImage를 찾을 수 없습니다.");
+        //    Utils.LogRed("BlindDebuffImage를 찾을 수 없습니다.");
         //}
 
         //yield return new WaitUntil(() => GameObject.Find("ConfusionDebuffImage") != null);
         //confusionDebuffImage = GameObject.Find("ConfusionDebuffImage");
         //if (confusionDebuffImage == null)
         //{
-        //    Debug.LogError("ConfusionDebuffImage를 찾을 수 없습니다.");
+        //    Utils.LogRed("ConfusionDebuffImage를 찾을 수 없습니다.");
         //}
 
         yield return new WaitUntil(() => GameObject.Find("Deck1") != null);
         GameObject deckObject = GameObject.Find("Deck1");
         if (deckObject == null)
         {
-            Debug.LogError("Deck1 오브젝트를 찾을 수 없습니다.");
+            Utils.LogRed("Deck1 오브젝트를 찾을 수 없습니다.");
         }
         else
         {
             _deck = deckObject.GetComponent<Deck>();
             if (_deck == null)
             {
-                Debug.LogError("Deck1 오브젝트에서 Deck 컴포넌트를 찾을 수 없습니다.");
+                Utils.LogRed("Deck1 오브젝트에서 Deck 컴포넌트를 찾을 수 없습니다.");
             }
         }
     }
@@ -159,7 +159,7 @@ public class BuffManager : MonoBehaviourPun
                 if (cardAsset != null)
                 {
                     _deck.DiscardDeck.Add(cardAsset);
-                    Debug.Log("출혈로 카드 버려짐: " + cardAsset.CardScriptName);
+                    Utils.Log("출혈로 카드 버려짐: " + cardAsset.CardScriptName);
 
                     playerScripts.UpdateCardCounts("Plus");
                 }

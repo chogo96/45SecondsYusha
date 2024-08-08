@@ -23,7 +23,7 @@ public class HealerSkills : MonoBehaviourPunCallbacks, SkillsInterface
     // 힐러 - 사용한 카드 덱에서 전체 다 5장씩 되돌림
     public void UseSkill()
     {
-        photonView.RPC("UseSkillSignal", RpcTarget.All);
+        // photonView.RPC("UseSkillSignal", RpcTarget.All);
         // 능력구현 + 내화면에 보여줄 애니메이션 or 이팩트 구현
     }
 

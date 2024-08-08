@@ -4,6 +4,7 @@ using Photon.Pun;
 using System.Collections;
 using System;
 using static UnityEngine.Rendering.DebugUI;
+using Photon.Pun.Demo.PunBasics;
 
 public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
 {
@@ -12,16 +13,16 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
     public int Magic;
     public int Shield;
     public int RandomValue;
-    private Enemy _currentEnemy;
+    public Enemy _currentEnemy;
     public int PlayerID;
     public CharacterAsset charAsset;
     public PlayerArea PArea;
     public SpellEffect HeroPowerEffect;
     public bool usedHeroPowerThisGame = false;
 
-    private int _previousSword;
-    private int _previousMagic;
-    private int _previousShield;
+    public int _previousSword;
+    public int _previousMagic;
+    public int _previousShield;
     public Deck _deck; // Deck1의 Deck 스크립트를 참조
     public Hand hand;
     public Table table;
@@ -53,6 +54,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
     UI_PlayerCount ui_PlayerCount;
     private int _deckCardCount;
     private int _handCardCount;
+    GameManager gameManager;
 
     public int ID
     {
@@ -96,12 +98,15 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
 
     void Awake()
     {
+        InsertScripts.OnScriptsInserted += FindPlayerScriptComponent;
+
         playerSetManager = FindObjectOfType<PlayerSetManager>();
         _enemyUIManager = FindObjectOfType<EnemyUIManager>();
         Players = GameObject.FindObjectsOfType<PlayerScripts>();
         PlayerID = IDFactory.GetUniquePlayerID();
         _playerDeckVisual = FindObjectOfType<PlayerDeckVisual>();
         ui_PlayerCount = FindObjectOfType<UI_PlayerCount>();
+        gameManager = FindObjectOfType<GameManager>();
 
         // EnemySpawner에 자신을 등록
         RegisterWithEnemySpawner();
@@ -121,11 +126,47 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             Utils.LogRed("BuffManager 오브젝트를 찾을 수 없습니다.");
         }
 
+        
+
         _playerTransform = gameObject;
+        //  테스팅중
+        
 
         LoadCharacterInfoFromDeck();
 
-        GameManager.AllPlayersSpawned += C_FillHand;
+        InsertScripts.OnScriptsInserted += C_FillHand;
+
+    }
+
+    public void FindPlayerScriptComponent()
+    {
+
+        // Deck1 오브젝트를 찾아서 Deck 스크립트를 참조합니다.
+        GameObject deckObject = GameObject.Find(PhotonNetwork.LocalPlayer.NickName);
+        if (deckObject != null)
+        {
+            _deck = deckObject.GetComponentInChildren<Deck>();
+            hand = deckObject.GetComponentInChildren<Hand>();
+            PArea = deckObject.GetComponentInChildren<PlayerArea>();
+
+            if (_deck == null)
+            {
+                Utils.LogRed("Deck1 오브젝트에서 Deck 컴포넌트를 찾을 수 없습니다.");
+            }
+            if (hand == null)
+            {
+                Utils.LogRed("hand 오브젝트에서 hand 컴포넌트를 찾을 수 없습니다.");
+            }
+            if (PArea == null)
+            {
+                Utils.LogRed("PArea 오브젝트에서 PArea 컴포넌트를 찾을 수 없습니다.");
+            }
+        }
+        else
+        {
+            Utils.LogRed("Deck1 오브젝트를 찾을 수 없습니다.");
+        }
+        InitializePlayerDeck();
     }
 
     private void LoadCharacterInfoFromDeck()
@@ -195,7 +236,9 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         // 이벤트 핸들러 등록 해제
         Enemy.OnEnemyDeath -= OnEnemyDeath;
         Enemy.OnEnemySpawned -= OnNewEnemySpawned;
-        GameManager.AllPlayersSpawned -= C_FillHand;
+        InsertScripts.OnScriptsInserted -= C_FillHand;
+        InsertScripts.OnScriptsInserted -= FindPlayerScriptComponent;
+
     }
 
     void OnEnemyDeath()
@@ -209,38 +252,40 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
         isEnemyAlive = true; // 새로운 적이 생성되면 플래그를 true로 설정
     }
 
-    [PunRPC]
-    public void RealTimeBossStatusCheck(int sword, int magic, int shield)
-    {
-        if (_currentEnemy == null)
-        {
-            Debug.LogWarning("현재 적이 null 상태입니다. RealTimeBossStatusCheck 호출을 무시합니다.");
-            return;
-        }
+    #region 대규모 개편으로 사용안함 -> 게임매니저로 옮김
+    //[PunRPC]
+    //public void RealTimeBossStatusCheck(int sword, int magic, int shield)
+    //{
+    //    if (_currentEnemy == null)
+    //    {
+    //        Debug.LogWarning("현재 적이 null 상태입니다. RealTimeBossStatusCheck 호출을 무시합니다.");
+    //        return;
+    //    }
 
-        _swordPoint = sword;
-        _magicPoint = magic;
-        _shieldPoint = shield;
+    //    _swordPoint = sword;
+    //    _magicPoint = magic;
+    //    _shieldPoint = shield;
 
-        InGameManager.instance.Sword = _swordPoint;
-        InGameManager.instance.Magic = _magicPoint;
-        InGameManager.instance.Shield = _shieldPoint;
+    //    InGameManager.instance.Sword = _swordPoint;
+    //    InGameManager.instance.Magic = _magicPoint;
+    //    InGameManager.instance.Shield = _shieldPoint;
 
-        int swordIncrement = _swordPoint - _previousSword;
-        int magicIncrement = _magicPoint - _previousMagic;
-        int shieldIncrement = _shieldPoint - _previousShield;
+    //    int swordIncrement = _swordPoint - _previousSword;
+    //    int magicIncrement = _magicPoint - _previousMagic;
+    //    int shieldIncrement = _shieldPoint - _previousShield;
 
-        _enemyUIManager.ChangeAlphaForIncrement(swordIncrement, _enemyUIManager.swordImageParent, Sword, _currentEnemy.requiredSword);
-        _enemyUIManager.ChangeAlphaForIncrement(magicIncrement, _enemyUIManager.magicImageParent, Magic, _currentEnemy.requiredMagic);
-        _enemyUIManager.ChangeAlphaForIncrement(shieldIncrement, _enemyUIManager.shieldImageParent, Shield, _currentEnemy.requiredShield);
+    //    _enemyUIManager.ChangeAlphaForIncrement(swordIncrement, _enemyUIManager.swordImageParent, Sword, _currentEnemy.requiredSword);
+    //    _enemyUIManager.ChangeAlphaForIncrement(magicIncrement, _enemyUIManager.magicImageParent, Magic, _currentEnemy.requiredMagic);
+    //    _enemyUIManager.ChangeAlphaForIncrement(shieldIncrement, _enemyUIManager.shieldImageParent, Shield, _currentEnemy.requiredShield);
 
-        Utils.Log($"Sword: {InGameManager.instance.Sword}, Magic: {InGameManager.instance.Magic}, Shield: {InGameManager.instance.Shield}");
-        Utils.Log($"CurrentEnemy: {_currentEnemy}");
-        Utils.LogGreen($"{_swordPoint},{_magicPoint},{_shieldPoint},{swordIncrement},{magicIncrement},{shieldIncrement}");
+    //    Utils.Log($"Sword: {InGameManager.instance.Sword}, Magic: {InGameManager.instance.Magic}, Shield: {InGameManager.instance.Shield}");
+    //    Utils.Log($"CurrentEnemy: {_currentEnemy}");
+    //    Utils.LogGreen($"{_swordPoint},{_magicPoint},{_shieldPoint},{swordIncrement},{magicIncrement},{shieldIncrement}");
 
-        // 현재 적의 생존 조건 확인
-        _currentEnemy?.CheckDeathCondition(_swordPoint, _magicPoint, _shieldPoint);
-    }
+    //    // 현재 적의 생존 조건 확인
+    //    _currentEnemy?.CheckDeathCondition(_swordPoint, _magicPoint, _shieldPoint);
+    //}
+    #endregion
 
     public void DrawACard(int n)
     {
@@ -506,7 +551,7 @@ public class PlayerScripts : MonoBehaviourPunCallbacks, ICharacter
             // 적 객체가 null이 아닌 경우에만 RealTimeBossStatusCheck 호출
             if (_currentEnemy != null)
             {
-                photonView.RPC("RealTimeBossStatusCheck", RpcTarget.All, InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield);
+                gameManager.photonView.RPC("RealTimeBossStatusCheck", RpcTarget.All, InGameManager.instance.Sword, InGameManager.instance.Magic, InGameManager.instance.Shield, Sword, Magic, Shield, _currentEnemy.requiredSword, _currentEnemy.requiredMagic, _currentEnemy.requiredShield, _previousSword, _previousMagic, _previousShield);
             }
             _deck.ReturnRandomCardsFromDiscard(card.cardAsset.RandomRestoreDeck);
         }

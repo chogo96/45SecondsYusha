@@ -23,7 +23,7 @@ public class TankerSkills : MonoBehaviourPunCallbacks, SkillsInterface
     // 탱커 - 인내심 > 영웅능력을 누르면 자신이 사용한 카드 덱에서 15장 되돌림
     public void UseSkill()
     {
-        photonView.RPC("UseSkillSignal", RpcTarget.All);
+        // photonView.RPC("UseSkillSignal", RpcTarget.All);
         // 능력구현 + 내화면에 보여줄 애니메이션 or 이팩트 구현
     }
 

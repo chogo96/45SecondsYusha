@@ -16,7 +16,7 @@ public class UI_Timer : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-        UiTimerUpdate();
+        // UiTimerUpdate();
     }
 
     /// <summary>

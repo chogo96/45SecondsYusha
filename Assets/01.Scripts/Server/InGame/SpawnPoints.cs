@@ -16,11 +16,11 @@ public class SpawnPoints : MonoBehaviourPunCallbacks
     }
     private void FindDeck()
     {
-        playerScripts = transform.Find($"{PhotonNetwork.LocalPlayer.NickName}").GetComponent<PlayerScripts>();
-        GameObject localPlayerObject = GameObject.Find($"{PhotonNetwork.LocalPlayer.NickName}/Player1PlayerArea/Deck1");
-        Deck deck = localPlayerObject.transform.GetComponent<Deck>();
-        playerScripts._deck = deck;
+        //playerScripts = transform.Find($"{PhotonNetwork.LocalPlayer.NickName}").GetComponent<PlayerScripts>();
+        //GameObject localPlayerObject = GameObject.Find($"{PhotonNetwork.LocalPlayer.NickName}/Player1PlayerArea/Deck1");
+        //Deck deck = localPlayerObject.transform.GetComponent<Deck>();
+        //playerScripts._deck = deck;
 
-        playerScripts.InitializePlayerDeck();
+        //playerScripts.InitializePlayerDeck();
     }
 }

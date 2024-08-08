@@ -46,13 +46,13 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
         _Nickname = new string[_playerCount];
 
         // GameManager의 AllPlayersSpawned 이벤트 구독
-        GameManager.AllPlayersSpawned += Reset;
+        InsertScripts.OnScriptsInserted += Reset;
     }
 
     private void OnDestroy()
     {
         // 이벤트 구독 해제
-        GameManager.AllPlayersSpawned -= Reset;
+        InsertScripts.OnScriptsInserted -= Reset;
     }
 
     private void Reset()

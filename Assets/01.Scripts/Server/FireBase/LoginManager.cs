@@ -82,13 +82,13 @@ public class LoginManager : MonoBehaviour
                 Login();
                 break;
             case 3:
-                _id.text = "user3";
-                _pw.text = "password3";
+                _id.text = "12345";
+                _pw.text = "1234567890";
                 Login();
                 break;
             case 4:
-                _id.text = "user4";
-                _pw.text = "password4";
+                _id.text = "1111";
+                _pw.text = "11111111";
                 Login();
                 break;
             default:

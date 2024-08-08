@@ -2,6 +2,8 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 using System;
+using static UnityEngine.Rendering.DebugUI;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
@@ -19,7 +21,35 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private InGameShop inGameShop;
 
+    //RealTimeBossStatusCheck 하기위해 만듬
+    PlayerScripts playerScripts;
+    private EnemyUIManager _enemyUIManager;
 
+    int _swordPoint;
+    int _magicPoint;
+    int _shieldPoint;
+
+    int _Sword;
+    int _Magic;
+    int _Shield;
+
+    int _requiredSword;
+    int _requiredMagic;
+    int _requiredShield;
+
+    int __previousSword;
+    int __previousMagic;
+    int __previousShield;
+
+    private void Awake()
+    {
+        _enemyUIManager = FindObjectOfType<EnemyUIManager>();
+        InsertScripts.OnScriptsInserted += GameManagerFindPlayerScriptComponent;
+    }
+    public void GameManagerFindPlayerScriptComponent()
+    {
+        playerScripts = FindObjectOfType<PlayerScripts>();
+    }
     private void Start()
     {
         // Find the Canvas - PlayerSpawn object
@@ -58,53 +88,37 @@ public class GameManager : MonoBehaviourPunCallbacks
             int playerIndex = player.ActorNumber - 1;
             Vector3 spawnPosition;
 
+            //string playerObjectName = player.NickName;
+            //GameObject existingPlayerObject = GameObject.Find(playerObjectName);
+            //if (existingPlayerObject != null)
+            //{
+            //    Destroy(existingPlayerObject);
+            //}
+
             if (player.IsLocal)
             {
                 spawnPosition = localPlayerPosition;
-                // Instantiate the local player
                 GameObject playerObject = PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.identity);
-                SetupPlayerObject(playerObject, player, spawnPosition);
+                playerObject.name = $"{player.NickName}";
+                playerObject.transform.SetParent(canvasTransform, false);
+                playerObject.transform.localPosition = spawnPosition;
             }
             else
             {
                 spawnPosition = otherPlayerPositions[playerIndex % otherPlayerPositions.Length];
-                // Instantiate other players
                 GameObject playerObject = PhotonNetwork.Instantiate(otherPlayerPrefab.name, Vector3.zero, Quaternion.identity);
-                SetupPlayerObject(playerObject, player, spawnPosition);
+                playerObject.name = $"{player.NickName}";
+                playerObject.transform.SetParent(canvasTransform, false);
+                playerObject.transform.localPosition = spawnPosition;
             }
+
         }
 
         // Check if all players have spawned and invoke event
         CheckAllPlayersSpawned();
     }
 
-    private void SetupPlayerObject(GameObject playerObject, Player player, Vector3 spawnPosition)
-    {
-        if (playerObject != null)
-        {
-            // Set a custom name to the player object
-            playerObject.name = $"{player.NickName}";
 
-            // Set the player as a child of the Canvas - PlayerSpawn object
-            playerObject.transform.SetParent(canvasTransform, false);
-            playerObject.transform.localPosition = spawnPosition;
-
-            // Assign PlayerScripts to GlobalSettings
-            PlayerScripts playerScripts = playerObject.GetComponent<PlayerScripts>();
-            if (player.IsLocal)
-            {
-                GlobalSettings.instance.AssignLowPlayer(playerScripts);
-            }
-
-            // Debugging information
-            Utils.Log("Player parent after setting: " + playerObject.transform.parent.name);
-            Utils.Log("Player local position after setting: " + playerObject.transform.localPosition);
-        }
-        else
-        {
-            Utils.LogRed("Player instantiation failed.");
-        }
-    }
 
     private void CheckAllPlayersSpawned()
     {
@@ -152,5 +166,50 @@ public class GameManager : MonoBehaviourPunCallbacks
             inGameShop.ExecuteVotingResult(_cardCount, _timeCount);
         }
 
+    }
+
+    [PunRPC]
+    public void RealTimeBossStatusCheck(int sword, int magic, int shield, int Sword, int Magic, int Shield,int requiredSword, int requiredMagic,int requiredShield, int _previousSword, int _previousMagic, int _previousShield)
+    {
+        if (playerScripts._currentEnemy == null)
+        {
+            Debug.LogWarning("현재 적이 null 상태입니다. RealTimeBossStatusCheck 호출을 무시합니다.");
+            return;
+        }
+
+        _swordPoint = sword;
+        _magicPoint = magic;
+        _shieldPoint = shield;
+
+        _Sword = Sword;
+        _Magic = Magic;
+         _Shield = Shield;
+
+        _requiredSword = requiredSword;
+         _requiredMagic = requiredMagic;
+        _requiredShield = requiredShield;
+
+        __previousSword = _previousSword;
+        __previousMagic = _previousMagic;
+        __previousShield = _previousShield;
+
+        InGameManager.instance.Sword = _swordPoint;
+        InGameManager.instance.Magic = _magicPoint;
+        InGameManager.instance.Shield = _shieldPoint;
+
+        int swordIncrement = _swordPoint - __previousSword;
+        int magicIncrement = _magicPoint - __previousMagic;
+        int shieldIncrement = _shieldPoint - __previousShield;
+
+        _enemyUIManager.ChangeAlphaForIncrement(swordIncrement, _enemyUIManager.swordImageParent, _Sword, _requiredSword);
+        _enemyUIManager.ChangeAlphaForIncrement(magicIncrement, _enemyUIManager.magicImageParent, _Magic, _requiredMagic);
+        _enemyUIManager.ChangeAlphaForIncrement(shieldIncrement, _enemyUIManager.shieldImageParent, _Shield, _requiredShield);
+
+        Utils.Log($"Sword: {InGameManager.instance.Sword}, Magic: {InGameManager.instance.Magic}, Shield: {InGameManager.instance.Shield}");
+        Utils.Log($"CurrentEnemy: {playerScripts._currentEnemy}");
+        Utils.LogGreen($"{_swordPoint},{_magicPoint},{_shieldPoint},{swordIncrement},{magicIncrement},{shieldIncrement}");
+
+        // 현재 적의 생존 조건 확인
+        playerScripts._currentEnemy?.CheckDeathCondition(_swordPoint, _magicPoint, _shieldPoint);
     }
 }

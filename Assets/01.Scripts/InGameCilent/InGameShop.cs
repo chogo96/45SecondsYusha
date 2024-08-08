@@ -33,6 +33,8 @@ public class InGameShop : MonoBehaviourPunCallbacks
         _enemySpawner = FindObjectOfType<EnemySpawner>();
         uI_Timer = FindObjectOfType<UI_Timer>();
         gameManager = FindObjectOfType<GameManager>();
+        playerScripts = FindObjectOfType<PlayerScripts>();
+
     }
 
     void Start()
@@ -42,7 +44,7 @@ public class InGameShop : MonoBehaviourPunCallbacks
 
         if (uI_Timer == null || uI_Timer.photonView == null)
         {
-            Debug.LogError("UI_Timer or its PhotonView component is not found.");
+            Utils.LogRed("UI_Timer or its PhotonView component is not found.");
             return;
         }
 
@@ -51,12 +53,14 @@ public class InGameShop : MonoBehaviourPunCallbacks
 
         _plusTimeCount = 0;
         _plusCardCount = 0;
+        playerScripts = FindObjectOfType<PlayerScripts>();
     }
 
     public void VotingPlusCardOrPlusTime(int voteNum)
     {
         _plusTime.interactable = false;
         _plusCard.interactable = false;
+        playerScripts = FindObjectOfType<PlayerScripts>();
 
         switch (voteNum)
         {
@@ -75,7 +79,6 @@ public class InGameShop : MonoBehaviourPunCallbacks
 
     public void ExecuteVotingResult(int plusCardVotes, int plusTimeVotes)
     {
-        playerScripts = FindObjectOfType<PlayerScripts>();
         if (plusCardVotes > plusTimeVotes)
         {
             // 카드추가 투표가 더 많거나
@@ -129,7 +132,7 @@ public class InGameShop : MonoBehaviourPunCallbacks
         }
         else
         {
-            Debug.LogError("PlayerScripts not found.");
+            Utils.LogRed("PlayerScripts not found.");
         }
     }
 }

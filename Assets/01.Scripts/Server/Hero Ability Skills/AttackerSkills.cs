@@ -24,7 +24,7 @@ public class AttackerSkills : MonoBehaviourPunCallbacks, SkillsInterface
     // 어태커 - 강공 > 영웅능력을 누른 뒤 다음 쓰는 공격카드의 공격력은 2배
     public void UseSkill()
     {
-        photonView.RPC("UseSkillSignal", RpcTarget.All);
+        // photonView.RPC("UseSkillSignal", RpcTarget.All);
         // 능력구현 + 내화면에 보여줄 애니메이션 or 이팩트 구현
     }
 

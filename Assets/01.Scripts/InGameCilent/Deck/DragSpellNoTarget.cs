@@ -99,21 +99,64 @@ public class DragSpellNoTarget : DraggingActions
         return true;
     }
 
+    //protected override PlayerScripts playerOwner
+    //{
+    //    get
+    //    {
+    //        if (tag.Contains("1Card"))
+    //        {
+    //            return GlobalSettings.instance?.LowPlayer;
+    //        }
+    //        else if (tag.Contains("2Card"))
+    //        {
+    //            return GlobalSettings.instance?.TopPlayer;
+    //        }
+    //        else
+    //        {
+    //            Debug.LogError("태그가 없는 카드 입니다." + transform.parent.name);
+    //            return null;
+    //        }
+    //    }
+    //}
     protected override PlayerScripts playerOwner
     {
         get
         {
             if (tag.Contains("1Card"))
             {
-                return GlobalSettings.instance?.LowPlayer;
+                if (GlobalSettings.instance == null)
+                {
+                    Debug.LogError("GlobalSettings.instance is null.");
+                    return null;
+                }
+
+                if (GlobalSettings.instance.LowPlayer == null)
+                {
+                    Debug.LogError("LowPlayer is not set in GlobalSettings.");
+                    return null;
+                }
+
+                return GlobalSettings.instance.LowPlayer;
             }
             else if (tag.Contains("2Card"))
             {
-                return GlobalSettings.instance?.TopPlayer;
+                if (GlobalSettings.instance == null)
+                {
+                    Debug.LogError("GlobalSettings.instance is null.");
+                    return null;
+                }
+
+                if (GlobalSettings.instance.TopPlayer == null)
+                {
+                    Debug.LogError("TopPlayer is not set in GlobalSettings.");
+                    return null;
+                }
+
+                return GlobalSettings.instance.TopPlayer;
             }
             else
             {
-                Debug.LogError("태그가 없는 카드 입니다." + transform.parent.name);
+                Debug.LogError("태그가 없는 카드 입니다: " + transform.parent.name);
                 return null;
             }
         }
