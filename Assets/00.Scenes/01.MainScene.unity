@@ -6653,7 +6653,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.0006126719}
+  m_AnchoredPosition: {x: 0, y: 0.00021915902}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &897640883
@@ -13929,6 +13929,15 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 27ad3e1050dc8fa4faf642ecd7163ff7, type: 3}
   - {fileID: 21300000, guid: cca4f400374e11948bb769c40a696b30, type: 3}
   - {fileID: 21300000, guid: 7b2c1316cb0eaff43807f886a088529b, type: 3}
+  - {fileID: 21300000, guid: 6a9bb6e613a33784e819328012d86730, type: 3}
+  - {fileID: 21300000, guid: 272911f5e71230c408bfbb937d6cce9e, type: 3}
+  - {fileID: 21300000, guid: 5f7dd3a7a67db4542a7cbb70700c32a9, type: 3}
+  - {fileID: 21300000, guid: eee775112eb862146a1c7b7599754169, type: 3}
+  - {fileID: 21300000, guid: 944eef24cbb90064e8950af94588ed6e, type: 3}
+  - {fileID: 21300000, guid: bc3d33ef69490164eb7872837b86297b, type: 3}
+  - {fileID: 21300000, guid: 4d3ff2cbe3b302c46ae982f8ec086648, type: 3}
+  - {fileID: 21300000, guid: 582a24f355e6dda468728847a473021a, type: 3}
+  - {fileID: 21300000, guid: 0c62e1a895d3551499b9cce54cc34b84, type: 3}
 --- !u!1 &1630807906
 GameObject:
   m_ObjectHideFlags: 0
