@@ -4,6 +4,8 @@ using UnityEngine;
 using System;
 using static UnityEngine.Rendering.DebugUI;
 using UnityEngine.SocialPlatforms.Impl;
+using static Enemy;
+using TMPro;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
@@ -19,7 +21,16 @@ public class GameManager : MonoBehaviourPunCallbacks
     private int _timeCount;
     private int _sumCount;
 
+    // 상점 먹통이라 여기서함
     private InGameShop inGameShop;
+    //private EnemySpawner enemySpawner;
+    //private GameObject _transformGameObject;
+    //private TMP_Text _cardVoteText;
+    //private TMP_Text _timeVoteText;
+
+    //private bool _isAllDone = false;
+    //private string _cardVote;
+    //private string _timeVote;
 
     //RealTimeBossStatusCheck 하기위해 만듬
     PlayerScripts playerScripts;
@@ -44,12 +55,22 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void Awake()
     {
         _enemyUIManager = FindObjectOfType<EnemyUIManager>();
+        //uI_Timer = FindObjectOfType<UI_Timer>();
+        //enemySpawner = FindObjectOfType<EnemySpawner>();
         InsertScripts.OnScriptsInserted += GameManagerFindPlayerScriptComponent;
+        InGameShop.InGameShopSpawn += InGameShopSpawn;
     }
+
     public void GameManagerFindPlayerScriptComponent()
     {
         playerScripts = FindObjectOfType<PlayerScripts>();
     }
+    public void InGameShopSpawn()
+    {
+        inGameShop = FindObjectOfType<InGameShop>();
+
+    }
+
     private void Start()
     {
         // Find the Canvas - PlayerSpawn object
@@ -83,17 +104,11 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void SpawnAllPlayers()
     {
+        int otherPlayerCount = 0;
+
         foreach (Player player in PhotonNetwork.PlayerList)
         {
-            int playerIndex = player.ActorNumber - 1;
             Vector3 spawnPosition;
-
-            //string playerObjectName = player.NickName;
-            //GameObject existingPlayerObject = GameObject.Find(playerObjectName);
-            //if (existingPlayerObject != null)
-            //{
-            //    Destroy(existingPlayerObject);
-            //}
 
             if (player.IsLocal)
             {
@@ -105,20 +120,18 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
             else
             {
-                spawnPosition = otherPlayerPositions[playerIndex % otherPlayerPositions.Length];
+                spawnPosition = otherPlayerPositions[otherPlayerCount % otherPlayerPositions.Length];
+                otherPlayerCount++;
                 GameObject playerObject = PhotonNetwork.Instantiate(otherPlayerPrefab.name, Vector3.zero, Quaternion.identity);
                 playerObject.name = $"{player.NickName}";
                 playerObject.transform.SetParent(canvasTransform, false);
                 playerObject.transform.localPosition = spawnPosition;
             }
-
         }
 
         // Check if all players have spawned and invoke event
         CheckAllPlayersSpawned();
     }
-
-
 
     private void CheckAllPlayersSpawned()
     {
@@ -127,7 +140,6 @@ public class GameManager : MonoBehaviourPunCallbacks
             AllPlayersSpawned?.Invoke();
         }
     }
-
 
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
@@ -141,19 +153,21 @@ public class GameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void OnAddTimeOrCardButton(int plusTime, int plusCard)
     {
-        inGameShop = FindObjectOfType<InGameShop>();
 
         Utils.LogGreen($"plusTime {plusTime}");
         Utils.LogGreen($"plusCard {plusCard}");
 
-        _cardCount = _cardCount + plusCard;
-        _timeCount = _timeCount + plusTime;
+        _cardCount =  plusCard;
+        _timeCount =  plusTime;
 
         inGameShop._plusTimeCount = plusTime;
         inGameShop._plusCardCount = plusCard;
 
         Utils.LogGreen($"_cardCount {_cardCount}");
         Utils.LogGreen($"_timeCount {_timeCount}");
+
+        Utils.LogGreen($"inGameShop {inGameShop}");
+        Utils.LogGreen($"inGameShop._timeText {inGameShop._timeText}");
         _sumCount = _cardCount + _timeCount;
 
         inGameShop._timeText.text = $"AddTime\nVote : {_timeCount}";
@@ -161,15 +175,17 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         Debug.Log($"Votes updated on {PhotonNetwork.LocalPlayer.NickName}: AddTime: {_timeCount}, AddCard: {_cardCount}");
 
-        if (_sumCount == PhotonNetwork.PlayerList.Length)
+        if (_sumCount >= PhotonNetwork.PlayerList.Length)
         {
             inGameShop.ExecuteVotingResult(_cardCount, _timeCount);
         }
-
     }
+    
+
+
 
     [PunRPC]
-    public void RealTimeBossStatusCheck(int sword, int magic, int shield, int Sword, int Magic, int Shield,int requiredSword, int requiredMagic,int requiredShield, int _previousSword, int _previousMagic, int _previousShield)
+    public void RealTimeBossStatusCheck(int sword, int magic, int shield, int Sword, int Magic, int Shield, int requiredSword, int requiredMagic, int requiredShield, int _previousSword, int _previousMagic, int _previousShield)
     {
         if (playerScripts._currentEnemy == null)
         {
@@ -183,10 +199,10 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         _Sword = Sword;
         _Magic = Magic;
-         _Shield = Shield;
+        _Shield = Shield;
 
         _requiredSword = requiredSword;
-         _requiredMagic = requiredMagic;
+        _requiredMagic = requiredMagic;
         _requiredShield = requiredShield;
 
         __previousSword = _previousSword;

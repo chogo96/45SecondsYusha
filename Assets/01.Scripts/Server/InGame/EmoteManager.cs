@@ -1,6 +1,8 @@
-using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
+using Photon.Realtime;
+using System.Collections;
 
 public class EmoteManager : MonoBehaviourPun
 {
@@ -66,6 +68,9 @@ public class EmoteManager : MonoBehaviourPun
         photonView.RPC("ShowEmote", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName, emoteIndex, PhotonNetwork.LocalPlayer.ActorNumber);
         _emotePanelOnOff = false;
         _emotePanel.SetActive(false);
+
+        // 버튼 비활성화
+        StartCoroutine(DisableButtonTemporarily(_emoteButtons[emoteIndex]));
     }
 
     [PunRPC]
@@ -79,7 +84,7 @@ public class EmoteManager : MonoBehaviourPun
             return;
         }
 
-        string objectName = $"{userNickname}_{acterNumber}";
+        string objectName = $"{userNickname}";
         GameObject targetObject = GameObject.Find(objectName);
 
         if (targetObject == null)
@@ -93,13 +98,6 @@ public class EmoteManager : MonoBehaviourPun
 
         GameObject emote = Instantiate(emotePrefabs[emoteIndex], emotePosition, Quaternion.identity, _canvas.transform);
         emote.transform.localPosition = emotePosition;
-
-        //RectTransform emoteRectTransform = emote.GetComponent<RectTransform>();
-        //if (emoteRectTransform != null)
-        //{
-        //    emoteRectTransform.localScale = Vector3.one; // 스케일을 1로 설정
-        //    emoteRectTransform.anchoredPosition = emotePosition; // anchoredPosition 사용
-        //}
 
         Utils.LogGreen("objectName: " + objectName);
         Utils.LogGreen("targetObject: " + targetObject);
@@ -142,5 +140,12 @@ public class EmoteManager : MonoBehaviourPun
     {
         _emotePanelOnOff = !_emotePanelOnOff;
         _emotePanel.SetActive(_emotePanelOnOff);
+    }
+
+    private IEnumerator DisableButtonTemporarily(Button button)
+    {
+        button.interactable = false; // 버튼 비활성화
+        yield return new WaitForSeconds(3f); // 3초 대기
+        button.interactable = true; // 버튼 다시 활성화
     }
 }

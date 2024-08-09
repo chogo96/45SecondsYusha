@@ -138,6 +138,10 @@ public class RoomCreator : MonoBehaviourPunCallbacks
             int playerNumber = PhotonNetwork.CurrentRoom.PlayerCount;
             playerListDisplay.UpdatePlayerList(); // 방에 입장한 후 플레이어 목록 갱신
             _punChatPanel.SetActive(true);
+            for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+            {
+                UpdatePlayerReadyState(PhotonNetwork.PlayerList[i].ActorNumber, true);
+            }
         }
         else
         {
@@ -748,6 +752,10 @@ public class RoomCreator : MonoBehaviourPunCallbacks
             {
                 Utils.LogRed("Other player object not found.");
             }
+        }
+        if (PhotonNetwork.IsMasterClient)
+        {
+            UpdateStartButtonVisibility();
         }
     }
 
