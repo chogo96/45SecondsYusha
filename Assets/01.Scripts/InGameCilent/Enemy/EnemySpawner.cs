@@ -202,7 +202,7 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
             if (spawnOrder[index] == "Shop")
             {
                 // 상점 소환
-                newEntity = PhotonNetwork.Instantiate(shopPrefab.name, Vector3.zero, Quaternion.identity);
+                newEntity = Instantiate(shopPrefab, Vector3.zero, Quaternion.identity);
             }
             else
             {

@@ -1,7 +1,9 @@
 using Photon.Pun;
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static Enemy;
 
 public class InGameShop : MonoBehaviourPunCallbacks
 {
@@ -21,6 +23,8 @@ public class InGameShop : MonoBehaviourPunCallbacks
     private UI_Timer uI_Timer;
     private GameManager gameManager;
     private PlayerScripts playerScripts;
+    public static Action InGameShopSpawn;
+
 
     private void Awake()
     {
@@ -54,6 +58,8 @@ public class InGameShop : MonoBehaviourPunCallbacks
         _plusTimeCount = 0;
         _plusCardCount = 0;
         playerScripts = FindObjectOfType<PlayerScripts>();
+        InGameShopSpawn.Invoke();
+
     }
 
     public void VotingPlusCardOrPlusTime(int voteNum)
@@ -76,7 +82,6 @@ public class InGameShop : MonoBehaviourPunCallbacks
         gameManager.photonView.RPC("OnAddTimeOrCardButton", RpcTarget.All, _plusTimeCount, _plusCardCount);
     }
 
-
     public void ExecuteVotingResult(int plusCardVotes, int plusTimeVotes)
     {
         if (plusCardVotes > plusTimeVotes)
@@ -96,7 +101,7 @@ public class InGameShop : MonoBehaviourPunCallbacks
         else
         {
             // 둘의 투표가 같다면 랜덤으로 결정
-            int randomVoting = Random.Range(0, 2);
+            int randomVoting = UnityEngine.Random.Range(0, 2);
             if (PhotonNetwork.IsMasterClient)
             {
                 if (randomVoting == 0)
@@ -113,13 +118,13 @@ public class InGameShop : MonoBehaviourPunCallbacks
                 }
             }
         }
-        
+
         if (_isAllDone && PhotonNetwork.IsMasterClient)
         {
             _enemySpawner.OnShopButtonPressed();
-            _isAllDone = false;
-            Destroy(gameObject); // 상점 UI 제거
         }
+        _isAllDone = false;
+        Destroy(gameObject); // 상점 UI 제거
     }
 
     private void AddRandomCardToDeck()
@@ -135,4 +140,5 @@ public class InGameShop : MonoBehaviourPunCallbacks
             Utils.LogRed("PlayerScripts not found.");
         }
     }
+
 }
