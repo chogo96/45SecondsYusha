@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
-using TMPro;
 
 public class AddCardToDeck : MonoBehaviour
 {
@@ -13,15 +12,36 @@ public class AddCardToDeck : MonoBehaviour
     private CardAsset cardAsset;
     FirebaseCardManager firebaseCardManager;
 
+    public CardAsset CardAsset
+    {
+        get { return cardAsset; }
+        set { cardAsset = value; }
+    }
+
     void Awake()
     {
         _initialScale = new Vector3(60.0f, 60.0f, 60.0f); // 원하는 초기 크기로 설정
         firebaseCardManager = FindObjectOfType<FirebaseCardManager>();
     }
 
+    //public void SetCardAsset(CardAsset asset)
+    //{
+    //    cardAsset = asset;
+    //}
+
     public void SetCardAsset(CardAsset asset)
     {
         cardAsset = asset;
+        // 카드 에셋이 설정되면 바로 수량 업데이트
+        if (cardAsset != null)
+        {
+            int count = firebaseCardManager.GetCardCount(LoginManager.UserId, cardAsset);
+            UpdateQuantity(count);
+        }
+        else
+        {
+            Debug.LogError("SetCardAsset: cardAsset이 null입니다.");
+        }
     }
 
     void OnMouseDown()
@@ -35,15 +55,26 @@ public class AddCardToDeck : MonoBehaviour
         // 딕셔너리에 키가 존재하는지 확인
         if (firebaseCardManager.viewCardss.ContainsKey(cardAsset))
         {
-            if (firebaseCardManager.viewCardss[cardAsset] - DeckBuildingScreen.instance.BuilderScript.NumberOfThisCardInDeck(cardAsset) >= 0)
+            int currentDeckCount = DeckBuildingScreen.instance.BuilderScript.NumberOfThisCardInDeck(cardAsset);
+            int availableCount = firebaseCardManager.viewCardss[cardAsset];
+
+            if (availableCount - currentDeckCount > 0)
             {
-                Debug.Log("클릭 활성화. 추가");
-                DeckBuildingScreen.instance.BuilderScript.AddCard(asset);
-                UpdateQuantity();
+                if (currentDeckCount < 3) // 최대 3장까지만 덱에 추가
+                {
+                    Debug.Log("클릭 활성화. 추가");
+                    DeckBuildingScreen.instance.BuilderScript.AddCard(asset);
+                    UpdateQuantity(firebaseCardManager.viewCardss[cardAsset]);
+                }
+                else
+                {
+                    Debug.Log("카드 수량이 이미 최대치입니다.");
+                    // 최대 카드 수량 알림
+                }
             }
             else
             {
-                Debug.Log("카드없음 ㅅㄱ.");
+                Debug.Log("카드가 충분하지 않습니다.");
                 // 카드가 충분하지 않음을 알려줍시다.
             }
         }
@@ -55,9 +86,6 @@ public class AddCardToDeck : MonoBehaviour
 
     void OnMouseEnter()
     {
-        //if (CraftingScreen.instance.Visible)
-        //    return;
-
         transform.DOScale(_initialScale * scaleFactor, 0.5f);
     }
 
@@ -77,11 +105,6 @@ public class AddCardToDeck : MonoBehaviour
     /// </summary>
     void OnRightClick()
     {
-        //if (CraftingScreen.instance.Visible)
-        //{
-        //    return;
-        //}
-
         Ray clickPoint = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hitPoint;
 
@@ -95,11 +118,27 @@ public class AddCardToDeck : MonoBehaviour
         }
     }
 
-    public void UpdateQuantity()
+    //public void UpdateQuantity(int count)
+    //{
+    //    if (cardAsset != null)
+    //    {
+    //        int quantity = cardAsset.Rarity == RarityOptions.Basic ? 3 : count;
+
+    //        if (DeckBuildingScreen.instance.BuilderScript.InDeckBuildingMode && DeckBuildingScreen.instance.ShowReducedQuantities)
+    //            quantity -= DeckBuildingScreen.instance.BuilderScript.NumberOfThisCardInDeck(cardAsset);
+
+    //        QuantityText.text = "X" + quantity.ToString();
+    //    }
+    //    else
+    //    {
+    //        Debug.LogError("cardAsset이 설정되지 않았습니다: " + name);
+    //    }
+    //}
+    public void UpdateQuantity(int count)
     {
-        if (CardCollection.instance.QuantityOfEachCard.ContainsKey(cardAsset))
+        if (cardAsset != null)
         {
-            int quantity = CardCollection.instance.QuantityOfEachCard[cardAsset];
+            int quantity = cardAsset.Rarity == RarityOptions.Basic ? 3 : count;
 
             if (DeckBuildingScreen.instance.BuilderScript.InDeckBuildingMode && DeckBuildingScreen.instance.ShowReducedQuantities)
                 quantity -= DeckBuildingScreen.instance.BuilderScript.NumberOfThisCardInDeck(cardAsset);
@@ -108,7 +147,8 @@ public class AddCardToDeck : MonoBehaviour
         }
         else
         {
-            Debug.LogError("QuantityOfEachCard 딕셔너리에 해당 카드가 없습니다: " + cardAsset.name);
+            Debug.LogError("UpdateQuantity: cardAsset이 설정되지 않았습니다: " + name);
         }
     }
+
 }

@@ -16,11 +16,11 @@ public class KeywordInputField : MonoBehaviour
     public void Clear()
     {
         iField.text = "";
-        DeckBuildingScreen.instance.CollectionBrowser.Keyword = iField.text;
+        //DeckBuildingScreen.instance.CollectionBrowser.Keyword = iField.text;
     }
 
     public void EnterSubmit()
     {
-        DeckBuildingScreen.instance.CollectionBrowser.Keyword = iField.text;
+        //DeckBuildingScreen.instance.CollectionBrowser.Keyword = iField.text;
     }
 }

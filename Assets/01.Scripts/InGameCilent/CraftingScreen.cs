@@ -72,7 +72,7 @@ public class CraftingScreen : MonoBehaviour
     {
         int AmountOfThisCardInYourCollection = CardCollection.instance.QuantityOfEachCard[currentCard];
         QuantityText.text = "You have " + AmountOfThisCardInYourCollection.ToString() + " of these";
-        DeckBuildingScreen.instance.CollectionBrowser.UpdatePage();
+        //DeckBuildingScreen.instance.CollectionBrowser.UpdatePage();
     }
 
     public void HideCraftingScreen()

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.Xml.Serialization;
+using static Photon.Pun.UtilityScripts.TabViewManager;
+
 public class DeckBuilder : MonoBehaviour
 {
     public GameObject CardNamePrefab;
@@ -17,17 +18,16 @@ public class DeckBuilder : MonoBehaviour
 
     private List<CardAsset> deckList = new List<CardAsset>();
     private Dictionary<CardAsset, CardNameRibbon> ribbons = new Dictionary<CardAsset, CardNameRibbon>();
-
+    public GameObject Tabs;
     public bool InDeckBuildingMode { get; set; }
 
     private CharacterAsset buildingForCharacter;
 
-    /// <summary>
-    /// 버튼 텍스트에 카드 넣은수 나오게 하면서 만든것들
-    /// </summary>
     private Button _deckBuilderDoneButton;
     private TMP_Text _deckBuilderDoneButtonText;
     private ListOfDecksInCollection listOfDecksInCollection;
+
+    private FirebaseCardManager firebaseCardManager;
 
     void Awake()
     {
@@ -35,54 +35,37 @@ public class DeckBuilder : MonoBehaviour
         _deckBuilderDoneButton = transform.Find("DoneButton").GetComponent<Button>();
         _deckBuilderDoneButtonText = transform.Find("DoneButton/Text (TMP)").GetComponent<TMP_Text>();
         listOfDecksInCollection = FindObjectOfType<ListOfDecksInCollection>();
+        firebaseCardManager = FindObjectOfType<FirebaseCardManager>();
     }
 
     private void Start()
     {
         _deckBuilderDoneButton.onClick.AddListener(OnClickDoneButton);
     }
-
     public void AddCard(CardAsset asset)
     {
-        // 컬렉션을 탐색 중이라면 예외처리
-        if (!InDeckBuildingMode)
-        {
-            return;
-
-        }
-
-        // 덱이 이미 가득 찼다면 예외처리
-        if (deckList.Count == AmountOfCardsInDeck)
-        {
-            return;
-        }
+        if (!InDeckBuildingMode) return;
+        if (deckList.Count == AmountOfCardsInDeck) return;
 
         int count = NumberOfThisCardInDeck(asset);
+        int limitOfThisCardInDeck = asset.LimitOfThisCardInDeck > 0 ? asset.LimitOfThisCardInDeck : SameCardLimit;
 
-        int limitOfThisCardInDeck = SameCardLimit;
+        // FirebaseCardManager에서 카드의 수량을 확인
+        int availableCount = firebaseCardManager.GetCardCount(LoginManager.UserId, asset);
 
-        // CardAsset에 다른 제한이 명시되어 있다면, 그것을 사용합니다.
-        if (asset.LimitOfThisCardInDeck > 0)
-            limitOfThisCardInDeck = asset.LimitOfThisCardInDeck;
-
-        if (count < limitOfThisCardInDeck)
+        if (count < limitOfThisCardInDeck && count < availableCount)
         {
             deckList.Add(asset);
-
             CheckDeckCompleteFrame();
 
-            // 카드를 추가하면 수량을 하나 증가시킵니다.
             count++;
 
-            // 그래픽 관련 작업 수행
             if (ribbons.ContainsKey(asset))
             {
-                // 수량 업데이트
                 ribbons[asset].SetQuantity(count);
             }
             else
             {
-                // 1) 카드의 이름을 목록에 추가
                 GameObject cardName = Instantiate(CardNamePrefab, Content) as GameObject;
                 cardName.transform.SetAsLastSibling();
                 cardName.transform.localScale = Vector3.one;
@@ -92,19 +75,10 @@ public class DeckBuilder : MonoBehaviour
             }
         }
     }
-
     void CheckDeckCompleteFrame()
     {
         _deckBuilderDoneButtonText.text = $"{deckList.Count} / {AmountOfCardsInDeck}\nDone";
-        DeckCompleteFrame.SetActive(deckList.Count == AmountOfCardsInDeck);
-        if(deckList.Count == AmountOfCardsInDeck)
-        {
-            _deckBuilderDoneButton.interactable = true;
-        }
-        else
-        {
-            _deckBuilderDoneButton.interactable = false;
-        }
+        _deckBuilderDoneButton.interactable = true;
     }
 
     public int NumberOfThisCardInDeck(CardAsset asset)
@@ -117,9 +91,9 @@ public class DeckBuilder : MonoBehaviour
         }
         return count;
     }
+
     public void RemoveCard(CardAsset asset)
     {
-        Debug.Log("InRemoveCard");
         if (ribbons.ContainsKey(asset))
         {
             CardNameRibbon ribbonToRemove = ribbons[asset];
@@ -128,68 +102,55 @@ public class DeckBuilder : MonoBehaviour
             if (NumberOfThisCardInDeck(asset) == 1)
             {
                 ribbons.Remove(asset);
-                if (ribbonToRemove != null && ribbonToRemove.gameObject != null)
-                {
-                    Destroy(ribbonToRemove.gameObject);
-                }
+                Destroy(ribbonToRemove.gameObject);
             }
         }
 
         deckList.Remove(asset);
-
         CheckDeckCompleteFrame();
 
-        if (DeckBuildingScreen.instance.CollectionBrowser != null)
-        {
-            DeckBuildingScreen.instance.CollectionBrowser.UpdateQuantitiesOnPage();
-        }
+        firebaseCardManager.LoadCardNames(LoginManager.UserId);  // 카드 수량이 변경된 후 업데이트
     }
 
     public void BuildADeckFor(CharacterAsset asset)
     {
         InDeckBuildingMode = true;
         buildingForCharacter = asset;
-        // TODO: 덱 목록에 카드가 있다면 모두 제거합니다. 
-        // 실제 목록과 시각적으로 모든 카드 목록 항목을 삭제합니다.
+
         while (deckList.Count > 0)
         {
             RemoveCard(deckList[0]);
         }
 
-        // 캐릭터 클래스를 적용하고 탭을 활성화합니다.
         DeckBuildingScreen.instance.TabsScript.SetClassOnClassTab(asset);
-        DeckBuildingScreen.instance.CollectionBrowser.ShowCollectionForDeckBuilding(asset);
+        firebaseCardManager.SetSelectedCharacter(asset);
 
         CheckDeckCompleteFrame();
-
-        // 입력 필드의 텍스트를 빈 문자열로 초기화합니다.
         DeckName.text = "";
     }
 
-
     public void DoneButtonHandler()
     {
-        
         DeckInfo deckToSave = new DeckInfo(deckList, DeckName.text, buildingForCharacter);
         DecksStorage.instance.AllDecks.Add(deckToSave);
         DecksStorage.instance.SaveDecksIntoPlayerPrefs();
         DeckBuildingScreen.instance.ShowScreenForCollectionBrowsing();
+        Tabs.SetActive(true);
     }
 
     void OnApplicationQuit()
     {
-        // 덱 고치다가 게임을 끈다 하더라도 어쨌든 덱을 저장해야함
         DoneButtonHandler();
     }
 
     private void OnClickDoneButton()
     {
-        if(deckList.Count == AmountOfCardsInDeck)
-        {
+        //if (deckList.Count == AmountOfCardsInDeck)
+        //{
             DoneButtonHandler();
             gameObject.SetActive(false);
             listOfDecksInCollection.ScrollViewSetActiveTrue();
             listOfDecksInCollection.UpdateList();
-        }
+        //}
     }
 }

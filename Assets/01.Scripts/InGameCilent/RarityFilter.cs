@@ -5,18 +5,19 @@ using UnityEngine.UI;
 
 public class RarityFilter : MonoBehaviour
 {
-
     public Image[] Rarities;
     public Color32 HighlightedColor = Color.white;
     public Color32 UnactiveColor = Color.gray;
 
     private int _currentIndex = -1;
+    private FirebaseCardManager firebaseCardManager;
 
     void Start()
     {
+        firebaseCardManager = FindObjectOfType<FirebaseCardManager>();
         RemoveAllFilters();
         _currentIndex = -1;
-        DeckBuildingScreen.instance.CollectionBrowser.Rarity= (RarityOptions)_currentIndex;
+        UpdateRarityFilter(_currentIndex);
     }
 
     /// <summary>
@@ -28,17 +29,27 @@ public class RarityFilter : MonoBehaviour
         RemoveAllFilters();
         if (index != _currentIndex)
         {
-            CardCollection.instance.GetCardsWithRarity((RarityOptions)_currentIndex);
-           _currentIndex = index;
+            _currentIndex = index;
             Rarities[index].color = HighlightedColor;
         }
         else
         {
-            CardCollection.instance.GetCards(true, true, true, (RarityOptions)_currentIndex);
             _currentIndex = -1;
         }
 
-        DeckBuildingScreen.instance.CollectionBrowser.Rarity= (RarityOptions)_currentIndex;
+        UpdateRarityFilter(_currentIndex);
+    }
+
+    private void UpdateRarityFilter(int rarityIndex)
+    {
+        if (firebaseCardManager != null)
+        {
+            //firebaseCardManager.FilterByRarity((RarityOptions)rarityIndex);
+        }
+        else
+        {
+            Debug.LogError("FirebaseCardManager를 찾을 수 없습니다.");
+        }
     }
 
     public void RemoveAllFilters()

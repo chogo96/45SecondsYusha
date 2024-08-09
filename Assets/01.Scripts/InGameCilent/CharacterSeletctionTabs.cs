@@ -35,31 +35,15 @@ public class CharacterSelectionTabs : MonoBehaviour
         // 선택된 탭 활성화
         tab.Select(instant);
 
-        if (DeckBuildingScreen.instance != null)
+        // FirebaseCardManager를 통해 캐릭터에 맞는 카드를 로드
+        FirebaseCardManager firebaseCardManager = FindObjectOfType<FirebaseCardManager>();
+        if (firebaseCardManager != null)
         {
-            if (DeckBuildingScreen.instance.CollectionBrowser != null)
-            {
-                DeckBuildingScreen.instance.CollectionBrowser.Asset = tab.Asset;
-                DeckBuildingScreen.instance.CollectionBrowser.IncludeAllCharacters = tab.showAllCharacters;
-
-                FirebaseCardManager firebaseCardManager = FindObjectOfType<FirebaseCardManager>();
-                if (firebaseCardManager != null)
-                {
-                    firebaseCardManager.SetSelectedCharacter(tab.Asset);
-                }
-                else
-                {
-                    Debug.LogWarning("FirebaseCardManager instance is null.");
-                }
-            }
-            else
-            {
-                Debug.LogWarning("CollectionBrowser instance is null.");
-            }
+            firebaseCardManager.SetSelectedCharacter(tab.Asset);
         }
         else
         {
-            Debug.LogWarning("DeckBuildingScreen instance is null.");
+            Debug.LogWarning("FirebaseCardManager instance is null.");
         }
     }
 

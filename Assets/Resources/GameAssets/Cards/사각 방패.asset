@@ -17,7 +17,7 @@ MonoBehaviour:
     \uAD74\uB801\uC1E0 \uB300\uC2E0 \uAD74\uB9AC\uB2E4 \uC783\uC5B4\uBC84\uB838\uC2B5\uB2C8\uB2E4."
   Tags: Neutral
   Rarity: 0
-  CardImage: {fileID: 21300000, guid: 2feb1a47a6b54a84aaecbc1fadb89d21, type: 3}
+  CardImage: {fileID: 21300000, guid: ca69ebe68624ef84383512b5d7bbf6b6, type: 3}
   TokenCard: 0
   LimitOfThisCardInDeck: 3
   IsVanishCard: 0

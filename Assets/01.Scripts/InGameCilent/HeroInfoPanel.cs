@@ -12,6 +12,8 @@ public class HeroInfoPanel : MonoBehaviour
     public PortraitMenu selectedPortrait { get; set; }
     public DeckIcon selectedDeck { get; set; }
 
+    public GameObject Tabs;
+
     void Awake()
     {
         OnOpen();
@@ -97,6 +99,7 @@ public class HeroInfoPanel : MonoBehaviour
             return;
 
         DeckBuildingScreen.instance.BuildADeckFor(selectedPortrait.asset);
+        Tabs.SetActive(false);
     }
 
 }

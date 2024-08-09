@@ -5,22 +5,22 @@ using UnityEngine.UI;
 
 public class DeckBuildingScreen : MonoBehaviour
 {
-
     public GameObject ScreenContent;
     public GameObject ReadyDecksList;
     public GameObject CardsInDeckList;
     public DeckBuilder BuilderScript;
     public ListOfDecksInCollection ListOfMadeDeck;
-    public CollectionBrowser CollectionBrowser;
     public CharacterSelectionTabs TabsScript;
     public bool ShowReducedQuantities = true;
 
     public static DeckBuildingScreen instance;
 
+    private FirebaseCardManager firebaseCardManager;
 
     void Awake()
     {
         instance = this;
+        firebaseCardManager = FindObjectOfType<FirebaseCardManager>();
         HideScreen();
     }
 
@@ -32,13 +32,9 @@ public class DeckBuildingScreen : MonoBehaviour
         BuilderScript.InDeckBuildingMode = false;
         ListOfMadeDeck.UpdateList();
 
-        CollectionBrowser.AllCharactersTabs.gameObject.SetActive(true);
-        CollectionBrowser.OneCharacterTabs.gameObject.SetActive(false);
         Canvas.ForceUpdateCanvases();
 
-
-        CollectionBrowser.UpdatePage();
-        // CollectionBrowser.ShowCollectionForBrowsing();
+        firebaseCardManager.SetSelectedCharacter(null); // 모든 캐릭터의 카드를 표시
     }
 
     public void ShowScreenForDeckBuilding()
@@ -47,16 +43,13 @@ public class DeckBuildingScreen : MonoBehaviour
         ReadyDecksList.SetActive(false);
         CardsInDeckList.SetActive(true);
 
-        CollectionBrowser.AllCharactersTabs.gameObject.SetActive(false);
-        CollectionBrowser.OneCharacterTabs.gameObject.SetActive(true);
         Canvas.ForceUpdateCanvases();
-        // TODO:  탭에 우리가 덱을 빌드하고 있는 캐릭터 클래스의 이름을 표시하도록 업데이트하고, 탭의 스크립트를 업데이트해야함
     }
 
     public void BuildADeckFor(CharacterAsset asset)
     {
         ShowScreenForDeckBuilding();
-        CollectionBrowser.ShowCollectionForDeckBuilding(asset);
+        firebaseCardManager.SetSelectedCharacter(asset); // 선택된 캐릭터의 카드만 표시
         TabsScript.SetClassOnClassTab(asset);
         BuilderScript.BuildADeckFor(asset);
     }
@@ -64,6 +57,6 @@ public class DeckBuildingScreen : MonoBehaviour
     public void HideScreen()
     {
         ScreenContent.SetActive(false);
-        CollectionBrowser.ClearCreatedCards();
+        firebaseCardManager.ClearCreatedCards();
     }
 }
