@@ -36,10 +36,13 @@ public class HandVisual : MonoBehaviour
         CardsInHand.Insert(0, card);
         card.transform.SetParent(this.transform);
 
-        // 드래그 기능을 카드에 추가합니다.
-        card.AddComponent<Draggable>();
-        card.GetComponent<Draggable>().HowToStart = Draggable.StartDragBehavior.OnMouseDown;
-        card.GetComponent<Draggable>().HowToEnd = Draggable.EndDragBehavior.OnMouseUp;
+        //// 드래그 기능을 카드에 추가합니다.
+        //card.AddComponent<Draggable>();
+        //card.GetComponent<Draggable>().HowToStart = Draggable.StartDragBehavior.OnMouseDown;
+        //card.GetComponent<Draggable>().HowToEnd = Draggable.EndDragBehavior.OnMouseUp;//// 드래그 기능을 카드에 추가합니다.
+        card.AddComponent<CardDraggable>();
+        card.GetComponent<CardDraggable>().HowToStart = CardDraggable.StartDragBehavior.OnMouseDown;
+        card.GetComponent<CardDraggable>().HowToEnd = CardDraggable.EndDragBehavior.OnMouseUp;
 
         // 손패의 카드 개수가 4장 이하일 때 코루틴을 시작합니다.
         if (CardsInHand.Count <= 4 && !isFillingHand)

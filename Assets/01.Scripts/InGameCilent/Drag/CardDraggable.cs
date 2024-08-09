@@ -4,20 +4,17 @@ using UnityEngine;
 using DG.Tweening;
 using static SoundManager;
 
-/// <summary>
-/// 이 클래스는 게임 오브젝트를 드래그 드롭 할 수 있는 클래스임
-/// </summary>
-public class Draggable : MonoBehaviour
+public class CardDraggable : MonoBehaviour
 {
     private bool _dragging = false;
     private Vector3 _privateDisplacement;
     private float _zDisplacement;
     private DraggingActions _draggingActions;
-    private static Draggable _draggingThis;
+    private static CardDraggable _cardDraggingThis;
 
-    public static Draggable DraggingThis
+    public static CardDraggable DraggingThis
     {
-        get { return _draggingThis; }
+        get { return _cardDraggingThis; }
     }
 
     private void Awake()
@@ -60,16 +57,19 @@ public class Draggable : MonoBehaviour
     {
         _dragging = false;
         HoverPreview.PreviewsAllowed = true;
-        _draggingThis = null;
+        _cardDraggingThis = null;
         _draggingActions.OnEndDrag();
         SoundManager.instance.PlaySfx(Sfx.CardUse);
+
+        // 드래그가 끝나면 원 모양으로 변경 후 중앙으로 이동
+        AnimateCardToCenter();
     }
 
     public void StartDragging()
     {
         _dragging = true;
         HoverPreview.PreviewsAllowed = false;
-        _draggingThis = this;
+        _cardDraggingThis = this;
         _draggingActions.OnStartDrag();
         _zDisplacement = -Camera.main.transform.position.z + transform.position.z;
         _privateDisplacement = -transform.position + MouseInWorldCoords();
@@ -81,7 +81,7 @@ public class Draggable : MonoBehaviour
         {
             _dragging = false;
             HoverPreview.PreviewsAllowed = true;
-            _draggingThis = null;
+            _cardDraggingThis = null;
             _draggingActions.OnCancelDrag();
         }
     }
@@ -91,26 +91,31 @@ public class Draggable : MonoBehaviour
         var screenMousePos = Input.mousePosition;
         screenMousePos.z = _zDisplacement;
 
-        // 카메라 회전을 고려하여 월드 좌표를 계산
         Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(screenMousePos);
-
-        // 카메라의 회전 값을 고려하여 변환된 월드 좌표를 반환
         return AdjustForCameraRotation(worldMousePos);
     }
 
     private Vector3 AdjustForCameraRotation(Vector3 worldPoint)
     {
-        // 카메라의 로컬 좌표계를 사용하여 회전값을 보정
         Vector3 cameraRight = Camera.main.transform.right;
         Vector3 cameraUp = Camera.main.transform.up;
 
-        // 카메라 회전 값을 고려하여 보정된 좌표 계산
         Vector3 adjustedPoint = Camera.main.transform.position +
                                 (cameraRight * (worldPoint.x - Camera.main.transform.position.x)) +
                                 (cameraUp * (worldPoint.y - Camera.main.transform.position.y)) +
                                 (Vector3.forward * (worldPoint.z - Camera.main.transform.position.z));
 
         return adjustedPoint;
+    }
+
+    private void AnimateCardToCenter()
+    {
+        // 원 모양으로 변형 (간단하게 크기 조정으로 처리)
+        //transform.DOScale(new Vector3(60, 60, 0), 0.5f).SetEase(Ease.InOutQuad);
+
+        // 중앙으로 이동
+        Vector3 centerPosition = new Vector3(500, 288, 381); // 화면 중앙의 월드 좌표
+        transform.DOMove(centerPosition, 1f).SetEase(Ease.InOutQuad);
     }
 
     public enum StartDragBehavior
