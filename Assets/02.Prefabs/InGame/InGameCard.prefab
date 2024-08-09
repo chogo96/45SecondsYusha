@@ -14,8 +14,8 @@ GameObject:
   - component: {fileID: 114000012452998384}
   - component: {fileID: 114000010004094300}
   - component: {fileID: 1297838400660762881}
-  - component: {fileID: 114000012503704844}
   - component: {fileID: -3631984392520527378}
+  - component: {fileID: 9183279616280418480}
   m_Layer: 0
   m_Name: InGameCard
   m_TagString: 1Card
@@ -155,20 +155,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76140d74c03662c42aa86740fe3047b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114000012503704844
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000010018853698}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ae918f7ea92cd74eac56a8e39fdbe48, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HowToStart: 0
-  HowToEnd: 0
 --- !u!114 &-3631984392520527378
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -181,6 +167,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3027b9113f43adb488022577c99f0c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &9183279616280418480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000010018853698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b846526d4dbe144d91ae431c4ccd03d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HowToStart: 0
+  HowToEnd: 0
 --- !u!1 &1000010146323856
 GameObject:
   m_ObjectHideFlags: 0
