@@ -81,7 +81,7 @@ public class UI_Voting : MonoBehaviourPunCallbacks
         _votesCount = _giveUpVotes + _noGiveUpVotes;
 
 
-        _votingResults.text = $"Agree: {_giveUpVotes} | Opposite: {_noGiveUpVotes}";
+        _votingResults.text = $"찬성: {_giveUpVotes} | 반대: {_noGiveUpVotes}";
 
         if (_votesCount == _totalPlayers)
         {

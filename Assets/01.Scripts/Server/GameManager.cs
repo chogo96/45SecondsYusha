@@ -170,8 +170,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         Utils.LogGreen($"inGameShop._timeText {inGameShop._timeText}");
         _sumCount = _cardCount + _timeCount;
 
-        inGameShop._timeText.text = $"AddTime\nVote : {_timeCount}";
-        inGameShop._cardText.text = $"AddCard\nVote : {_cardCount}";
+        inGameShop._timeText.text = $"시간 10초구매\n투표 : {_timeCount}";
+        inGameShop._cardText.text = $"카드 10장구매\n투표 : {_cardCount}";
 
         Debug.Log($"Votes updated on {PhotonNetwork.LocalPlayer.NickName}: AddTime: {_timeCount}, AddCard: {_cardCount}");
 
