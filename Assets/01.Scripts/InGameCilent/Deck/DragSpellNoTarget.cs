@@ -98,26 +98,6 @@ public class DragSpellNoTarget : DraggingActions
         // TableVisual을 사용하지 않으므로 항상 드래그가 성공한 것으로 간주
         return true;
     }
-
-    //protected override PlayerScripts playerOwner
-    //{
-    //    get
-    //    {
-    //        if (tag.Contains("1Card"))
-    //        {
-    //            return GlobalSettings.instance?.LowPlayer;
-    //        }
-    //        else if (tag.Contains("2Card"))
-    //        {
-    //            return GlobalSettings.instance?.TopPlayer;
-    //        }
-    //        else
-    //        {
-    //            Debug.LogError("태그가 없는 카드 입니다." + transform.parent.name);
-    //            return null;
-    //        }
-    //    }
-    //}
     protected override PlayerScripts playerOwner
     {
         get
