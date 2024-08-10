@@ -609,20 +609,20 @@ public class RoomCreator : MonoBehaviourPunCallbacks
             switch (num)
             {
                 case 0:
-                    //if (PhotonNetwork.IsMasterClient && (PhotonNetwork.CurrentRoom.PlayerCount == 4))
-                    //{
-                    //    PhotonNetwork.LoadLevel("03.GamePlay Scene");
-                    //}
-                    //else
-                    //{
-                    //    Utils.LogRed($"플레이어 수가 4명이 아닙니다.\n현재 플레이어 수는 {PhotonNetwork.CurrentRoom.PlayerCount} 입니다.");
-                    //}
-
-                    if (PhotonNetwork.IsMasterClient)
+                    if (PhotonNetwork.IsMasterClient && (PhotonNetwork.CurrentRoom.PlayerCount == 4))
                     {
-                        // 서버 테스트할때 사용할 내용
                         PhotonNetwork.LoadLevel("03.GamePlay Scene");
                     }
+                    else
+                    {
+                        _notReady.SetActive(true);
+                    }
+
+                    //if (PhotonNetwork.IsMasterClient)
+                    //{
+                    //    // 서버 테스트할때 사용할 내용
+                    //    PhotonNetwork.LoadLevel("03.GamePlay Scene");
+                    //}
                     break;
                 case 1:
 
