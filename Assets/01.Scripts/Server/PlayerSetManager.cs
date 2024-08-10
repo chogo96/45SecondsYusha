@@ -219,7 +219,7 @@ public class PlayerSetManager : MonoBehaviourPunCallbacks
 
         int playerIndex = GetPlayerIndexByNickName(nickName);
 
-
+        // 현재 스크립트에서 RPC값을 저장해 모두 동일한 값을 볼 수 있도록 하기.
         _baseHandCards = handCardCount;
         _baseDeckCards = deckCardCount;
 
