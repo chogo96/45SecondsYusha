@@ -74,9 +74,9 @@ public class UI_Voting : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void RegisterVote(int _giveUp, int noGiveUp)
+    public void RegisterVote(int giveUp, int noGiveUp)
     {
-        _giveUpVotes = _giveUp;
+        _giveUpVotes = giveUp;
         _noGiveUpVotes = noGiveUp;
         _votesCount = _giveUpVotes + _noGiveUpVotes;
 
