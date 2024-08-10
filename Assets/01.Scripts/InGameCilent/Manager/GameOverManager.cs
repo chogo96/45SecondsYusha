@@ -11,11 +11,13 @@ public class GameOverManager : MonoBehaviour
     public GameObject losePanel;
     public float displayTime = 5.0f; // 패널이 보이는 시간
     private Button returnToLobbyButton;
+
     private void Awake()
     {
         //Todo : 버튼 제작 후 주석 해제 해서 사용하세요
-        returnToLobbyButton = GameObject.Find("Button - ReturnLobby").GetComponent<Button>();   
+        returnToLobbyButton = GameObject.Find("Button - ReturnLobby").GetComponent<Button>();
     }
+
     void Start()
     {
         winPanel.SetActive(false);
@@ -26,12 +28,14 @@ public class GameOverManager : MonoBehaviour
 
     public void DisplayWin()
     {
+        DisableAllCardInteractions(); // 카드 상호작용 비활성화
         StartCoroutine(ShowPanel(winPanel));
         SoundManager.instance.ChangeBgm("Win");
     }
 
     public void DisplayLose()
     {
+        DisableAllCardInteractions(); // 카드 상호작용 비활성화
         StartCoroutine(ShowPanel(losePanel));
         SoundManager.instance.ChangeBgm("Lose");
     }
@@ -45,7 +49,6 @@ public class GameOverManager : MonoBehaviour
 
     private void ReturnToLobby()
     {
-
         if (PhotonNetwork.IsMasterClient)
         {
             returnToLobbyButton.interactable = true;
@@ -54,6 +57,20 @@ public class GameOverManager : MonoBehaviour
         else
         {
             returnToLobbyButton.interactable = false;
+        }
+    }
+
+    private void DisableAllCardInteractions()
+    {
+        // 모든 CardDraggable을 가진 오브젝트의 BoxCollider 비활성화
+        CardDraggable[] cards = FindObjectsOfType<CardDraggable>();
+        foreach (CardDraggable card in cards)
+        {
+            BoxCollider cardCollider = card.GetComponent<BoxCollider>();
+            if (cardCollider != null)
+            {
+                cardCollider.enabled = false;  // BoxCollider 비활성화
+            }
         }
     }
 }
