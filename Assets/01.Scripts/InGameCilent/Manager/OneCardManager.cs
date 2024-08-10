@@ -35,6 +35,9 @@
 //    public GameObject ConfusionPrefab;
 //    public GameObject AllDebuffPrefab;
 
+//    [Header("CardRegainImagePrefabs")]
+//    public GameObject CardRegainPrefab;
+
 
 //    [Header("UI Parents for Attack Circles")]
 //    public Transform SwordParent; // 검 공격 동그라미를 추가할 부모 객체
@@ -47,6 +50,10 @@
 //    public Transform BleedParent; //출혈 디버프 해제를 의미하는 스프라이트를 추가할 부모객체
 //    public Transform BlindParent; //실명 디버프 해제를 의미하는 스프라이트를 추가할 부모객체
 //    public Transform AllDebuffParent; //모든 디버프 해제를 의미하는 스프라이트를 추가할 부모객체
+
+
+//    [Header("UI Parents for CheckCardEffect")]
+//    public Transform CardRegainParent; //카드 회복을 의미하는 스프라이트를 추가할 부모객체
 
 //    void Awake()
 //    {
@@ -78,7 +85,7 @@
 //        {
 //            CardBodyImage.color = cardAsset.CharacterAsset.ClassCardTint;
 //            CardFaceFrameImage.color = cardAsset.CharacterAsset.ClassCardTint;
-//            CardTopRibbonImage.color = cardAsset.CharacterAsset.ClassRibbonsTint;
+//            //CardTopRibbonImage.color = cardAsset.CharacterAsset.ClassRibbonsTint;
 //            CardLowRibbonImage.color = cardAsset.CharacterAsset.ClassRibbonsTint;
 //        }
 //        else
@@ -87,8 +94,9 @@
 //        }
 //        // 2) 카드 이름 추가
 //        NameText.text = cardAsset.name;
-//        // 3) 설명 추가
-//        DescriptionText.text = cardAsset.Description;
+//        // 3) 설명 추가 가독성을 위해 첨삭처리 필요 시 첨삭 해제하고 하면됨
+//        //DescriptionText.text = cardAsset.Description;
+//        DescriptionText.text = null;
 //        // 4) 그래픽 이미지 변경
 //        CardGraphicImage.sprite = cardAsset.CardImage;
 
@@ -125,13 +133,41 @@
 //        CreateAttackCircles(RandomParent, RandomCirclePrefab, cardAsset.RandomAttack);
 //    }
 
-
 //    private void UpdateDebuffImages()
 //    {
+//        // 기존 디버프 이미지를 모두 제거
 //        ClearDebuffChildren(ConfusionParent);
 //        ClearDebuffChildren(BleedParent);
 //        ClearDebuffChildren(BlindParent);
 //        ClearDebuffChildren(AllDebuffParent);
+
+//        // cardAsset의 RemoveDebuff 값을 확인하여 해당하는 이모티콘을 추가
+//        switch (cardAsset.RemoveDebuff)
+//        {
+//            case "혼란":
+//                Instantiate(ConfusionPrefab, ConfusionParent);
+//                break;
+//            case "출혈":
+//                Instantiate(BleedPrefab, BleedParent);
+//                break;
+//            case "실명":
+//                Instantiate(BlindPrefab, BlindParent);
+//                break;
+//            case "모든":
+//                Instantiate(AllDebuffPrefab, AllDebuffParent);
+//                break;
+//            case "랜덤":
+//                Instantiate(AllDebuffPrefab, AllDebuffParent);
+//                break;
+//            case "0":
+//                break;
+//            default: 
+//                break;
+//        }
+//    } 
+//    private void UpdateCostImages()
+//    {
+
 //    }
 
 //    private void ClearDebuffChildren(Transform parent)
@@ -141,7 +177,19 @@
 //            Destroy(child.gameObject);
 //        }
 //    }
-
+//    private void ClearCostChildren(Transform parent)
+//    {
+//        foreach (Transform child in parent)
+//        {
+//            Destroy(child.gameObject);
+//        }
+//    }private void ClearCardRegainChildren(Transform parent)
+//    {
+//        foreach (Transform child in parent)
+//        {
+//            Destroy(child.gameObject);
+//        }
+//    }
 //    private void ClearChildren(Transform parent)
 //    {
 //        foreach (Transform child in parent)
@@ -168,10 +216,12 @@ public class OneCardManager : MonoBehaviour
 {
     public CardAsset cardAsset;
     public OneCardManager PreviewManager;
+
     [Header("Text Component References")]
     public Text NameText;
     public Text DescriptionText;
     //public TMP_Text AttackText;
+
     [Header("Image References")]
     public Image CardTopRibbonImage;
     public Image CardLowRibbonImage;
@@ -195,7 +245,6 @@ public class OneCardManager : MonoBehaviour
     public GameObject ConfusionPrefab;
     public GameObject AllDebuffPrefab;
 
-
     [Header("UI Parents for Attack Circles")]
     public Transform SwordParent; // 검 공격 동그라미를 추가할 부모 객체
     public Transform MagicParent; // 마법 공격 동그라미를 추가할 부모 객체
@@ -203,10 +252,18 @@ public class OneCardManager : MonoBehaviour
     public Transform RandomParent; // 랜덤 공격 동그라미를 추가할 부모 객체
 
     [Header("UI Parents for CheckCardEffect")]
-    public Transform ConfusionParent; //혼란 디버프 해제를 의미하는 스프라이트를 추가할 부모객체
-    public Transform BleedParent; //출혈 디버프 해제를 의미하는 스프라이트를 추가할 부모객체
-    public Transform BlindParent; //실명 디버프 해제를 의미하는 스프라이트를 추가할 부모객체
-    public Transform AllDebuffParent; //모든 디버프 해제를 의미하는 스프라이트를 추가할 부모객체
+    public Transform ConfusionParent; // 혼란 디버프 해제를 의미하는 스프라이트를 추가할 부모객체
+    public Transform BleedParent; // 출혈 디버프 해제를 의미하는 스프라이트를 추가할 부모객체
+    public Transform BlindParent; // 실명 디버프 해제를 의미하는 스프라이트를 추가할 부모객체
+    public Transform AllDebuffParent; // 모든 디버프 해제를 의미하는 스프라이트를 추가할 부모객체
+
+    [Header("UI Parents for Card Effects")]
+    public Transform CardRegainParent; // 카드 회복을 의미하는 스프라이트를 추가할 부모 객체
+    public Transform DiscardParent; // 덱에서 버려진 카드를 의미하는 스프라이트를 추가할 부모 객체
+
+    [Header("Prefabs for Card Effects")]
+    public GameObject DiscardPrefab; // 덱에서 버려진 카드에 대한 프리팹
+    public GameObject RandomRestorePrefab; // 랜덤으로 회복되는 카드에 대한 프리팹
 
     void Awake()
     {
@@ -225,7 +282,6 @@ public class OneCardManager : MonoBehaviour
         set
         {
             canBePlayedNow = value;
-
             CardFaceGlowImage.enabled = value;
         }
     }
@@ -238,18 +294,19 @@ public class OneCardManager : MonoBehaviour
         {
             CardBodyImage.color = cardAsset.CharacterAsset.ClassCardTint;
             CardFaceFrameImage.color = cardAsset.CharacterAsset.ClassCardTint;
-            //CardTopRibbonImage.color = cardAsset.CharacterAsset.ClassRibbonsTint;
             CardLowRibbonImage.color = cardAsset.CharacterAsset.ClassRibbonsTint;
         }
         else
         {
             CardFaceFrameImage.color = Color.white;
         }
+
         // 2) 카드 이름 추가
         NameText.text = cardAsset.name;
-        // 3) 설명 추가 가독성을 위해 첨삭처리 필요 시 첨삭 해제하고 하면됨
-        //DescriptionText.text = cardAsset.Description;
+
+        // 3) 설명 추가
         DescriptionText.text = null;
+
         // 4) 그래픽 이미지 변경
         CardGraphicImage.sprite = cardAsset.CardImage;
 
@@ -267,8 +324,12 @@ public class OneCardManager : MonoBehaviour
 
         // 공격 수치를 동그라미 이미지로 표시
         UpdateAttackImages();
-        //디버프 해제 요소를 아이콘으로 표시
+
+        // 디버프 해제 요소를 아이콘으로 표시
         UpdateDebuffImages();
+
+        // 카드 효과를 아이콘으로 표시
+        UpdateCardEffects();
     }
 
     private void UpdateAttackImages()
@@ -314,8 +375,37 @@ public class OneCardManager : MonoBehaviour
                 break;
             case "0":
                 break;
-            default: 
+            default:
                 break;
+        }
+    }
+
+    private void UpdateCardEffects()
+    {
+        // 기존 카드 효과 이미지를 모두 제거
+        ClearChildren(DiscardParent);
+        ClearChildren(CardRegainParent);
+
+        // DiscardFromDeck 값이 0이 아니면 해당 프리팹 생성 및 텍스트 설정
+        if (cardAsset.DiscardFromDeck != 0)
+        {
+            GameObject discardInstance = Instantiate(DiscardPrefab, DiscardParent);
+            Text discardText = discardInstance.GetComponentInChildren<Text>();
+            if (discardText != null)
+            {
+                discardText.text = cardAsset.DiscardFromDeck.ToString();
+            }
+        }
+
+        // RandomRestoreDeck 값이 0이 아니면 해당 프리팹 생성 및 텍스트 설정
+        if (cardAsset.RandomRestoreDeck != 0)
+        {
+            GameObject restoreInstance = Instantiate(RandomRestorePrefab, CardRegainParent);
+            Text restoreText = restoreInstance.GetComponentInChildren<Text>();
+            if (restoreText != null)
+            {
+                restoreText.text = cardAsset.RandomRestoreDeck.ToString();
+            }
         }
     }
 
