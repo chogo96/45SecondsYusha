@@ -27,6 +27,7 @@ public class LoginManager : MonoBehaviour
 
     private FirebaseAuth auth;
     private DatabaseReference databaseReference;
+    private RegisterManager registerManager;
 
     private TMP_Text _errorMessage;
 
@@ -49,6 +50,8 @@ public class LoginManager : MonoBehaviour
         _registerPopUp = transform.Find("Panel - Register").gameObject;
 
         _errorMessage = transform.Find("Panel - Login/Text (TMP) - ErrorMessage").GetComponent<TMP_Text>();
+
+        registerManager = GetComponent<RegisterManager>();
 
         FirebaseInit.OnFirebaseInitialized += OnFirebaseInitialized;
     }
@@ -205,6 +208,7 @@ public class LoginManager : MonoBehaviour
         }
         else
         {
+            registerManager.Reset();
             _registerPopUp.SetActive(false);
         }
         isHide = !isHide;

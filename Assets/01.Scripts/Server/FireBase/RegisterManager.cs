@@ -69,8 +69,22 @@ public class RegisterManager : MonoBehaviour
         {
             _errorMessage.text = "Sign up error: " + e.Message;
         }
+
+
+        Reset();
+        _loginManager.OnClickRegisterButton();
+    }
+
+    public void Reset()
+    {
+        _registerId.text = null;
+        _registerPw.text = null;
+        _nickName.text = null;
+        _errorMessage.text= null;
     }
 }
+
+
 
 [System.Serializable]
 public class User
