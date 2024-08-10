@@ -139,20 +139,19 @@ public class UI_Setting : MonoBehaviour
     {
         _settingPanel.SetActive(true);
     }
-
     public void OnClickUiPopUpButtons(int num)
     {
         switch (num)
         {
             case 0: // 저장 버튼
-                // BGM 사운드 조절 내용
+                    // BGM 사운드 조절 내용
                 _currentBGMValue = Mathf.Lerp(0f, 1f, _bgmSoundBar.value);
-                soundManager.bgmVolume = _currentBGMValue;
+                soundManager.SetBgmVolume(_currentBGMValue);  // 이 부분을 수정
                 PlayerPrefs.SetFloat(_bgmSaveKey, _bgmSoundBar.value);
 
                 // SFX 사운드 조절 내용
                 _currentSFXValue = Mathf.Lerp(0f, 1f, _sfxSoundBar.value);
-                soundManager.sfxVolume = _currentSFXValue;
+                soundManager.SetSfxVolume(_currentSFXValue);  // 이 부분을 수정
                 PlayerPrefs.SetFloat(_sfxSaveKey, _sfxSoundBar.value);
 
                 // 해상도 및 전체화면 설정 저장
@@ -164,7 +163,7 @@ public class UI_Setting : MonoBehaviour
                 break;
 
             case 1: // 취소 버튼
-                // 설정을 저장하지 않고 이전 상태로 되돌림
+                    // 설정을 저장하지 않고 이전 상태로 되돌림
                 _bgmSoundBar.value = _savedBGMValue;
                 _sfxSoundBar.value = _savedSFXValue;
 

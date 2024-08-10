@@ -238,7 +238,7 @@ public class OneCardManager : MonoBehaviour
         {
             CardBodyImage.color = cardAsset.CharacterAsset.ClassCardTint;
             CardFaceFrameImage.color = cardAsset.CharacterAsset.ClassCardTint;
-            CardTopRibbonImage.color = cardAsset.CharacterAsset.ClassRibbonsTint;
+            //CardTopRibbonImage.color = cardAsset.CharacterAsset.ClassRibbonsTint;
             CardLowRibbonImage.color = cardAsset.CharacterAsset.ClassRibbonsTint;
         }
         else

@@ -10,6 +10,7 @@ public class TurnOverPack : MonoBehaviour
     private float _initialScale;
     private float _scaleFactor = 1.1f;
     public OneCardManager _oneCardManager;
+    private bool _isOpened = false;
 
     private void Awake()
     {
@@ -18,6 +19,8 @@ public class TurnOverPack : MonoBehaviour
     }
     private void OnMouseDown()
     {
+        if (_isOpened) { return; }
+        _isOpened = true;
         SoundManager.instance.PlaySfx(SoundManager.Sfx.CardGrab);
         transform.DORotate(Vector3.zero, 0.5f);
         ShopManager.instance.OpeningArea.NumberOfCardsOpenedFromPack++;

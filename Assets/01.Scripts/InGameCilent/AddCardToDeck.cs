@@ -8,7 +8,7 @@ public class AddCardToDeck : MonoBehaviour
 {
     public Text QuantityText;
     private Vector3 _initialScale;
-    private float scaleFactor = 1.5f;
+    private float scaleFactor = 1.1f;
     private CardAsset cardAsset;
     FirebaseCardManager firebaseCardManager;
 
@@ -20,7 +20,7 @@ public class AddCardToDeck : MonoBehaviour
 
     void Awake()
     {
-        _initialScale = new Vector3(60.0f, 60.0f, 60.0f); // 원하는 초기 크기로 설정
+        _initialScale = new Vector3(90.0f, 90.0f, 30f); // 원하는 초기 크기로 설정
         firebaseCardManager = FindObjectOfType<FirebaseCardManager>();
     }
 

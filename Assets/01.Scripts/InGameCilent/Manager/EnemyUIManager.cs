@@ -5,9 +5,9 @@ using TMPro;
 
 public class EnemyUIManager : MonoBehaviour
 {
-    public TMP_Text requiredSwordText;
-    public TMP_Text requiredMagicText;
-    public TMP_Text requiredShieldText;
+    //public TMP_Text requiredSwordText;
+    //public TMP_Text requiredMagicText;
+    //public TMP_Text requiredShieldText;
     public Transform swordImageParent;
     public Transform magicImageParent;
     public Transform shieldImageParent;
@@ -17,10 +17,10 @@ public class EnemyUIManager : MonoBehaviour
 
     public void UpdateUI(int requiredSword, int requiredMagic, int requiredShield)
     {
-        // 텍스트 업데이트
-        requiredSwordText.text = requiredSword.ToString();
-        requiredMagicText.text = requiredMagic.ToString();
-        requiredShieldText.text = requiredShield.ToString();
+        //// 텍스트 업데이트
+        //requiredSwordText.text = requiredSword.ToString();
+        //requiredMagicText.text = requiredMagic.ToString();
+        //requiredShieldText.text = requiredShield.ToString();
 
         // 이미지 갯수 업데이트 및 초기 알파값 설정
         UpdateImages(swordImageParent, swordImagePrefab, requiredSword);
