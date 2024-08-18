@@ -29,11 +29,9 @@ public class PlayerPortraitVisual : MonoBehaviour
             //HeroPowerBackgroundImage.sprite = charAsset.HeroPowerBGImage;
             //HeroPowerBackgroundImage.color = charAsset.HeroPowerBGTint;
         }
-
         PortraitImage.sprite = charAsset.AvatarImage;
         PortraitBackgroundImage.sprite = charAsset.AvatarBGImage;
         PortraitBackgroundImage.color = charAsset.AvatarBGTint;
-
     }
 
     public void TakeDamage(int amount, int healthAfter)
@@ -51,7 +49,4 @@ public class PlayerPortraitVisual : MonoBehaviour
         s.PrependInterval(2f);
         s.OnComplete(() => GlobalSettings.instance.GameOverPanel.SetActive(true));
     }
-
-
-
 }

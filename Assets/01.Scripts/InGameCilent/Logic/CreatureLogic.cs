@@ -6,38 +6,28 @@ using Photon.Realtime;
 [System.Serializable]
 public class CreatureLogic : ICharacter
 {
-    // PUBLIC FIELDS
-    // Player that this creature belongs to
     public Player owner;
 
     //이 카드의 정보
     public CardAsset cardAsset;
 
-    // Reference to CreatureEffect script that causes unique effect for this creature
     public CreatureEffect effect;
 
-    // an ID of this creature in Logic (is similar to an ID of Game Object that represents this creature in Visual)
     public int UniqueCreatureID;
 
-    // A flag that marks this creature as frosen
     public bool Frozen = false;
 
-    // PROPERTIES
-    // property from ICharacter interface
     public int ID
     {
         get { return UniqueCreatureID; }
     }
 
-    // the basic health that we have in CardAsset
     private int baseHealth;
-    // health with all the current buffs taken into account
     public int MaxHealth
     {
         get { return baseHealth; }
     }
 
-    // current health of this creature
     private int health;
     public int Health
     {
@@ -61,7 +51,6 @@ public class CreatureLogic : ICharacter
     }
 
 
-    // returns true if we can attack with this creature now
     public bool CanAttack
     {
         get
@@ -71,14 +60,12 @@ public class CreatureLogic : ICharacter
         }
     }
 
-    // property for Attack
     private int baseAttack;
     public int Attack
     {
         get { return baseAttack; }
     }
 
-    // number of attacks for one turn if (attacksForOneTurn==2) => Windfury
     private int attacksForOneTurn = 1;
     public int AttacksLeftThisTurn
     {
@@ -86,10 +73,8 @@ public class CreatureLogic : ICharacter
         set;
     }
 
-    // CONSTRUCTOR
     public CreatureLogic(Player owner, CardAsset cardAsset)
     {
-        // AttacksLeftThisTurn is now equal to 0
         this.owner = owner;
         UniqueCreatureID = IDFactory.GetUniqueID();
         //if (cardAsset.CreatureScriptName != null && cardAsset.CreatureScriptName != "")
@@ -100,7 +85,6 @@ public class CreatureLogic : ICharacter
         CreaturesCreatedThisGame.Add(UniqueCreatureID, this);
     }
 
-    // METHODS
     public void OnTurnStart()
     {
         AttacksLeftThisTurn = attacksForOneTurn;
@@ -108,7 +92,7 @@ public class CreatureLogic : ICharacter
 
     public void Die()
     {
-        //    // cause Deathrattle Effect
+        //    // 죽음의 메아리
         //    if (effect != null)
         //    {
         //        effect.WhenACreatureDies();
@@ -118,34 +102,7 @@ public class CreatureLogic : ICharacter
 
         //    new CreatureDieCommand(UniqueCreatureID, owner).AddToQueue();
     }
-
-//public void GoFace()
-//{
-//    AttacksLeftThisTurn--;
-//    int targetHealthAfter = owner.otherPlayer.Health - Attack;
-//    new CreatureAttackCommand(owner.otherPlayer.PlayerID, UniqueCreatureID, 0, Attack, Health, targetHealthAfter).AddToQueue();
-//    owner.otherPlayer.Health -= Attack;
-//}
-
-//public void AttackCreature(CreatureLogic target)
-//{
-//    AttacksLeftThisTurn--;
-//    // calculate the values so that the creature does not fire the DIE command before the Attack command is sent
-//    int targetHealthAfter = target.Health - Attack;
-//    int attackerHealthAfter = Health - target.Attack;
-//    new CreatureAttackCommand(target.UniqueCreatureID, UniqueCreatureID, target.Attack, Attack, attackerHealthAfter, targetHealthAfter).AddToQueue();
-
-//    target.Health -= Attack;
-//    Health -= target.Attack;
-//}
-
-//public void AttackCreatureWithID(int uniqueCreatureID)
-//{
-//    CreatureLogic target = CreatureLogic.CreaturesCreatedThisGame[uniqueCreatureID];
-//    AttackCreature(target);
-//}
-
-// STATIC For managing IDs
+// 카드 ID관리
 public static Dictionary<int, CreatureLogic> CreaturesCreatedThisGame = new Dictionary<int, CreatureLogic>();
 
 }

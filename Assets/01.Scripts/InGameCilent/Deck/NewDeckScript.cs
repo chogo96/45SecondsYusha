@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class NewDeckScript : MonoBehaviour
 {
-
     public void MakeANewDeck()
     {
         DeckBuildingScreen.instance.HideScreen();

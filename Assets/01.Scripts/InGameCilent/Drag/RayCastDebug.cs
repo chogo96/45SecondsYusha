@@ -22,7 +22,7 @@ public class RaycastDebug : MonoBehaviour
 
             foreach (RaycastResult result in results)
             {
-                Debug.Log("Hit: " + result.gameObject.name);
+                Utils.Log("Hit: " + result.gameObject.name);
             }
         }
     }

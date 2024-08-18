@@ -36,13 +36,10 @@ public class HandVisual : MonoBehaviour
         CardsInHand.Insert(0, card);
         card.transform.SetParent(this.transform);
 
-        //// 드래그 기능을 카드에 추가합니다.
-        //card.AddComponent<Draggable>();
-        //card.GetComponent<Draggable>().HowToStart = Draggable.StartDragBehavior.OnMouseDown;
-        //card.GetComponent<Draggable>().HowToEnd = Draggable.EndDragBehavior.OnMouseUp;//// 드래그 기능을 카드에 추가합니다.
+        // 드래그 기능을 카드에 추가합니다.
         card.AddComponent<CardDraggable>();
         card.GetComponent<CardDraggable>().HowToStart = CardDraggable.StartDragBehavior.OnMouseDown;
-        card.GetComponent<CardDraggable>().HowToEnd = CardDraggable.EndDragBehavior.OnMouseUp;
+        card.GetComponent<CardDraggable>().HowToEnd = CardDraggable.EndDragBehavior.OnMouseUp;// 드래그 기능을 카드에 추가합니다.
 
         // 손패의 카드 개수가 4장 이하일 때 코루틴을 시작합니다.
         if (CardsInHand.Count <= 4 && !isFillingHand)
@@ -130,7 +127,7 @@ public class HandVisual : MonoBehaviour
         {
             if (GlobalSettings.instance.CreatureCardPrefab == null)
             {
-                Debug.LogError("CreatureCardPrefab is not assigned in GlobalSettings.");
+                Utils.LogRed("CreatureCardPrefab is not assigned in GlobalSettings.");
             }
             card = Instantiate(GlobalSettings.instance.CreatureCardPrefab, position, Quaternion.Euler(eulerAngles));
         }
@@ -140,7 +137,7 @@ public class HandVisual : MonoBehaviour
             {
                 if (GlobalSettings.instance.NoTargetSpellCardPrefab == null)
                 {
-                    Debug.LogError("NoTargetSpellCardPrefab is not assigned in GlobalSettings.");
+                    Utils.LogRed("NoTargetSpellCardPrefab is not assigned in GlobalSettings.");
                 }
                 card = Instantiate(GlobalSettings.instance.NoTargetSpellCardPrefab, position, Quaternion.Euler(eulerAngles));
             }
@@ -148,7 +145,7 @@ public class HandVisual : MonoBehaviour
             {
                 if (GlobalSettings.instance.TargetedSpellCardPrefab == null)
                 {
-                    Debug.LogError("TargetedSpellCardPrefab is not assigned in GlobalSettings.");
+                    Utils.LogRed("TargetedSpellCardPrefab is not assigned in GlobalSettings.");
                 }
                 card = Instantiate(GlobalSettings.instance.TargetedSpellCardPrefab, position, Quaternion.Euler(eulerAngles));
                 DragSpellOnTarget dragSpell = card.GetComponentInChildren<DragSpellOnTarget>();
@@ -290,11 +287,10 @@ public class HandVisual : MonoBehaviour
             // PlayerScripts의 DrawACard 메서드를 호출합니다.
             playerScript.DrawACard(1);
 
-            // Wait until the card is added to the hand
             bool cardAdded = false;
             while (!cardAdded)
             {
-                yield return new WaitForSeconds(0.1f); // Check every 0.1 seconds
+                yield return new WaitForSeconds(0.1f);
                 if (CardsInHand.Count == playerScript.hand.CardsInHand.Count)
                 {
                     cardAdded = true;
@@ -350,7 +346,7 @@ public class HandVisual : MonoBehaviour
             case PlayerPosition.Player4:
                 return player4Left;
             default:
-                Debug.LogError("Invalid player position in GetLeftTransform!");
+                Utils.LogRed("Invalid player position in GetLeftTransform!");
                 return player1Left;
         }
     }
@@ -368,7 +364,7 @@ public class HandVisual : MonoBehaviour
             case PlayerPosition.Player4:
                 return player4Right;
             default:
-                Debug.LogError("Invalid player position in GetRightTransform!");
+                Utils.LogRed("Invalid player position in GetRightTransform!");
                 return player1Right;
         }
     }

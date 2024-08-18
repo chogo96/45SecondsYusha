@@ -55,27 +55,6 @@ public class BuffManager : MonoBehaviourPun
 
     private IEnumerator Initialize()
     {
-        //yield return new WaitUntil(() => GameObject.Find("BleedDebuffImage") != null);
-        //bleedDebuffImage = GameObject.Find("BleedDebuffImage");
-        //if (bleedDebuffImage == null)
-        //{
-        //    Utils.LogRed("BleedDebuffImage를 찾을 수 없습니다.");
-        //}
-
-        //yield return new WaitUntil(() => GameObject.Find("BlindDebuffImage") != null);
-        //blindDebuffImage = GameObject.Find("BlindDebuffImage");
-        //if (blindDebuffImage == null)
-        //{
-        //    Utils.LogRed("BlindDebuffImage를 찾을 수 없습니다.");
-        //}
-
-        //yield return new WaitUntil(() => GameObject.Find("ConfusionDebuffImage") != null);
-        //confusionDebuffImage = GameObject.Find("ConfusionDebuffImage");
-        //if (confusionDebuffImage == null)
-        //{
-        //    Utils.LogRed("ConfusionDebuffImage를 찾을 수 없습니다.");
-        //}
-
         yield return new WaitUntil(() => GameObject.Find("Deck1") != null);
         GameObject deckObject = GameObject.Find("Deck1");
         if (deckObject == null)

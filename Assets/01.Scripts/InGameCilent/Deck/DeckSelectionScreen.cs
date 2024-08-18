@@ -21,7 +21,6 @@ public class DeckSelectionScreen : MonoBehaviour
 
     public void ShowDecks()
     {
-        // If there are no decks at all, show the character selection screen
         if (DecksStorage.instance.AllDecks.Count == 0)
         {
             HideScreen();
@@ -29,7 +28,6 @@ public class DeckSelectionScreen : MonoBehaviour
             return;
         }
 
-        // disable all deck icons first
         foreach (DeckIcon icon in DeckIcons)
         {
             icon.gameObject.SetActive(false);
@@ -54,8 +52,4 @@ public class DeckSelectionScreen : MonoBehaviour
     {
         ScreenContent.SetActive(false);
     }
-    //public void GoToPlay()
-    //{
-    //    SceneManager.LoadScene("03.GamePlay Scene");
-    //}
 }

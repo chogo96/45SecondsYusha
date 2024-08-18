@@ -16,8 +16,6 @@ public class CurvedLinePoint : MonoBehaviour
 			Gizmos.DrawSphere( this.transform.position, gizmoSize );
 		}
 	}
-
-	//update parent line when this point moved
 	void OnDrawGizmosSelected()
 	{
 		CurvedLineRenderer curvedLine = this.transform.parent.GetComponent<CurvedLineRenderer>();

@@ -169,35 +169,6 @@ public class Enemy : MonoBehaviourPunCallbacks
             Utils.LogRed("플레이어 리스트가 null이거나 비어 있습니다. 출혈 디버프를 적용할 수 없습니다.");
         }
     }
-    //private void ApplyRandomBleedDebuffToPlayer(List<PlayerScripts> players)
-    //{
-    //    if (players != null && players.Count > 0)
-    //    {
-    //        if (PhotonNetwork.IsMasterClient)
-    //        {
-    //            //int randomIndex = Random.Range(0, players.Count);
-    //            int randomIndex = Random.Range(0, PhotonNetwork.PlayerList.Length);
-    //            int randomActorNumber = PhotonNetwork.PlayerList[randomIndex].ActorNumber;
-    //            Utils.LogGreen(randomIndex);
-    //            Utils.LogGreen(randomActorNumber);
-    //            if (randomActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
-    //            {
-    //                players[randomIndex].ApplyBleedToPlayer();
-    //                playerSetManager.photonView.RPC("DeBuffImageOn", RpcTarget.All, randomActorNumber, "bleed");
-    //            }
-    //            else
-    //            {
-    //                return;
-    //            }
-    //            //int playerID = players[randomIndex].PlayerID;
-    //            //playerSetManager.photonView.RPC("DeBuffImageOn", RpcTarget.All, playerID, "bleed");
-    //        }
-    //    }
-    //    else
-    //    {
-    //        Utils.LogRed("플레이어 리스트가 null이거나 비어 있습니다. 출혈 디버프를 적용할 수 없습니다.");
-    //    }
-    //}
 
     private void ApplyRandomBlindDebuffToPlayer(List<PlayerScripts> players)
     {

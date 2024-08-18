@@ -13,7 +13,6 @@ public class DragSpellNoTarget : DraggingActions
     {
         get
         {
-            // TODO : include full field check
             return base.CanDrag && !DragManager.instance.isDraggingCard;
         }
     }
@@ -95,7 +94,6 @@ public class DragSpellNoTarget : DraggingActions
 
     protected override bool DragSuccessful()
     {
-        // TableVisual을 사용하지 않으므로 항상 드래그가 성공한 것으로 간주
         return true;
     }
     protected override PlayerScripts playerOwner
@@ -106,13 +104,13 @@ public class DragSpellNoTarget : DraggingActions
             {
                 if (GlobalSettings.instance == null)
                 {
-                    Debug.LogError("GlobalSettings.instance is null.");
+                    Utils.LogRed("GlobalSettings.instance is null.");
                     return null;
                 }
 
                 if (GlobalSettings.instance.LowPlayer == null)
                 {
-                    Debug.LogError("LowPlayer is not set in GlobalSettings.");
+                    Utils.LogRed("LowPlayer is not set in GlobalSettings.");
                     return null;
                 }
 
@@ -122,13 +120,13 @@ public class DragSpellNoTarget : DraggingActions
             {
                 if (GlobalSettings.instance == null)
                 {
-                    Debug.LogError("GlobalSettings.instance is null.");
+                    Utils.LogRed("GlobalSettings.instance is null.");
                     return null;
                 }
 
                 if (GlobalSettings.instance.TopPlayer == null)
                 {
-                    Debug.LogError("TopPlayer is not set in GlobalSettings.");
+                    Utils.LogRed("TopPlayer is not set in GlobalSettings.");
                     return null;
                 }
 
@@ -136,7 +134,7 @@ public class DragSpellNoTarget : DraggingActions
             }
             else
             {
-                Debug.LogError("태그가 없는 카드 입니다: " + transform.parent.name);
+                Utils.LogRed("태그가 없는 카드 입니다: " + transform.parent.name);
                 return null;
             }
         }

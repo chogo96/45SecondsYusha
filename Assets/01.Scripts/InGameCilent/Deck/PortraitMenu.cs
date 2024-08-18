@@ -14,20 +14,18 @@ public class PortraitMenu : MonoBehaviour
 
     void Awake()
     {
-        //portrait = GetComponent<PlayerPortraitVisual>();
         portrait.ApplyLookFromAsset();
         InitialScale = transform.localScale.x;
     }
 
     void OnMouseDown()
     {
-        // show the animation
+        // 애니메이션 재생
         if (!selected)
         {
             selected = true;
             transform.DOScale(TargetScale, 0.5f);
             CharacterSelectionScreen.instance.HeroPanel.SelectCharacter(this);
-            // deselect all the other Portrait Menu buttons 
             PortraitMenu[] allPortraitButtons = GameObject.FindObjectsOfType<PortraitMenu>();
             foreach (PortraitMenu m in allPortraitButtons)
                 if (m != this)

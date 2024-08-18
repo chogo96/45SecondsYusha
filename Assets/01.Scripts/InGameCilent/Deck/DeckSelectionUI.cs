@@ -32,16 +32,15 @@ public class DeckSelectionUI : MonoBehaviour
 
     private void ShowDeckList()
     {
-
         if (DecksStorage.instance == null)
         {
-            Debug.LogError("DecksStorage.instance가 null입니다.");
+            Utils.LogRed("DecksStorage.instance가 null입니다.");
             return;
         }
 
         if (DecksStorage.instance.AllDecks == null)
         {
-            Debug.LogError("DecksStorage.instance.AllDecks가 null입니다.");
+            Utils.LogRed("DecksStorage.instance.AllDecks가 null입니다.");
             return;
         }
 

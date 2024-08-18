@@ -34,7 +34,7 @@ public abstract class DraggingActions : MonoBehaviour
             }
             else
             {
-                Debug.LogError("태그가 없는 카드 입니다." + transform.parent.name);
+                Utils.LogRed("태그가 없는 카드 입니다." + transform.parent.name);
                 return null;
             }
         }
